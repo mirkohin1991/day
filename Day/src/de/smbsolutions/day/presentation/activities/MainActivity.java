@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 	public void onButtonClick(View view){
 		switch (view.getId()) {
 		case R.id.button1:
-			startActivity(new Intent(this, UnterActivity.class));
+			startActivity(new Intent(this, MapActivity.class));
 			break;
 		case R.id.button2:
 			startActivity(new Intent(this,KameraActivity.class));
