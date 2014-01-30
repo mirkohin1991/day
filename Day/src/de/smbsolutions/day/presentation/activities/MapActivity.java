@@ -72,12 +72,12 @@ public class MapActivity extends Activity {
 				}
 				if (bitmap != null) {
 					bitmap = getResizedBitmap(bitmap, 5, 5);
-//					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
-//							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-//							.title("Ihr aktueller Standort");
-					
 					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
-							.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+							.title("Ihr aktueller Standort");
+					
+
+					
 							
 					
 					rectOptions.add(new LatLng(element.getLatitude(), element
