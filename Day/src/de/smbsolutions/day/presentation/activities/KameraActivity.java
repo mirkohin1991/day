@@ -4,20 +4,16 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.smbsolutions.day.R;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.FrameLayout;
+import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.location.GPSTracker;
 
 public class KameraActivity extends Activity {
 	
@@ -33,7 +29,7 @@ public class KameraActivity extends Activity {
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-	        setContentView(R.layout.);
+	        setContentView(R.layout.kamera_activity);
 	        
 	       
 	        
@@ -94,13 +90,9 @@ public class KameraActivity extends Activity {
 			if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 				GPSTracker gps = new GPSTracker(KameraActivity.this);
 			      if(gps.canGetLocation()){
-			            Database.addNewRoutePoint(fileUri.toString(), gps.getLatitude() + 0.2, gps.getLongitude(), "Wanderung");
-			    		ImageSpot neuesBild = new ImageSpot(gps.getLongitude(), gps.getLatitude(), fileUri.toString(), timeStamp);
+			            Database.addNewRoutePoint(fileUri.toString(), gps.getLatitude(), gps.getLongitude(), "Wanderung");
+			    		
 						Intent mapIntent = new Intent(this, MapActivity.class);
-						mapIntent.putExtra("ImgLatitude", neuesBild.getLatitude());
-						mapIntent.putExtra("ImgLongitude", neuesBild.getLongitude());
-						mapIntent.putExtra("ImgUri", neuesBild.getImgUri());
-						mapIntent.putExtra("TimeStamp", neuesBild.getTimestamp());
 						startActivity(mapIntent);
 						
 					

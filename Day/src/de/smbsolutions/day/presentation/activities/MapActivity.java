@@ -9,15 +9,22 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.database.RoutePoint;
+import de.smbsolutions.day.functions.location.GPSTracker;
 
 public class MapActivity extends Activity {
 
@@ -30,7 +37,7 @@ public class MapActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.unter_activity);
+		setContentView(R.layout.map_activity);
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 				.getMap();
 
@@ -64,14 +71,15 @@ public class MapActivity extends Activity {
 					e.printStackTrace();
 				}
 				if (bitmap != null) {
-					bitmap = getResizedBitmap(bitmap, 80, 80);
-					MarkerOptions marker = new MarkerOptions()
-							.position(
-									new LatLng(element.getLatitude(), element
-											.getLongitude()))
-							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-							.title("Ihr aktueller Standort");
-
+					bitmap = getResizedBitmap(bitmap, 5, 5);
+//					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
+//							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+//							.title("Ihr aktueller Standort");
+					
+					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
+							.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+							
+					
 					rectOptions.add(new LatLng(element.getLatitude(), element
 							.getLongitude()));
 					map.addMarker(marker);
