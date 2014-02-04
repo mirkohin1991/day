@@ -46,7 +46,7 @@ public class Database implements DatabaseInterface {
 	}
 	
 	
-	public static void addNewRoutePoint (double latitude, double longitude, Timestamp timestamp ) {
+	public  void addNewRoutePoint (double latitude, double longitude, Timestamp timestamp ) {
 		
      mDatabase = mHelper.getWritableDatabase();
 		

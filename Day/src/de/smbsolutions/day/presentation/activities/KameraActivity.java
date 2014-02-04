@@ -90,7 +90,7 @@ public class KameraActivity extends Activity {
 		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			super.onActivityResult(requestCode, resultCode, data);
 			if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-				GPSTracker gps = new GPSTracker(KameraActivity.this);
+				GPSTracker gps = GPSTracker.getInstance(this);
 			      if(gps.canGetLocation()){
 			    	  
 			    	//Getting the current timestamp

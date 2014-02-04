@@ -54,8 +54,8 @@ public class MapActivity extends Activity {
 		// Kartenart
 		// map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-		gps = new GPSTracker(MapActivity.this);
-		if (gps.canGetLocation()) {
+	
+		
 
 			PolylineOptions rectOptions = new PolylineOptions();
 
@@ -152,10 +152,9 @@ public class MapActivity extends Activity {
 			// Toast.makeText(getApplicationContext(),
 			// "Your Location is - \nLat: " + actLatitude() + "\nLong: " +
 			// actLongitude(), Toast.LENGTH_LONG).show();
-		} else {
-			gps.showSettingsAlert();
-		}
-		gps.stopUsingGPS();
+		
+		
+	
 
 		CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(new LatLng(latitude, longitude)).zoom(15).build();
