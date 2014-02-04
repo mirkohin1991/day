@@ -1,6 +1,7 @@
 package de.smbsolutions.day.presentation.activities;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.format.Time;
 import android.util.Log;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
@@ -90,7 +92,12 @@ public class KameraActivity extends Activity {
 			if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 				GPSTracker gps = new GPSTracker(KameraActivity.this);
 			      if(gps.canGetLocation()){
-			            Database.addNewRoutePoint(fileUri.toString(), gps.getLatitude(), gps.getLongitude(), "Wanderung");
+			    	  
+			    	//Getting the current timestamp
+			  		Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+			    	  
+			    	  
+			            Database.addNewRoutePoint(fileUri.toString(), gps.getLatitude(), gps.getLongitude(), tsTemp);
 			    		
 						Intent mapIntent = new Intent(this, MapActivity.class);
 						startActivity(mapIntent);

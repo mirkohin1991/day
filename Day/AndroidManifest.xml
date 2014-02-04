@@ -33,7 +33,7 @@
         android:theme="@style/AppTheme" >
         <meta-data
    		  android:name="com.google.android.maps.v2.API_KEY"
-  		  android:value="AIzaSyBxJ55c4tfCj8ijdmLSsheogpUXN_e0k70"/>
+  		  android:value="AIzaSyCQEqd_ENlCU2hN6vr__HAbOja2GUSgdIQ"/>
         <meta-data
           android:name="com.google.android.gms.version"
    		  android:value="@integer/google_play_services_version" />
@@ -47,6 +47,8 @@
         </activity>
         <activity android:name="de.smbsolutions.day.presentation.activities.KameraActivity"></activity>
          <activity android:name="de.smbsolutions.day.presentation.activities.MapActivity"></activity>
+         <service android:name=".functions.services.TrackingService"></service>
+         <activity android:name="de.smbsolutions.day.presentation.activities.PictureActivity"></activity>
          
         
         

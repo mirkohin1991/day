@@ -7,5 +7,8 @@
     <string name="karte_oeffnen">Öffne Karte</string>
     <string name="maps_description">Maps</string>
     <string name="kamera_oeffnen">Öffne Kamera</string>
+    <string name="start_service">Service starten</string>
+    <string name="stop_service">Service stoppen</string>
+    <string name="new_route">Neue Route anlegen </string>
 
 </resources>

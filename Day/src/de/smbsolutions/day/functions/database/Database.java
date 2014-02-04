@@ -9,13 +9,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class Database {
+public class Database implements DatabaseInterface {
 	
 	RoutePoint TEST;
 
 	private static DatabaseManager mHelper;
 	private static SQLiteDatabase mDatabase;
 	private static int currentRouteID = 1 ;
+	private static String currentRouteName;
 	
 	private static Database db_data = null;
 	
@@ -45,26 +46,66 @@ public class Database {
 	}
 	
 	
+	public static void addNewRoutePoint (double latitude, double longitude, Timestamp timestamp ) {
+		
+     mDatabase = mHelper.getWritableDatabase();
+		
+		
+
+		
+		ContentValues route_values = new ContentValues();
+	    
+		//Zum Testen erstmal alle dem gleichen Record
+		route_values.put("_id", currentRouteID);
+		route_values.put("timestamp", timestamp.toString()); // inserting an int
+	    route_values.put("latitude", latitude); // inserting a string
+	    route_values.put("longitude", longitude);
+		
+		
+		
+	
+		
+		// CurrentRoute greater than the latest one in the DB
+		// --> Completely new route!
+		if (  currentRouteID > getIDlastRoute() ) {
+			
+			
+			mDatabase.insert("route_points", null , route_values);
+			
+			//For a completely new route, also the general information, like the name has to be stored		 
+			 ContentValues route_info = new ContentValues();
+			 route_info.put("_id", currentRouteID);
+			 route_info.put("name", currentRouteName);
+			 route_info.put("date", timestamp.getDate());
+			 mDatabase.insert("route_info", null, route_info);
+			
+			
+		} else {
+			
+		    mDatabase.insert("route_points", null , route_values);
+			
+		}
+		
+		
+	
+	}
+	
+	
 	//Irgendwie noch abfangen ob es eine neue Route ist!
-	public static boolean addNewRoutePoint (String picture, double latitude, double longitude, String name) {
+	public static void addNewRoutePoint (String picture, double latitude, double longitude, Timestamp timestamp) {
 		
 	
 	   
        mDatabase = mHelper.getWritableDatabase();
 		
 		
-       //Getting the current timestamp ODER SOLL DIREKT BEIM AUFNEHMEN EINER GENOMMEN WERDEN?
-		int time = (int) (System.currentTimeMillis());
-		Timestamp tsTemp = new Timestamp(time);
-		
-		
-		
+
 		
 		ContentValues route_values = new ContentValues();
 	    
 		//Zum Testen erstmal alle dem gleichen Record
 		route_values.put("_id", currentRouteID);
-		route_values.put("timestamp", tsTemp.toString()); // inserting an int
+		route_values.put("timestamp", timestamp.toString()); // inserting an int
 	    route_values.put("picture", picture); // inserting an int
 	    route_values.put("latitude", latitude); // inserting a string
 	    route_values.put("longitude", longitude);
@@ -83,8 +124,8 @@ public class Database {
 			//For a completely new route, also the general information, like the name has to be stored		 
 			 ContentValues route_info = new ContentValues();
 			 route_info.put("_id", currentRouteID);
-			 route_info.put("name", name);
-			 route_info.put("date", tsTemp.getDate());
+			 route_info.put("name", currentRouteName);
+			 route_info.put("date", timestamp.getDate());
 			 mDatabase.insert("route_info", null, route_info);
 			
 			
@@ -95,7 +136,7 @@ public class Database {
 		}
 		
 		
-		return true;
+		
 		
 	}
 
@@ -302,6 +343,54 @@ public class Database {
 		return allRoutes;
 	}
 	
+	public static RoutePoint getSingleRoutePoint (String timestamp){
+		
+		
+		 RoutePoint route_point = null;
+		 
+		 Cursor db_cursor;
+			
+			mDatabase = mHelper.getWritableDatabase();
+			
+			
+
+			db_cursor = mDatabase.query("route_points", //table
+					null ,  //which column
+					"timestamp = ?" , // select options
+					new String [] { timestamp},  // Using ? in the select options can be replaced here as an array
+					null,   // Group by ID --> Only the whole routes
+					null, //Having
+					null);// order by
+			
+			
+			
+			while (db_cursor.moveToNext()) {
+				
+				// Getting each field
+							int cursor_id = db_cursor.getInt(db_cursor.getColumnIndex("_id"));
+							String cursor_picture = db_cursor.getString(db_cursor.getColumnIndex("picture"));
+							int cursor_longitude = db_cursor.getInt(db_cursor.getColumnIndex("longitude"));
+							int cursor_latitude = db_cursor.getInt(db_cursor.getColumnIndex("latitude"));
+							Timestamp cursor_time = Timestamp.valueOf(db_cursor.getString(db_cursor.getColumnIndex("timestamp")));
+				
+				
+				route_point = 	new RoutePoint(cursor_id, 
+						cursor_time,  //Timestamp class helps us to get the value as timestamp
+						cursor_picture,
+						cursor_latitude,
+						cursor_longitude);
+				
+				
+					
+						
+			}
+			
+		     db_cursor.close();
+		
+		
+		return  route_point;
+	}
+	
 	
 	
 	public static List<RoutePoint> getRoutePoint (int id){
@@ -359,21 +448,75 @@ public class Database {
 
 	
     //EVERY TIME A NEW ROUTE IS STARTET THIS METHOD HAS TO BE CALLED
-	public static void registerNewRouteID() {
+	public static void registerNewRoute(String name) {
 		
 		// -1 means first route ever tracked
 		if ( getIDlastRoute() != -1 ) {
 		currentRouteID = getIDlastRoute() + 1;
+		currentRouteName = name ;
 		
 		}else {
 			
 			currentRouteID = 1;
+			currentRouteName = name ;
 			
 		
 		}
+		
+		
 				
 	}
 	
+	
+	
+	
+	public static int getSettingValue (String name) {
+		
+		int value;
+		
+		Cursor db_cursor;
+		
+		mDatabase = mHelper.getWritableDatabase();		
+
+		db_cursor = mDatabase.query("settings", //table
+				null ,  //which column
+				"name = ?" , // select options
+				new String [] {name},  // Using ? in the select options can be replaced here as an array
+				null,   // Group by ID --> Only the whole routes
+				null, //Having
+				null);// order by
+		
+		
+		db_cursor.moveToFirst();
+		
+		value = db_cursor.getInt(db_cursor.getColumnIndex("value"));
+		
+		 db_cursor.close();
+		     
+		
+		return value;
+		
+		
+	    		
+		
+	}
+	
+	public static void changeSettingValue (String setting, int value) {
+		
+		  mDatabase = mHelper.getWritableDatabase();
+			
+			
+			
+			ContentValues values = new ContentValues();
+		    
+			
+			values.put("value", value);
+			mDatabase.update("settings", values, "name=?", new String[] { setting} );
+			
+			
+		
+		
+	}
 	
 	
 	

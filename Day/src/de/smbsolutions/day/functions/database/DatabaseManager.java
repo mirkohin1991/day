@@ -15,10 +15,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			"CREATE TABLE route_points ( _id INTEGER NOT NULL, timestamp NOT NULL, picture TEXT , longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (_id, timestamp) ) ";
 	
 	private static final String ROUTE_INFO_CREATE = "CREATE TABLE route_info ( _id INTEGER NOT NULL, name TEXT NOT NULL, date TEXT NOT NULL, PRIMARY KEY (_id) ) ";
-	
+	private static final String SETTINGS_CREATE = "CREATE TABLE settings (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER NOT NULL ) ";
 //	"CREATE TABLE routes (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, " + "link TEXT NOT NULL, " +
  //   "geo_location INTEGER, " + "timestamp TIMESTAMP" + ")";
 	
+	private static final String INITIALSETTINGS_INSERT = 
+			" INSERT INTO settings (name, value) VALUES " +
+			"  ('tracking', 0 ), " +
+			"  ('tracking_interval', 10000)";
+			
 	private static final String CLASS_DROP = "DROP TABLE IF EXISTS routes";
 	
 	public DatabaseManager (Context context) {
@@ -39,6 +44,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		
 		db.execSQL(ROUTES_CREATE);
 		db.execSQL(ROUTE_INFO_CREATE);
+		db.execSQL(SETTINGS_CREATE);
+		db.execSQL(INITIALSETTINGS_INSERT);
 		
 	
 		

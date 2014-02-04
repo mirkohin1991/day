@@ -2,8 +2,11 @@ package de.smbsolutions.day.presentation.activities;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
@@ -12,11 +15,12 @@ import android.provider.MediaStore;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -29,6 +33,7 @@ import de.smbsolutions.day.functions.location.GPSTracker;
 public class MapActivity extends Activity {
 
 	public Database db_data;
+	private HashMap < Integer, Timestamp> markerMap= new HashMap< Integer, Timestamp>();
 
 	private GPSTracker gps;
 	private GoogleMap map;
@@ -55,10 +60,14 @@ public class MapActivity extends Activity {
 			PolylineOptions rectOptions = new PolylineOptions();
 
 			for (RoutePoint element : Database
-					.getSpecificRoute(new String[] { "1" })) {
-
-				Uri uri = Uri.parse(element.getPicture());
+					
+					//Zunächst einmal immer die letzte Route. Später muss das dann von jeweils gedrückten Button kommen.
+					.getSpecificRoute(new String[] { String.valueOf(Database.getCurrentRouteID())})) {
+				
 				Bitmap bitmap = null;
+                if (!(element.getPicture() == null)) {
+				Uri uri = Uri.parse(element.getPicture());
+				
 				try {
 					bitmap = MediaStore.Images.Media.getBitmap(
 							this.getContentResolver(), uri);
@@ -70,11 +79,38 @@ public class MapActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+			}
 				if (bitmap != null) {
-					bitmap = getResizedBitmap(bitmap, 5, 5);
+//					 Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+//					    Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
+//					    Canvas canvas = new Canvas(bitmap);
+//
+//					    // paint defines the text color,
+//					    // stroke width, size
+//					    Paint color = new Paint();
+//					    color.setTextSize(35);
+//					    color.setColor(Color.BLACK);
+//
+//					    //modify canv
+//					    canvas.drawBitmap(bitmap, 0,0, color);
+//					    canvas.drawText("User Name!", 30, 40, color);
+//
+//					    //add marker to Map
+//					    map.addMarker(new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
+//					    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+//					    .anchor(0.5f, 1)); //Specifies the anchor to be
+//					               //at a particular point in the marker image.
+					
+					
+					    
+					
+					bitmap = getResizedBitmap(bitmap, 80, 80);
 					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
 							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
 							.title("Ihr aktueller Standort");
+					
+					marker.hashCode();
 					
 
 					
@@ -82,8 +118,27 @@ public class MapActivity extends Activity {
 					
 					rectOptions.add(new LatLng(element.getLatitude(), element
 							.getLongitude()));
-					map.addMarker(marker);
+					
+					int code = map.addMarker(marker).hashCode();
+					
+					
+					markerMap.put( code, element.getTimestamp());
+					
+					
+				// no image
+				} else {
+					
+					rectOptions.add(new LatLng(element.getLatitude(), element
+							.getLongitude()));
+					
+					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
+							
+							.title("Ihr aktueller Standort");
+					
 
+					int code = map.addMarker(marker).hashCode();
+					
+					
 				}
 
 				longitude = element.getLongitude();
@@ -106,6 +161,24 @@ public class MapActivity extends Activity {
 				.target(new LatLng(latitude, longitude)).zoom(15).build();
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		map.setOnMarkerClickListener( new OnMarkerClickListener() {
+			
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				
+				int code = marker.hashCode();
+				
+				markerMap.containsValue(marker);
+				Timestamp timestamp = markerMap.get(marker.hashCode());
+				
+				Intent intent = new Intent(MapActivity.this, PictureActivity.class);
+				intent.putExtra("timestamp", timestamp.toString());
+				
+				startActivity(intent);
+				
+				return false;
+			}
+		});
 
 		// gps = new GPSTracker(UnterActivity.this);
 		// if(gps.canGetLocation()){
