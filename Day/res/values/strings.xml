@@ -10,5 +10,6 @@
     <string name="start_service">Service starten</string>
     <string name="stop_service">Service stoppen</string>
     <string name="new_route">Neue Route anlegen </string>
+    <color name="Weiß">#ffff</color>
 
 </resources>

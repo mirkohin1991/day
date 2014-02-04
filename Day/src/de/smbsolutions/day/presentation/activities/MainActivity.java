@@ -1,133 +1,86 @@
 package de.smbsolutions.day.presentation.activities;
 
+import java.util.ArrayList;
+
+import android.R;
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.services.TrackingService;
-import de.smbsolutions.day.functions.services.TrackingService.ServiceBinder;
-import de.smbsolutions.day.presentation.popups.RouteNameDialog;
+import android.view.Display;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends Activity {
-	
-	private static Handler trackingHandler;
-	
-	
-	//KONKRETE VERBINDUNG ZUM SERVICE, ZUGRIFF ÜBER DIE DEFINIERTEN METHODEN DES BINDERS der TRACKINGSERVICE KLASSE.
-	//DA WIR ABER NUR REGELMÄßIG die GPS DATEN SPEICHERN WOLLEN; BRAUCHEN WIR DIE VERBINDUNG ZUNÄCHST NICHT.
-	//BUCH um S.180
-//	private ServiceConnection serviceConn = new ServiceConnection() {
-//		
-//		@Override
-//		public void onServiceDisconnected(ComponentName name) {
-//			// TODO Auto-generated method stub
-//		}
-//		
-//		@Override
-//		public void onServiceConnected(ComponentName className, IBinder binder) {
-//			// TODO Auto-generated method stub
-//	
-//			((ServiceBinder) binder).setAcitivityCallbackHandler ( trackingHandler);
-//			
-//		}
-//	};
-	
+
+	private GoogleMap map, map2;
+
+	/** Called when the activity is first created. */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		
-		//Create DB singleton
-		Database.getInstance(this);
-	
+		setContentView(R.layout.unter_activity);
+		WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		Display mDisplay = mWindowManager.getDefaultDisplay();
+		double latitude = 47.9873111, longitude = 7.79642;
+
+		if (mDisplay.getRotation() == 0 || mDisplay.getRotation() == 2) {
+			// portrait
+			map = ((MapFragment) getFragmentManager()
+					.findFragmentById(R.id.map)).getMap();
+			map2 = ((MapFragment) getFragmentManager().findFragmentById(
+					R.id.map2)).getMap();
+
+			// Kartenart
+			CameraPosition cameraPosition = new CameraPosition.Builder()
+					.target(new LatLng(latitude, longitude)).zoom(11).build();
+			map.animateCamera(CameraUpdateFactory
+					.newCameraPosition(cameraPosition));
+			map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			map2.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			map2.animateCamera(CameraUpdateFactory
+					.newCameraPosition(cameraPosition));
+
+		} else if (mDisplay.getRotation() == 1 || mDisplay.getRotation() == 3) {
+			// landscape
+			ListView meineListView = (ListView) findViewById(R.id.listView1);
+			ArrayList<String> meineListe = new ArrayList<String>();
+			meineListe.add("Route 1");
+			meineListe.add("Route 2");
+			meineListe.add("Route 3");
+			meineListe.add("Route 4");
+			meineListe.add("Route 5");
+			meineListe.add("Route 6");
+			meineListe.add("Route 7");
+			meineListe.add("Route 8");
+			meineListe.add("Route 9");
+			meineListe.add("Route 10");
 			
-	}
-	public void onButtonClick(View view){
-		Button startButton = (Button) findViewById(R.id.button3);
-		Button stopButton = (Button) findViewById(R.id.button4);
-		switch (view.getId()) {
-		case R.id.button1:
-			startActivity(new Intent(this, MapActivity.class));
-			break;
-		case R.id.button2:
-			startActivity(new Intent(this,KameraActivity.class));
-			break;
-			
-		case R.id.button3:
-			startService(new Intent(this, TrackingService.class));
-			startButton.setEnabled(false);
-			stopButton.setEnabled(true);
-			
-			break;
-		case R.id.button4:
-			
-			stopService(new Intent(this, TrackingService.class));
-			startButton.setEnabled(true);
-			stopButton.setEnabled(false);
-//			Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL, 5000);
-		
-			break;
-			
-		case R.id.newRoute:
-			
-			RouteNameDialog dialog = new RouteNameDialog();
-	        //Showing the popup / Second Parameter: Unique Name, that is used to identify the dialog
-			dialog.show(getFragmentManager(), "NameDialog");
-			
-		default:
-			break;
+			ListAdapter listenAdapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, meineListe);
+			meineListView.setAdapter(listenAdapter);
+
+			map = ((MapFragment) getFragmentManager()
+					.findFragmentById(R.id.map)).getMap();
+
+			CameraPosition cameraPosition = new CameraPosition.Builder()
+					.target(new LatLng(latitude, longitude)).zoom(11).build();
+			map.animateCamera(CameraUpdateFactory
+					.newCameraPosition(cameraPosition));
+			map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+		} else {
 		}
-	}
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
+
 	}
 
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
-
-	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		super.onRestart();
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-	}
-
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-	}
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-	}
-
-	
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
 
 }
