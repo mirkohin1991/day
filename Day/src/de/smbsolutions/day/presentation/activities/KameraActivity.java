@@ -11,17 +11,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.format.Time;
 import android.util.Log;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.location.GPSTracker;
 
 public class KameraActivity extends Activity {
-	
-	
-	
-	
 	
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;

@@ -2,14 +2,14 @@ package de.smbsolutions.day.presentation.activities;
 
 import java.util.ArrayList;
 
-import android.R;
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -19,6 +19,11 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.services.TrackingService;
+import de.smbsolutions.day.presentation.popups.RouteNameDialog;
+
 public class MainActivity extends Activity {
 
 	private GoogleMap map, map2;
@@ -27,10 +32,12 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.unter_activity);
+		setContentView(R.layout.main_activity);
 		WindowManager mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 		Display mDisplay = mWindowManager.getDefaultDisplay();
 		double latitude = 47.9873111, longitude = 7.79642;
+		// Create DB singleton
+		Database.getInstance(this);
 
 		if (mDisplay.getRotation() == 0 || mDisplay.getRotation() == 2) {
 			// portrait
@@ -63,7 +70,7 @@ public class MainActivity extends Activity {
 			meineListe.add("Route 8");
 			meineListe.add("Route 9");
 			meineListe.add("Route 10");
-			
+
 			ListAdapter listenAdapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, meineListe);
 			meineListView.setAdapter(listenAdapter);
@@ -82,5 +89,18 @@ public class MainActivity extends Activity {
 
 	}
 
+	public void onButtonClick(View view) {
+		switch (view.getId()) {
+		case R.id.button1:
+			RouteNameDialog dialog = new RouteNameDialog();
+			// Showing the popup / Second Parameter: Unique Name, that is used
+			// to identify the dialog
+			dialog.show(getFragmentManager(), "NameDialog");
+			break;
+
+		default:
+			break;
+		}
+	}
 
 }
