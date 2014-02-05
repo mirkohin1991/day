@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +30,7 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.database.RoutePoint;
 import de.smbsolutions.day.functions.location.GPSTracker;
+import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 
 public class MapActivity extends Activity {
 
@@ -214,6 +216,17 @@ public class MapActivity extends Activity {
 
 	}
 
+	public void onButtonClick(View view){
+		switch (view.getId()) {
+		case R.id.imageButton1:
+			Intent cam = new Intent(this, KameraActivity.class);
+			startActivity(cam);
+			break;
+
+		default:
+			break;
+		}
+	}
 	public static Bitmap getResizedBitmap(Bitmap image, int newHeight,
 			int newWidth) {
 		int width = image.getWidth();
