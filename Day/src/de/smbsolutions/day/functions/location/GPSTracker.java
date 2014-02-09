@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GPSTracker extends Service implements LocationListener {
 
@@ -76,7 +77,7 @@ public class GPSTracker extends Service implements LocationListener {
 		}
 
 	}
-
+	
 	private String getBestProvider() {
 
 		// Getting the
@@ -87,10 +88,15 @@ public class GPSTracker extends Service implements LocationListener {
 		return locationManager.getBestProvider(criteria, true);
 	}
 
+
 	public boolean enoughDistance() {
 		double distance = 0;
 		Location newLocation;
 		newLocation = getLocation();
+		
+		if (location == null) {
+			return true;
+		}
 
 		if (newLocation != null && location != null) {
 			 distance = location.distanceTo(newLocation);
@@ -98,7 +104,6 @@ public class GPSTracker extends Service implements LocationListener {
 
 			if (distance > 20) {
 				return true;
-				
 			} else {
 				return false;
 			}
@@ -108,11 +113,8 @@ public class GPSTracker extends Service implements LocationListener {
 		try {
 
 			if (isProviderAvailable() == false) {
-
 				// Stop method and return no Location object
-
 				return null;
-
 			}
 
 			String newProvider = getBestProvider();
@@ -120,60 +122,42 @@ public class GPSTracker extends Service implements LocationListener {
 
 			// Auch wenn bestProvder noch nie gesetzt wurde, springt er hier
 			// rein
-			if (bestProvider != newProvider) {
-
+			if (bestProvider == null ) {
+				// Save the new provider globally
+				bestProvider = newProvider;	
+			}
+				
+				if (bestProvider.equals(newProvider)) {
 				// Save the new provider globally
 				bestProvider = newProvider;
 
 				// Remove the old updateListener
-				locationManager.removeUpdates(GPSTracker.this);
+				// locationManager.removeUpdates(GPSTracker.this);
 
-				// Start another listener with the new Provider
-				locationManager.requestLocationUpdates(newProvider,
-						MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
-						this);
-
-			}
+//				// Start another listener with the new Provider
+//				locationManager.requestLocationUpdates(newProvider,
+//						MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
+//						this);
+				}
 
 			if (bestProvider.equals(LocationManager.GPS_PROVIDER)) {
 
 				location = locationManager
 						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				
 				if (location != null) {
 					latitude = location.getLatitude();
 					longitude = location.getLongitude();
 				}
-
 			}
 
 			if (bestProvider.equals(LocationManager.NETWORK_PROVIDER)
 					| (location == null && locationManager
-							.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) // Could
-																					// be
-																					// that
-																					// the
-																					// GPS
-																					// was
-																					// selected
-																					// as
-																					// the
-																					// best
-																					// provider,
-																					// but
-																					// failed
-																					// to
-																					// get
-																					// the
-																					// location.
-																					// Then
-																					// the
-																					// Networkprovider
-																					// is
-																					// used,
-																					// if
-																					// available
+							.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) 
+	// Could be that the GPS was selected as the best provider, but failed to get the location
+	// Then the Networkprovider is used, if available 
+						
 			) {
-
 				location = locationManager
 						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
@@ -183,9 +167,25 @@ public class GPSTracker extends Service implements LocationListener {
 				}
 
 			}
+			
+			
+			
+			if (bestProvider.equals(LocationManager.PASSIVE_PROVIDER)| (location == null && locationManager
+					.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))) {
+				
+				location = locationManager
+						.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+				if (location != null) {
+					latitude = location.getLatitude();
+					longitude = location.getLongitude();
+				}
+				
+			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT );
 		}
 
 		// if no provider was available, the old location will be returned

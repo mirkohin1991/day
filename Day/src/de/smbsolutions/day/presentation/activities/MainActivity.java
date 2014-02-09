@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 
+import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.database.RouteList;
 import de.smbsolutions.day.presentation.fragments.mainFragment;
 
 public class MainActivity extends Activity {

@@ -14,7 +14,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	private static final String ROUTES_CREATE = 
 			"CREATE TABLE route_points ( _id INTEGER NOT NULL, timestamp NOT NULL, picture TEXT , longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (_id, timestamp) ) ";
 	
-	private static final String ROUTE_INFO_CREATE = "CREATE TABLE route_info ( _id INTEGER NOT NULL, name TEXT NOT NULL, date TEXT NOT NULL, PRIMARY KEY (_id) ) ";
+	private static final String ROUTE_INFO_CREATE = "CREATE TABLE route_info ( _id INTEGER NOT NULL, name TEXT NOT NULL, date TEXT NOT NULL, active TEXT, PRIMARY KEY (_id) ) ";
 	private static final String SETTINGS_CREATE = "CREATE TABLE settings (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER NOT NULL ) ";
 //	"CREATE TABLE routes (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, " + "link TEXT NOT NULL, " +
  //   "geo_location INTEGER, " + "timestamp TIMESTAMP" + ")";
