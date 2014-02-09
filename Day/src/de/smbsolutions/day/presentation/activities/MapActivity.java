@@ -1,5 +1,6 @@
 package de.smbsolutions.day.presentation.activities;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -7,12 +8,21 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +45,7 @@ import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 public class MapActivity extends Activity {
 
 	public Database db_data;
-	private HashMap < Integer, Timestamp> markerMap= new HashMap< Integer, Timestamp>();
+	private HashMap<Integer, Timestamp> markerMap = new HashMap<Integer, Timestamp>();
 
 	private GPSTracker gps;
 	private GoogleMap map;
@@ -44,7 +54,7 @@ public class MapActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.map_activity);
+		setContentView(R.layout.cr_fragment);
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 				.getMap();
 
@@ -53,23 +63,19 @@ public class MapActivity extends Activity {
 		// Aktuelle Position
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setMyLocationButtonEnabled(true);
-		// Kartenart
-		// map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		PolylineOptions rectOptions = new PolylineOptions();
 
-	
-		
+		for (RoutePoint element : Database
 
-			PolylineOptions rectOptions = new PolylineOptions();
+		// Zunächst einmal immer die letzte Route. Später muss das dann von
+		// jeweils gedrückten Button kommen.
+				.getSpecificRoute(new String[] { String.valueOf(Database
+						.getCurrentRouteID()) })) {
 
-			for (RoutePoint element : Database
-					
-					//Zunächst einmal immer die letzte Route. Später muss das dann von jeweils gedrückten Button kommen.
-					.getSpecificRoute(new String[] { String.valueOf(Database.getCurrentRouteID())})) {
-				
-				Bitmap bitmap = null;
-                if (!(element.getPicture() == null)) {
+			Bitmap bitmap = null;
+			if (!(element.getPicture() == null)) {
 				Uri uri = Uri.parse(element.getPicture());
-				
+
 				try {
 					bitmap = MediaStore.Images.Media.getBitmap(
 							this.getContentResolver(), uri);
@@ -81,102 +87,92 @@ public class MapActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			}
-				if (bitmap != null) {
-//					 Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-//					    Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
-//					    Canvas canvas = new Canvas(bitmap);
-//
-//					    // paint defines the text color,
-//					    // stroke width, size
-//					    Paint color = new Paint();
-//					    color.setTextSize(35);
-//					    color.setColor(Color.BLACK);
-//
-//					    //modify canv
-//					    canvas.drawBitmap(bitmap, 0,0, color);
-//					    canvas.drawText("User Name!", 30, 40, color);
-//
-//					    //add marker to Map
-//					    map.addMarker(new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
-//					    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-//					    .anchor(0.5f, 1)); //Specifies the anchor to be
-//					               //at a particular point in the marker image.
-					
-					
-					    
-					
-					bitmap = getResizedBitmap(bitmap, 80, 80);
-					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
-							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-							.title("Ihr aktueller Standort");
-					
-					marker.hashCode();
-					
 
-					
-							
-					
-					rectOptions.add(new LatLng(element.getLatitude(), element
-							.getLongitude()));
-					
-					int code = map.addMarker(marker).hashCode();
-					
-					
-					markerMap.put( code, element.getTimestamp());
-					
-					
+			}
+			if (bitmap != null) {
+				// Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+				// Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
+				// Canvas canvas = new Canvas(bitmap);
+				//
+				// // paint defines the text color,
+				// // stroke width, size
+				// Paint color = new Paint();
+				// color.setTextSize(35);
+				// color.setColor(Color.BLACK);
+				//
+				// //modify canv
+				// canvas.drawBitmap(bitmap, 0,0, color);
+				// canvas.drawText("User Name!", 30, 40, color);
+				//
+				// //add marker to Map
+				// map.addMarker(new MarkerOptions().position(new
+				// LatLng(element.getLatitude(), element.getLongitude()))
+				// .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+				// .anchor(0.5f, 1)); //Specifies the anchor to be
+				// //at a particular point in the marker image.
+
+				bitmap = getResizedBitmap(bitmap, 80, 80);
+				MarkerOptions marker = new MarkerOptions()
+						.position(
+								new LatLng(element.getLatitude(), element
+										.getLongitude()))
+						.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+						.title("Ihr aktueller Standort");
+
+				marker.hashCode();
+
+				rectOptions.add(new LatLng(element.getLatitude(), element
+						.getLongitude()));
+
+				int code = map.addMarker(marker).hashCode();
+
+				markerMap.put(code, element.getTimestamp());
+
 				// no image
-				} else {
-					
-					rectOptions.add(new LatLng(element.getLatitude(), element
-							.getLongitude()));
-					
-					MarkerOptions marker = new MarkerOptions().position(new LatLng(element.getLatitude(), element.getLongitude()))
-							
-							.title("Ihr aktueller Standort");
-					
+			} else {
 
-					int code = map.addMarker(marker).hashCode();
-					
-					
-				}
+				rectOptions.add(new LatLng(element.getLatitude(), element
+						.getLongitude()));
 
-				longitude = element.getLongitude();
-				latitude = element.getLatitude();
+				MarkerOptions marker = new MarkerOptions().position(
+						new LatLng(element.getLatitude(), element
+								.getLongitude()))
+
+				.title("Ihr aktueller Standort");
+
+				int code = map.addMarker(marker).hashCode();
 
 			}
 
-			Polyline polyline = map.addPolyline(rectOptions);
+			longitude = element.getLongitude();
+			latitude = element.getLatitude();
 
-			// \n is for new line
-			// Toast.makeText(getApplicationContext(),
-			// "Your Location is - \nLat: " + actLatitude() + "\nLong: " +
-			// actLongitude(), Toast.LENGTH_LONG).show();
-		
-		
-	
+		}
+
+		Polyline polyline = map.addPolyline(rectOptions);
+
+		// \n is for new line
+		// Toast.makeText(getApplicationContext(),
+		// "Your Location is - \nLat: " + actLatitude() + "\nLong: " +
+		// actLongitude(), Toast.LENGTH_LONG).show();
 
 		CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(new LatLng(latitude, longitude)).zoom(15).build();
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		map.setOnMarkerClickListener( new OnMarkerClickListener() {
-			
+		map.setOnMarkerClickListener(new OnMarkerClickListener() {
+
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				
+
 				int code = marker.hashCode();
-				
+
 				markerMap.containsValue(marker);
 				Timestamp timestamp = markerMap.get(marker.hashCode());
-				
-				Intent intent = new Intent(MapActivity.this, PictureActivity.class);
+				Intent intent = new Intent(MapActivity.this,
+						PictureActivity.class);
 				intent.putExtra("timestamp", timestamp.toString());
-				
 				startActivity(intent);
-				
 				return false;
 			}
 		});
@@ -214,9 +210,93 @@ public class MapActivity extends Activity {
 		// gps.showSettingsAlert();
 		// }
 
+		LinearLayout myGallery = (LinearLayout) findViewById(R.id.LinearLayoutcR);
+		String targetPath = "/storage/emulated/0/Pictures/MyCameraApp/";
+
+		Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG)
+				.show();
+		File targetDirector = new File(targetPath);
+
+		File[] files = targetDirector.listFiles();
+		for (File file : files) {
+			myGallery.addView(insertPhoto(file.getAbsolutePath()));
+			
+		}
+	
+//		for (int i = 0; i < myGallery.getChildCount(); i++) {
+//			final ImageView imgView = (ImageView) myGallery.getChildAt(i);
+//			imgView.setOnClickListener(new OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+////				int test  = imgView.getId();
+////				
+////					Drawable drawable= (Drawable) imgView.getDrawable();
+////					Bitmap bm = BitmapFactory.decodeResource(rsrc, drawable, drawable.)
+////					Toast.makeText(this, imgView.getDrawable().gte, duration)
+//				}
+//			});
+//		}
+
 	}
 
-	public void onButtonClick(View view){
+	View insertPhoto(String path) {
+		Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
+
+		LinearLayout layout = new LinearLayout(getApplicationContext());
+		layout.setLayoutParams(new LayoutParams(250, 250));
+		layout.setGravity(Gravity.CENTER);
+
+		ImageView imageView = new ImageView(getApplicationContext());
+		imageView.setLayoutParams(new LayoutParams(220, 220));
+		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		imageView.setImageBitmap(bm);
+
+		layout.addView(imageView);
+		return layout;
+		
+	}
+
+	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
+			int reqHeight) {
+		Bitmap bm = null;
+
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		bm = BitmapFactory.decodeFile(path, options);
+
+		return bm;
+	}
+
+	public int calculateInSampleSize(
+
+	BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+			if (width > height) {
+				inSampleSize = Math.round((float) height / (float) reqHeight);
+			} else {
+				inSampleSize = Math.round((float) width / (float) reqWidth);
+			}
+		}
+
+		return inSampleSize;
+	}
+
+	public void onButtonClick(View view) {
 		switch (view.getId()) {
 		case R.id.imageButton1:
 			Intent cam = new Intent(this, KameraActivity.class);
@@ -227,6 +307,7 @@ public class MapActivity extends Activity {
 			break;
 		}
 	}
+
 	public static Bitmap getResizedBitmap(Bitmap image, int newHeight,
 			int newWidth) {
 		int width = image.getWidth();
