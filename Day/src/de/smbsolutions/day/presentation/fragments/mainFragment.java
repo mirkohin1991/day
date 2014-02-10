@@ -1,5 +1,6 @@
 package de.smbsolutions.day.presentation.fragments;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 import android.app.Fragment;
@@ -21,12 +22,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.database.RouteList;
+import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 
 public class mainFragment extends Fragment {
 
 	private GoogleMap map, map2;
-	
+
 	private View view;
 
 	@Override
@@ -35,17 +37,16 @@ public class mainFragment extends Fragment {
 		Database.getInstance(getActivity());
 		Configuration config = getResources().getConfiguration();
 		view = inflater.inflate(R.layout.main_fragment, container, false);
-		
-		
+
 		/**
 		 * Check the device orientation and act accordingly
 		 */
 		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			
+
 			initializeFragmentLandscape();
 
 		} else {
-			
+
 			initializeFragmentPortrait();
 		}
 		return view;
@@ -54,8 +55,7 @@ public class mainFragment extends Fragment {
 	public void initializeFragmentPortrait() {
 		// portrait
 		try {
-			
-		
+
 			map = ((MapFragment) getFragmentManager()
 					.findFragmentById(R.id.map)).getMap();
 			map2 = ((MapFragment) getFragmentManager().findFragmentById(
@@ -70,8 +70,8 @@ public class mainFragment extends Fragment {
 			map2.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 			map2.animateCamera(CameraUpdateFactory
 					.newCameraPosition(cameraPosition));
-			RouteList = new RouteList(2);
-		
+			RouteList routeList = new RouteList(2);
+			
 		} catch (Exception e) {
 			Log.wtf("mf_p", e.getMessage());
 		}
@@ -113,5 +113,19 @@ public class mainFragment extends Fragment {
 			Log.wtf("mf_land", e.getMessage());
 		}
 
+	}
+	
+	public void onButtonClick(View view) {
+		switch (view.getId()) {
+		case R.id.button1:
+			RouteNameDialog dialog = new RouteNameDialog();
+			// Showing the popup / Second Parameter: Unique Name, that is used
+			// to identify the dialog
+			dialog.show(getFragmentManager(), "NameDialog");
+			break;
+
+		default:
+			break;
+		}
 	}
 }

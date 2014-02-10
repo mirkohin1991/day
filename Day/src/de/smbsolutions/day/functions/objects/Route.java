@@ -1,13 +1,20 @@
-package de.smbsolutions.day.functions.database;
+package de.smbsolutions.day.functions.objects;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.smbsolutions.day.functions.database.Database;
+
 public class Route {
 
-	private List<RoutePoint> routePoints;
+	private List<RoutePoint> routePoints = new ArrayList<RoutePoint>();
 	private String routeName;
 	private String date;
+
+	private String active;
+	private int id;
+	
+	
 	public String getDate() {
 		return date;
 	}
@@ -17,8 +24,6 @@ public class Route {
 	}
 
 
-	private String active;
-	private int id;
 
 	public Route() {
 
@@ -28,7 +33,6 @@ public class Route {
 		this.id = id;
 		routePoints = Database.getSpecificRoute(new String[] { String
 				.valueOf(id) });
-		// routeName = Database.getOpenRouteInfo();
 	}
 
 	public int getId() {
@@ -61,6 +65,13 @@ public class Route {
 
 	public void setActive(String active) {
 		this.active = active;
+		
+		
+	}
+	
+	public void closeRoute() {
+		Database.closeRoute(String.valueOf(id));
+		
 	}
 	
 	

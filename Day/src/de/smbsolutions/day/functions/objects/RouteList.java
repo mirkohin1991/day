@@ -1,18 +1,23 @@
-package de.smbsolutions.day.functions.database;
+package de.smbsolutions.day.functions.objects;
 
 import java.util.List;
+
+import de.smbsolutions.day.functions.database.Database;
 
 public class RouteList {
 
 	private int count;
-	private int sequence;
 	private List<Route> listRoutes;
 
 	public RouteList(int count) {
 		this.count = count;
-
 		listRoutes = Database.getSpecificRoute(count);
 
+	}
+	
+	public RouteList() {
+		listRoutes = Database.getSpecificRoute(count);
+		
 	}
 
 	public int getCount() {
@@ -23,13 +28,6 @@ public class RouteList {
 		this.count = count;
 	}
 
-	public int getSequence() {
-		return sequence;
-	}
-
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
-	}
 
 	public List<Route> getListRoutes() {
 		return listRoutes;

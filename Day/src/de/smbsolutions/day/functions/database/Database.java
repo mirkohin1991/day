@@ -4,6 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.smbsolutions.day.functions.objects.Route;
+import de.smbsolutions.day.functions.objects.RoutePoint;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -210,18 +213,28 @@ public class Database implements DatabaseInterface {
 		mDatabase = mHelper.getWritableDatabase();
 
 		int id = getIDlastRoute();
-		String[] ids = new String[count];
-
-		for (int i = id; i > (id - count); i--) {
-
-			ids[count - 1] = String.valueOf(id);
-
+		if (count > id) {
+			return null;
+			
+			//HIER MUSS NOCH ABGEFANGEN WERDEN
 		}
-
+		
+		String condition;
+	      
+		//User wants all routes
+	    if (count == 0){
+	    	condition = null;
+	    	
+	    } else {
+		condition = "_id > " + String.valueOf(id - count) + " AND _id <= " + String.valueOf(id);
+		
+	    }
+	
 		db_cursor = mDatabase.query("route_points", // table
 				null, // which column
-				"_id = ?", // select options
-				ids, // Using ? in the select options can be replaced here as an
+				condition, // select options
+				null, // Using ? in the select options can be replaced here as
+						// an
 						// array
 				null, // Group by ID --> Only the whole routes
 				null, // Having
@@ -243,14 +256,17 @@ public class Database implements DatabaseInterface {
 					.getColumnIndex("latitude"));
 			Timestamp cursor_time = Timestamp.valueOf(db_cursor
 					.getString(db_cursor.getColumnIndex("timestamp")));
+			if (cursor_id != previous_id) {
 
-			if (cursor_id != previous_id && previous_id != -1) {
-				route_list.add(route);
-				route = new Route();
+				if (cursor_id != previous_id && previous_id != -1) {
+					route_list.add(route);
+					route = new Route();
+					// route.setId(cursor_id);
+					// getRouteInfo(route);
+				}
 				route.setId(cursor_id);
 				getRouteInfo(route);
 			}
-
 			previous_id = cursor_id;
 
 			RoutePoint route_point = new RoutePoint(cursor_id, cursor_time, // Timestamp
@@ -266,7 +282,9 @@ public class Database implements DatabaseInterface {
 					cursor_picture, cursor_latitude, cursor_longitude);
 
 			route.addRoutePoint(route_point);
-
+			if (db_cursor.isLast() == true) {
+				route_list.add(route);
+			}
 		}
 
 		db_cursor.close();
@@ -405,7 +423,7 @@ public class Database implements DatabaseInterface {
 
 		mDatabase = mHelper.getWritableDatabase();
 
-		db_cursor = mDatabase.query("route_points", // table
+		db_cursor = mDatabase.query("route_info", // table
 				null, // which column
 				"_id = " + String.valueOf(route.getId()), // select options
 				null, // Using ? in the select options can be replaced here as
@@ -459,8 +477,8 @@ public class Database implements DatabaseInterface {
 			String cursor_active = db_cursor.getString(db_cursor
 					.getColumnIndex("active"));
 
-			route_point = new RoutePoint(cursor_id, cursor_name, cursor_date,
-					cursor_active);
+//			route_point = new RoutePoint(cursor_id, cursor_name, cursor_date,
+//					cursor_active);
 
 		}
 

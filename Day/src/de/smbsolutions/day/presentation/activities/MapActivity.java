@@ -38,8 +38,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.database.RoutePoint;
 import de.smbsolutions.day.functions.location.GPSTracker;
+import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 
 public class MapActivity extends Activity {
