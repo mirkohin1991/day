@@ -1,14 +1,11 @@
 package de.smbsolutions.day.functions.database;
 
-import java.sql.Timestamp;
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-	
+
 	private static final String DB_NAME = "routes.db";
 	private static final int DB_VERSION = 1;
 	private static final String ROUTES_CREATE = 
@@ -29,7 +26,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public DatabaseManager (Context context) {
 		
 		super( context , DB_NAME, null, DB_VERSION);
-		
+
 	
 	}
 	
@@ -41,12 +38,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		
+	
 		db.execSQL(ROUTES_CREATE);
 		db.execSQL(ROUTE_INFO_CREATE);
 		db.execSQL(SETTINGS_CREATE);
 		db.execSQL(INITIALSETTINGS_INSERT);
-		
+	
 	
 		
 	}
@@ -57,7 +54,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		
 		db.execSQL(CLASS_DROP);
 		onCreate(db);
-		
+
 		
 	}
 

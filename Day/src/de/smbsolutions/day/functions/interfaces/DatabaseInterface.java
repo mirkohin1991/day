@@ -1,4 +1,4 @@
-package de.smbsolutions.day.functions.database;
+package de.smbsolutions.day.functions.interfaces;
 
 public interface DatabaseInterface {
 	

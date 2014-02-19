@@ -1,45 +1,114 @@
 package de.smbsolutions.day.presentation.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.View;
-
-import com.google.android.gms.maps.GoogleMap;
-
+import android.support.v4.app.FragmentActivity;
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.interfaces.MainCallback;
+import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.presentation.fragments.crFragment;
 import de.smbsolutions.day.presentation.fragments.mainFragment;
+import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity implements MainCallback {
 
-	private GoogleMap map, map2;
-	private Fragment mFragment, mFragment_land;
-	private String tag_portrait, tag_landscape;
+	private android.support.v4.app.Fragment mfrag;
+	private android.support.v4.app.Fragment crFrag;
+	private String tag;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
-		Configuration config = getResources().getConfiguration();
-
-		android.app.FragmentManager fragmentManager = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager
-				.beginTransaction();
-//		if (savedInstanceState == null) {
-			mFragment = new mainFragment();
-			fragmentTransaction.replace(android.R.id.content, mFragment, "fragmenttag");
-//		}
-		fragmentTransaction.commit();
+		setContentView(R.layout.main_activity);
+		mfrag = new mainFragment();
+		tag = mfrag.getClass().getName();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, mfrag, tag).commit();
 
 	}
 
-	public void onButtonClick(View view) {
-		((mainFragment) mFragment).onButtonClick(view);
+	@Override
+	public void onItemSelected(int position) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onNewRouteStarted(Route route) {
+
+		crFrag = new crFragment();
+		tag = crFrag.getClass().getName();
+
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		// Übergabe Index selektierte Route
+
+		crFrag.setArguments(bundle);
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, crFrag, tag).addToBackStack(tag)
+				.commit();
+	}
+
+	@Override
+	public void onShowRoute(Route route) {
+		// fragmen avaiable?
+		crFrag = new crFragment();
+		tag = crFrag.getClass().getName();
+
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		crFrag.setArguments(bundle);
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, crFrag, tag).addToBackStack(tag)
+				.commit();
+
+	}
+
+	@Override
+	public void onOpenDialogNewRoute(RouteList routeList) {
+		RouteNameDialog dialog = new RouteNameDialog();
+		Bundle bundle = new Bundle();
+
+		bundle.putSerializable("routeList", routeList);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "NameDialog");
+
+	}
+
+	@Override
+	public void onLongItemSelected(RouteList routeList, int index) {
+
+		DeleteDialog dialog = new DeleteDialog();
+		Bundle bundle = new Bundle();
+		bundle.putInt("routeIndex", index);
+		bundle.putSerializable("routeList", routeList);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "DeleteDialog");
+
+	}
+
+	@Override
+	public void onDeleteRoute() {
+		mfrag = new mainFragment();
+		tag = mfrag.getClass().getName();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, mfrag, tag).commit();
+
+	}
+
+	@Override
+	public void onCamStart(Route route) {
+
 	}
 
 }

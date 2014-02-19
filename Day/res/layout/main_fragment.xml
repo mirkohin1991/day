@@ -3,85 +3,77 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_weight="@integer/weightMainMap" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="0.58"
-            android:scaleType="fitCenter"
-            android:src="@drawable/googleplaceslogo" />
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#88000000"
-    		android:textColor="#ffffff"
-    		android:onClick="onButtonClick"
-            android:text="Neue Route starten" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
-
-        <fragment
+        <FrameLayout
             android:id="@+id/map"
-            android:name="com.google.android.gms.maps.MapFragment"
             android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"/>
+            android:layout_weight="1" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/map"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/map"
-            android:text="Route vom 01.01.2014"
-            android:background="#88000000"
-    		android:textColor="#ffffff"
-            android:textSize="30sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="7" >
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="@integer/weightTextBarMainMap"
+                    android:background="#80669900" >
+
+                    <TextView
+                        android:id="@+id/txtViewPic"
+                        android:layout_width="0dp"
+                        android:maxLines="1"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="10dp"
+                        android:text="TextView"
+                        android:textColor="@color/Weiß"
+                        android:textSize="@dimen/h1" />
+
+                    <Button
+                        android:id="@+id/imagebutton1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:text="Button"
+                        android:textColor="@color/Weiß"
+                        android:textSize="@dimen/h1" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
-
-        <fragment
-            android:id="@+id/map2"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:padding="15dip" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/map2"
-            android:layout_alignRight="@+id/map2"
-            android:layout_alignTop="@+id/map2"
-    		android:background="#88000000"
-    		android:textColor="#ffffff"
-            android:text="Route vom 31.02.2013"
-            android:textSize="30sp" />
-
-    </RelativeLayout>
+        android:layout_weight="@integer/weightMainList"
+        android:drawSelectorOnTop="false"
+        android:longClickable="true"
+        android:listSelector="#669900" >
+    </ListView>
 
 </LinearLayout>
