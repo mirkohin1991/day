@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <integer name="weightMainMap">1</integer>
+      <integer name="weightMainList">1</integer>
+      <integer name="weightTextBarMainMap">1</integer>
+      <integer name="weightPictureView">1</integer>
+          <integer name ="weightDetailMap">7</integer>
+       
+       
+    
+</resources>

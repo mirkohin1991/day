@@ -1,10 +1,13 @@
 package de.smbsolutions.day.functions.location;
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,10 +15,16 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GPSTracker extends Service implements LocationListener {
 
 	private final Context mContext;
+
+	// Singleton
+	private static GPSTracker tracker = null;
+
+	private String bestProvider;
 
 	// flag for GPS status
 	boolean isGPSEnabled = false;
@@ -31,78 +40,155 @@ public class GPSTracker extends Service implements LocationListener {
 	double longitude; // longitude
 
 	// The minimum distance to change Updates in meters
-	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10 meters
 
 	// The minimum time between updates in milliseconds
-	private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+	private static final long MIN_TIME_BW_UPDATES = 10000; // 10 seconds
 
 	// Declaring a Location Manager
 	protected LocationManager locationManager;
 
-	public GPSTracker(Context context) {
+	private GPSTracker(Context context) {
 		this.mContext = context;
-		getLocation();
+
+		locationManager = (LocationManager) mContext
+				.getSystemService(LOCATION_SERVICE);
+
+	}
+
+	public static GPSTracker getInstance(Context context) {
+		if (tracker == null)
+			tracker = new GPSTracker(context);
+		return tracker;
+	}
+
+	public boolean isProviderAvailable() {
+
+		// Possible providers are: - GPS
+		// - Network
+
+		List<String> test = locationManager.getProviders(true);
+		if (test.isEmpty() == true) {
+
+			return false;
+
+		} else {
+			return true;
+		}
+
+	}
+	
+	private String getBestProvider() {
+
+		// Getting the
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+		return locationManager.getBestProvider(criteria, true);
+	}
+
+
+	public boolean enoughDistance() {
+		double distance = 0;
+		Location newLocation;
+		newLocation = getLocation();
+		
+		if (location == null) {
+			return true;
+		}
+
+		if (newLocation != null && location != null) {
+			 distance = location.distanceTo(newLocation);
+		}
+
+			if (distance > 20) {
+				return true;
+			} else {
+				return false;
+			}
 	}
 
 	public Location getLocation() {
 		try {
-			locationManager = (LocationManager) mContext
-					.getSystemService(LOCATION_SERVICE);
 
-			// getting GPS status
-			isGPSEnabled = locationManager
-					.isProviderEnabled(LocationManager.GPS_PROVIDER);
+			if (isProviderAvailable() == false) {
+				// Stop method and return no Location object
+				return null;
+			}
 
-			// getting network status
-			isNetworkEnabled = locationManager
-					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+			String newProvider = getBestProvider();
+			// Check if a different provider is the best one now
 
-			if (!isGPSEnabled && !isNetworkEnabled) {
-				// no network provider is enabled
-			} else {
-				this.canGetLocation = true;
+			// Auch wenn bestProvder noch nie gesetzt wurde, springt er hier
+			// rein
+			if (bestProvider == null ) {
+				// Save the new provider globally
+				bestProvider = newProvider;	
+			}
 				
-				// if GPS Enabled get lat/long using GPS Services
-				if (isGPSEnabled) {
-					if (location == null) {
-						locationManager.requestLocationUpdates(
-								LocationManager.GPS_PROVIDER,
-								MIN_TIME_BW_UPDATES,
-								MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-						Log.d("GPS Enabled", "GPS Enabled");
-						if (locationManager != null) {
-							location = locationManager
-									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-							if (location != null) {
-								latitude = location.getLatitude();
-								longitude = location.getLongitude();
-							}
-						}
-					}
+				if (bestProvider.equals(newProvider)) {
+				// Save the new provider globally
+				bestProvider = newProvider;
+
+				// Remove the old updateListener
+				// locationManager.removeUpdates(GPSTracker.this);
+
+//				// Start another listener with the new Provider
+//				locationManager.requestLocationUpdates(newProvider,
+//						MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
+//						this);
 				}
+
+			if (bestProvider.equals(LocationManager.GPS_PROVIDER)) {
+
+				location = locationManager
+						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				
-				// First get location from Network Provider
-				if (isNetworkEnabled) {
-					locationManager.requestLocationUpdates(
-							LocationManager.NETWORK_PROVIDER,
-							MIN_TIME_BW_UPDATES,
-							MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-					Log.d("Network", "Network");
-					if (locationManager != null) {
-						location = locationManager
-								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-						if (location != null) {
-							latitude = location.getLatitude();
-							longitude = location.getLongitude();
-						}
-					}
+				if (location != null) {
+					latitude = location.getLatitude();
+					longitude = location.getLongitude();
 				}
 			}
 
+			if (bestProvider.equals(LocationManager.NETWORK_PROVIDER)
+					| (location == null && locationManager
+							.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) 
+	// Could be that the GPS was selected as the best provider, but failed to get the location
+	// Then the Networkprovider is used, if available 
+						
+			) {
+				location = locationManager
+						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+				if (location != null) {
+					latitude = location.getLatitude();
+					longitude = location.getLongitude();
+				}
+
+			}
+			
+			
+			
+			if (bestProvider.equals(LocationManager.PASSIVE_PROVIDER)| (location == null && locationManager
+					.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))) {
+				
+				location = locationManager
+						.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+				if (location != null) {
+					latitude = location.getLatitude();
+					longitude = location.getLongitude();
+				}
+				
+			}
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			
+			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT );
 		}
 
+		// if no provider was available, the old location will be returned
 		return location;
 	}
 
@@ -120,7 +206,9 @@ public class GPSTracker extends Service implements LocationListener {
 	 * Function to get latitude
 	 * */
 	public double getLatitude() {
-		if (location != null) {
+
+		// If getLocation is null, the method failed to get the latest location
+		if (getLocation() != null) {
 			latitude = location.getLatitude();
 		}
 
@@ -132,7 +220,9 @@ public class GPSTracker extends Service implements LocationListener {
 	 * Function to get longitude
 	 * */
 	public double getLongitude() {
-		if (location != null) {
+
+		// If getLocation is null, the method failed to get the latest location
+		if (getLocation() != null) {
 			longitude = location.getLongitude();
 		}
 
@@ -146,7 +236,12 @@ public class GPSTracker extends Service implements LocationListener {
 	 * @return boolean
 	 * */
 	public boolean canGetLocation() {
-		return this.canGetLocation;
+		if(isProviderAvailable()) {
+		return true;
+		} else {
+			
+			return false;
+		}
 	}
 
 	/**
@@ -187,18 +282,24 @@ public class GPSTracker extends Service implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
+		Log.i("test", "onLocationChanged");
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
+		Log.i("test", "onProviderDisabled");
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
+		Log.i("test", "onProviderEnabled");
 	}
 
+	//
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+
+		Log.i("test", "onStatusChanged");
 	}
 
 	@Override
