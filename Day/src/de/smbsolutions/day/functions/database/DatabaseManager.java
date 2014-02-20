@@ -18,7 +18,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	
 	private static final String INITIALSETTINGS_INSERT = 
 			" INSERT INTO settings (name, value) VALUES " +
-			"  ('tracking', 0 ), " +
+			"  ('tracking', 1 ), " +
 			"  ('tracking_interval', 10000)";
 			
 	private static final String CLASS_DROP = "DROP TABLE IF EXISTS routes";
