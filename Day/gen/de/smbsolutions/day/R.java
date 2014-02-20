@@ -151,6 +151,7 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f01000f;
     }
     public static final class color {
+        public static final int Weiß=0x7f04000a;
         public static final int common_action_bar_splitter=0x7f040009;
         /**  Sign-in Button Colors 
          */
@@ -163,8 +164,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f040006;
         public static final int common_signin_btn_light_text_focused=0x7f040007;
         public static final int common_signin_btn_light_text_pressed=0x7f040005;
-        public static final int common_signin_btn_text_dark=0x7f04000a;
-        public static final int common_signin_btn_text_light=0x7f04000b;
+        public static final int common_signin_btn_text_dark=0x7f04000b;
+        public static final int common_signin_btn_text_light=0x7f04000c;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -175,61 +176,120 @@ containing a value of this type.
          */
         public static final int activity_horizontal_margin=0x7f080000;
         public static final int activity_vertical_margin=0x7f080001;
+        public static final int h1=0x7f080002;
     }
     public static final class drawable {
-        public static final int common_signin_btn_icon_dark=0x7f020000;
-        public static final int common_signin_btn_icon_disabled_dark=0x7f020001;
-        public static final int common_signin_btn_icon_disabled_focus_dark=0x7f020002;
-        public static final int common_signin_btn_icon_disabled_focus_light=0x7f020003;
-        public static final int common_signin_btn_icon_disabled_light=0x7f020004;
-        public static final int common_signin_btn_icon_focus_dark=0x7f020005;
-        public static final int common_signin_btn_icon_focus_light=0x7f020006;
-        public static final int common_signin_btn_icon_light=0x7f020007;
-        public static final int common_signin_btn_icon_normal_dark=0x7f020008;
-        public static final int common_signin_btn_icon_normal_light=0x7f020009;
-        public static final int common_signin_btn_icon_pressed_dark=0x7f02000a;
-        public static final int common_signin_btn_icon_pressed_light=0x7f02000b;
-        public static final int common_signin_btn_text_dark=0x7f02000c;
-        public static final int common_signin_btn_text_disabled_dark=0x7f02000d;
-        public static final int common_signin_btn_text_disabled_focus_dark=0x7f02000e;
-        public static final int common_signin_btn_text_disabled_focus_light=0x7f02000f;
-        public static final int common_signin_btn_text_disabled_light=0x7f020010;
-        public static final int common_signin_btn_text_focus_dark=0x7f020011;
-        public static final int common_signin_btn_text_focus_light=0x7f020012;
-        public static final int common_signin_btn_text_light=0x7f020013;
-        public static final int common_signin_btn_text_normal_dark=0x7f020014;
-        public static final int common_signin_btn_text_normal_light=0x7f020015;
-        public static final int common_signin_btn_text_pressed_dark=0x7f020016;
-        public static final int common_signin_btn_text_pressed_light=0x7f020017;
-        public static final int ic_launcher=0x7f020018;
-        public static final int ic_plusone_medium_off_client=0x7f020019;
-        public static final int ic_plusone_small_off_client=0x7f02001a;
-        public static final int ic_plusone_standard_off_client=0x7f02001b;
-        public static final int ic_plusone_tall_off_client=0x7f02001c;
+        public static final int ab_background_textured_appbasetheme=0x7f020000;
+        public static final int ab_bottom_solid_appbasetheme=0x7f020001;
+        public static final int ab_solid_appbasetheme=0x7f020002;
+        public static final int ab_stacked_solid_appbasetheme=0x7f020003;
+        public static final int ab_texture_tile_appbasetheme=0x7f020004;
+        public static final int ab_transparent_appbasetheme=0x7f020005;
+        public static final int background=0x7f020006;
+        public static final int bg=0x7f020007;
+        public static final int btn_cab_done_appbasetheme=0x7f020008;
+        public static final int btn_cab_done_default_appbasetheme=0x7f020009;
+        public static final int btn_cab_done_focused_appbasetheme=0x7f02000a;
+        public static final int btn_cab_done_pressed_appbasetheme=0x7f02000b;
+        public static final int cab_background_bottom_appbasetheme=0x7f02000c;
+        public static final int cab_background_top_appbasetheme=0x7f02000d;
+        public static final int common_signin_btn_icon_dark=0x7f02000e;
+        public static final int common_signin_btn_icon_disabled_dark=0x7f02000f;
+        public static final int common_signin_btn_icon_disabled_focus_dark=0x7f020010;
+        public static final int common_signin_btn_icon_disabled_focus_light=0x7f020011;
+        public static final int common_signin_btn_icon_disabled_light=0x7f020012;
+        public static final int common_signin_btn_icon_focus_dark=0x7f020013;
+        public static final int common_signin_btn_icon_focus_light=0x7f020014;
+        public static final int common_signin_btn_icon_light=0x7f020015;
+        public static final int common_signin_btn_icon_normal_dark=0x7f020016;
+        public static final int common_signin_btn_icon_normal_light=0x7f020017;
+        public static final int common_signin_btn_icon_pressed_dark=0x7f020018;
+        public static final int common_signin_btn_icon_pressed_light=0x7f020019;
+        public static final int common_signin_btn_text_dark=0x7f02001a;
+        public static final int common_signin_btn_text_disabled_dark=0x7f02001b;
+        public static final int common_signin_btn_text_disabled_focus_dark=0x7f02001c;
+        public static final int common_signin_btn_text_disabled_focus_light=0x7f02001d;
+        public static final int common_signin_btn_text_disabled_light=0x7f02001e;
+        public static final int common_signin_btn_text_focus_dark=0x7f02001f;
+        public static final int common_signin_btn_text_focus_light=0x7f020020;
+        public static final int common_signin_btn_text_light=0x7f020021;
+        public static final int common_signin_btn_text_normal_dark=0x7f020022;
+        public static final int common_signin_btn_text_normal_light=0x7f020023;
+        public static final int common_signin_btn_text_pressed_dark=0x7f020024;
+        public static final int common_signin_btn_text_pressed_light=0x7f020025;
+        public static final int custom_marker=0x7f020026;
+        public static final int googleplaceslogo=0x7f020027;
+        public static final int ic_launcher=0x7f020028;
+        public static final int ic_plusone_medium_off_client=0x7f020029;
+        public static final int ic_plusone_small_off_client=0x7f02002a;
+        public static final int ic_plusone_standard_off_client=0x7f02002b;
+        public static final int ic_plusone_tall_off_client=0x7f02002c;
+        public static final int list_focused_appbasetheme=0x7f02002d;
+        public static final int list_pressed_appbasetheme=0x7f02002e;
+        public static final int logo=0x7f02002f;
+        public static final int menu_dropdown_panel_appbasetheme=0x7f020030;
+        public static final int plus=0x7f020031;
+        public static final int progress_bg_appbasetheme=0x7f020032;
+        public static final int progress_horizontal_appbasetheme=0x7f020033;
+        public static final int progress_primary_appbasetheme=0x7f020034;
+        public static final int progress_secondary_appbasetheme=0x7f020035;
+        public static final int resizedbitmap_placeholder=0x7f020036;
+        public static final int selectable_background_appbasetheme=0x7f020037;
+        public static final int slr_camera=0x7f020038;
+        public static final int spinner_ab_default_appbasetheme=0x7f020039;
+        public static final int spinner_ab_disabled_appbasetheme=0x7f02003a;
+        public static final int spinner_ab_focused_appbasetheme=0x7f02003b;
+        public static final int spinner_ab_pressed_appbasetheme=0x7f02003c;
+        public static final int spinner_background_ab_appbasetheme=0x7f02003d;
+        public static final int tab_indicator_ab_appbasetheme=0x7f02003e;
+        public static final int tab_selected_appbasetheme=0x7f02003f;
+        public static final int tab_selected_focused_appbasetheme=0x7f020040;
+        public static final int tab_selected_pressed_appbasetheme=0x7f020041;
+        public static final int tab_unselected_appbasetheme=0x7f020042;
+        public static final int tab_unselected_focused_appbasetheme=0x7f020043;
+        public static final int tab_unselected_pressed_appbasetheme=0x7f020044;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f050005;
-        public static final int action_settings=0x7f05000d;
-        public static final int button1=0x7f050006;
-        public static final int button2=0x7f050007;
-        public static final int button3=0x7f050008;
-        public static final int button4=0x7f050009;
-        public static final int camera_preview=0x7f05000b;
+        public static final int FrameLayout1=0x7f05000e;
+        public static final int LinearLayout1=0x7f050010;
+        public static final int LinearLayoutImage=0x7f050007;
+        public static final int LinearLayoutcR=0x7f050005;
+        public static final int action_settings=0x7f050016;
+        public static final int camera_preview=0x7f05000d;
+        public static final int cr_map=0x7f050009;
+        public static final int customMarker=0x7f05000b;
+        public static final int fragment=0x7f05000f;
+        public static final int horizontalScrollView1=0x7f050006;
         public static final int hybrid=0x7f050004;
-        public static final int map=0x7f05000c;
-        public static final int newRoute=0x7f05000a;
+        public static final int imageView1=0x7f050014;
+        public static final int imagebutton1=0x7f05000a;
+        public static final int linlayoutland=0x7f050013;
+        public static final int listView1=0x7f050012;
+        public static final int map=0x7f050011;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
+        public static final int resizedBitmap_Placeholder=0x7f05000c;
+        public static final int routename=0x7f050015;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
+        public static final int txtViewPic=0x7f050008;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
+        public static final int weightDetailMap=0x7f070005;
+        public static final int weightMainList=0x7f070002;
+        public static final int weightMainMap=0x7f070001;
+        public static final int weightPictureView=0x7f070004;
+        public static final int weightTextBarMainMap=0x7f070003;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int kamera_activity=0x7f030001;
-        public static final int map_activity=0x7f030002;
+        public static final int cr_fragment=0x7f030000;
+        public static final int custom_marker_layout=0x7f030001;
+        public static final int kamera_activity=0x7f030002;
+        public static final int main_activity=0x7f030003;
+        public static final int main_fragment=0x7f030004;
+        public static final int picture=0x7f030005;
+        public static final int routename_dialog=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
@@ -340,16 +400,11 @@ containing a value of this type.
         public static final int stop_service=0x7f060021;
     }
     public static final class style {
+        public static final int ActionBar_Solid_Appbasetheme=0x7f090001;
+        public static final int ActionBar_Transparent_Appbasetheme=0x7f090003;
+        public static final int ActionBarTabStyle_Appbasetheme=0x7f090006;
+        public static final int ActionButton_CloseMode_Appbasetheme=0x7f090009;
         /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
-
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     
@@ -361,11 +416,16 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f090000;
-        /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
+        public static final int AppBaseTheme=0x7f09000b;
+        public static final int DropDownListView_Appbasetheme=0x7f090005;
+        public static final int DropDownNav_Appbasetheme=0x7f090007;
+        public static final int MyTheme_ActionBar_TitleTextStyle=0x7f090002;
+        public static final int PopupMenu_Appbasetheme=0x7f090004;
+        public static final int ProgressBar_Appbasetheme=0x7f090008;
+        public static final int Theme_Appbasetheme=0x7f090000;
+        /**  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int AppTheme=0x7f090001;
+        public static final int Theme_Appbasetheme_Widget=0x7f09000a;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.

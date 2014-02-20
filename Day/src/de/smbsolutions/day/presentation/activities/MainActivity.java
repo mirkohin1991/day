@@ -1,131 +1,114 @@
 package de.smbsolutions.day.presentation.activities;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
+import android.support.v4.app.FragmentActivity;
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.services.TrackingService;
-import de.smbsolutions.day.functions.services.TrackingService.ServiceBinder;
+import de.smbsolutions.day.functions.interfaces.MainCallback;
+import de.smbsolutions.day.functions.objects.Route;
+import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.presentation.fragments.crFragment;
+import de.smbsolutions.day.presentation.fragments.mainFragment;
+import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 
-public class MainActivity extends Activity {
-	
-	private static Handler trackingHandler;
-	
-	
-	//KONKRETE VERBINDUNG ZUM SERVICE, ZUGRIFF ÜBER DIE DEFINIERTEN METHODEN DES BINDERS der TRACKINGSERVICE KLASSE.
-	//DA WIR ABER NUR REGELMÄßIG die GPS DATEN SPEICHERN WOLLEN; BRAUCHEN WIR DIE VERBINDUNG ZUNÄCHST NICHT.
-	//BUCH um S.180
-//	private ServiceConnection serviceConn = new ServiceConnection() {
-//		
-//		@Override
-//		public void onServiceDisconnected(ComponentName name) {
-//			// TODO Auto-generated method stub
-//		}
-//		
-//		@Override
-//		public void onServiceConnected(ComponentName className, IBinder binder) {
-//			// TODO Auto-generated method stub
-//	
-//			((ServiceBinder) binder).setAcitivityCallbackHandler ( trackingHandler);
-//			
-//		}
-//	};
-	
+public class MainActivity extends FragmentActivity implements MainCallback {
+
+	private android.support.v4.app.Fragment mfrag;
+	private android.support.v4.app.Fragment crFrag;
+	private String tag;
+
+	/** Called when the activity is first created. */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-		Database.getInstance(this);
-	
-			
-	}
-	public void onButtonClick(View view){
-		Button startButton = (Button) findViewById(R.id.button3);
-		Button stopButton = (Button) findViewById(R.id.button4);
-		switch (view.getId()) {
-		case R.id.button1:
-			startActivity(new Intent(this, MapActivity.class));
-			break;
-		case R.id.button2:
-			startActivity(new Intent(this,KameraActivity.class));
-			break;
-			
-		case R.id.button3:
-			startService(new Intent(this, TrackingService.class));
-			startButton.setEnabled(false);
-			stopButton.setEnabled(true);
-			
-			break;
-		case R.id.button4:
-			
-			stopService(new Intent(this, TrackingService.class));
-			startButton.setEnabled(true);
-			stopButton.setEnabled(false);
-//			Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL, 5000);
-		
-			break;
-			
-		case R.id.newRoute:
-			
-			RouteNameDialog dialog = new RouteNameDialog();
-	        //Showing the popup / Second Parameter: Unique Name, that is used to identify the dialog
-			dialog.show(getFragmentManager(), "NameDialog");
-			
-		default:
-			break;
-		}
-	}
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(null);
+		setContentView(R.layout.main_activity);
+		mfrag = new mainFragment();
+		tag = mfrag.getClass().getName();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, mfrag, tag).commit();
+
 	}
 
 	@Override
-	protected void onPause() {
+	public void onItemSelected(int position) {
 		// TODO Auto-generated method stub
-		super.onPause();
+
 	}
 
 	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		super.onRestart();
+	public void onNewRouteStarted(Route route) {
+
+		crFrag = new crFragment();
+		tag = crFrag.getClass().getName();
+
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		// Übergabe Index selektierte Route
+
+		crFrag.setArguments(bundle);
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, crFrag, tag).addToBackStack(tag)
+				.commit();
 	}
 
 	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
+	public void onShowRoute(Route route) {
+		// fragmen avaiable?
+		crFrag = new crFragment();
+		tag = crFrag.getClass().getName();
+
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		crFrag.setArguments(bundle);
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, crFrag, tag).addToBackStack(tag)
+				.commit();
+
 	}
 
 	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
+	public void onOpenDialogNewRoute(RouteList routeList) {
+		RouteNameDialog dialog = new RouteNameDialog();
+		Bundle bundle = new Bundle();
+
+		bundle.putSerializable("routeList", routeList);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "NameDialog");
+
 	}
 
 	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
+	public void onLongItemSelected(RouteList routeList, int index) {
+
+		DeleteDialog dialog = new DeleteDialog();
+		Bundle bundle = new Bundle();
+		bundle.putInt("routeIndex", index);
+		bundle.putSerializable("routeList", routeList);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "DeleteDialog");
+
 	}
 
-	
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	@Override
+	public void onDeleteRoute() {
+		mfrag = new mainFragment();
+		tag = mfrag.getClass().getName();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, mfrag, tag).commit();
+
+	}
+
+	@Override
+	public void onCamStart(Route route) {
+
 	}
 
 }
