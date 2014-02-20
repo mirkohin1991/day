@@ -31,7 +31,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
@@ -193,7 +192,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 
 	public View insertPhoto(String path) {
 		Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
-
+		
 		LinearLayout layout = new LinearLayout(getActivity());
 		layout.setLayoutParams(new LayoutParams(250, 250));
 		layout.setGravity(Gravity.CENTER);
