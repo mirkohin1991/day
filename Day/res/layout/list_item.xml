@@ -36,13 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="test2"
-            android:textColor="@drawable/textcolor_selected_item"
+            android:textColor="#80669900"
             android:textSize="18dp" />
 
             <Button
                 android:id="@+id/imagebuttonDetails"
-                android:layout_width="50px"
-                android:layout_height="50px"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:background="@drawable/icon_arrow"
                 android:clickable="true"
                 android:focusable="false"

@@ -268,8 +268,7 @@ containing a value of this type.
         public static final int tab_unselected_appbasetheme=0x7f020046;
         public static final int tab_unselected_focused_appbasetheme=0x7f020047;
         public static final int tab_unselected_pressed_appbasetheme=0x7f020048;
-        public static final int textcolor_selected_item=0x7f020049;
-        public static final int view_detailsneu=0x7f02004a;
+        public static final int view_detailsneu=0x7f020049;
     }
     public static final class id {
         public static final int FrameLayout1=0x7f050017;

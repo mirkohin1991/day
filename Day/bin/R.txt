@@ -107,8 +107,7 @@ int drawable tab_selected_pressed_appbasetheme 0x7f020045
 int drawable tab_unselected_appbasetheme 0x7f020046
 int drawable tab_unselected_focused_appbasetheme 0x7f020047
 int drawable tab_unselected_pressed_appbasetheme 0x7f020048
-int drawable textcolor_selected_item 0x7f020049
-int drawable view_detailsneu 0x7f02004a
+int drawable view_detailsneu 0x7f020049
 int id FrameLayout1 0x7f050017
 int id LinearLayout1 0x7f050019
 int id LinearLayoutImage 0x7f05000b

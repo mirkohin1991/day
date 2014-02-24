@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="...ist aktiv"
-            android:textColor="@drawable/textcolor_selected_item"
+            android:textColor="#80669900"
             android:textSize="18sp" />
            
 
