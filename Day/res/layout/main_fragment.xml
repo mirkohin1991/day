@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="@integer/weightTextBarMainMap"
-                    android:background="#80669900" >
+                    android:background="@color/lightgreen" >
 
                     <TextView
                         android:id="@+id/txtViewPic"
@@ -49,7 +49,7 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:text="TextView"
-                        android:textColor="@color/Weiß"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/h1" />
 
                     <Button
@@ -59,7 +59,7 @@
                         android:layout_weight="1"
                         android:background="#00000000"
                         android:text="Button"
-                        android:textColor="@color/Weiß"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/h1" />
                 </LinearLayout>
             </LinearLayout>

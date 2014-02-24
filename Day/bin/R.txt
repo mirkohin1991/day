@@ -15,7 +15,6 @@ int attr uiZoomControls 0x7f01000d
 int attr uiZoomGestures 0x7f01000e
 int attr useViewLifecycle 0x7f01000f
 int attr zOrderOnTop 0x7f010010
-int color Weiß 0x7f04000a
 int color common_action_bar_splitter 0x7f040009
 int color common_signin_btn_dark_text_default 0x7f040000
 int color common_signin_btn_dark_text_disabled 0x7f040002
@@ -26,8 +25,10 @@ int color common_signin_btn_light_text_default 0x7f040004
 int color common_signin_btn_light_text_disabled 0x7f040006
 int color common_signin_btn_light_text_focused 0x7f040007
 int color common_signin_btn_light_text_pressed 0x7f040005
-int color common_signin_btn_text_dark 0x7f04000b
-int color common_signin_btn_text_light 0x7f04000c
+int color common_signin_btn_text_dark 0x7f04000c
+int color common_signin_btn_text_light 0x7f04000d
+int color lightgreen 0x7f04000b
+int color white 0x7f04000a
 int dimen activity_horizontal_margin 0x7f080000
 int dimen activity_vertical_margin 0x7f080001
 int dimen h1 0x7f080002
@@ -142,6 +143,7 @@ int id textRouteNameActive 0x7f050005
 int id txtViewPic 0x7f05000c
 int id vf 0x7f05001b
 int integer google_play_services_version 0x7f070000
+int integer lengthRouteName 0x7f070006
 int integer weightDetailMap 0x7f070005
 int integer weightMainList 0x7f070002
 int integer weightMainMap 0x7f070001

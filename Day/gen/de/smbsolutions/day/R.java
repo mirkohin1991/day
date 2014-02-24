@@ -164,7 +164,6 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f010010;
     }
     public static final class color {
-        public static final int Weiß=0x7f04000a;
         public static final int common_action_bar_splitter=0x7f040009;
         /**  Sign-in Button Colors 
          */
@@ -177,8 +176,10 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f040006;
         public static final int common_signin_btn_light_text_focused=0x7f040007;
         public static final int common_signin_btn_light_text_pressed=0x7f040005;
-        public static final int common_signin_btn_text_dark=0x7f04000b;
-        public static final int common_signin_btn_text_light=0x7f04000c;
+        public static final int common_signin_btn_text_dark=0x7f04000c;
+        public static final int common_signin_btn_text_light=0x7f04000d;
+        public static final int lightgreen=0x7f04000b;
+        public static final int white=0x7f04000a;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -307,6 +308,7 @@ containing a value of this type.
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
+        public static final int lengthRouteName=0x7f070006;
         public static final int weightDetailMap=0x7f070005;
         public static final int weightMainList=0x7f070002;
         public static final int weightMainMap=0x7f070001;
