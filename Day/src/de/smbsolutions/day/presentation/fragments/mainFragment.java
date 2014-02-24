@@ -133,9 +133,9 @@ public class mainFragment extends android.support.v4.app.Fragment {
 			// viewflipper are used to change views at the same position
 			viewFlipper = (ViewFlipper) view.findViewById(R.id.vf);
 
-			map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			map.getUiSettings().setZoomControlsEnabled(false);
-			map.setPadding(0, 70, 0, 70);
+			map.setPadding(0, 70, 0, 0);
 			// get views from fragment
 			meineListView = (ListView) view.findViewById(R.id.listView1);
 			List<ListElement> meineListe = new ArrayList<ListElement>();
@@ -168,13 +168,10 @@ public class mainFragment extends android.support.v4.app.Fragment {
 						.findViewById(R.id.imagebuttonContinue);
 
 			} else {
-
 				// Showing the "create new route item"
 				viewFlipper.setDisplayedChild(0);
-
 				btnCreateRoute = (Button) view
 						.findViewById(R.id.imagebuttonCreate);
-
 			}
 
 			LinearLayout linleaLayout = (LinearLayout) view
