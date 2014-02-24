@@ -128,55 +128,55 @@ public class Route implements Parcelable {
 		// add markers to map
 
 		for (RoutePoint point : this.routePoints) {
+		
+				if (point.getPicture() != null && details == true ) {
+					File pic = new File(point.getPicture());
+					Uri uri = Uri.fromFile(pic);
 
-			if (point.getPicture() != null && details == true) {
-				File pic = new File(point.getPicture());
-				Uri uri = Uri.fromFile(pic);
+					try {
+						bitmap = MediaStore.Images.Media.getBitmap(
+								context.getContentResolver(), uri);
 
-				try {
-					bitmap = MediaStore.Images.Media.getBitmap(
-							context.getContentResolver(), uri);
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					
+				
 
 				// A image is available and it shall be displayed (details =
 				// true)
 				if (bitmap != null && details == true) {
+					
+					Bitmap background = BitmapFactory.decodeResource(context.getResources(), R.drawable.custom_marker);
 
-					Bitmap background = BitmapFactory.decodeResource(
-							context.getResources(), R.drawable.custom_marker);
+                	Bitmap resizedBitmap_Placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.resizedbitmap_placeholder);
+                	
+ 
 
-					Bitmap resizedBitmap_Placeholder = BitmapFactory
-							.decodeResource(context.getResources(),
-									R.drawable.resizedbitmap_placeholder);
-
+                			
 					int bgwidth = resizedBitmap_Placeholder.getWidth();
 					int bgheight = resizedBitmap_Placeholder.getHeight();
 
+                	
+
 					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
-					MarkerOptions markerOpt = new MarkerOptions()
-							.position(
-									new LatLng(point.getLatitude(), point
-											.getLongitude()))
-							.icon(BitmapDescriptorFactory.fromBitmap(this
-									.overlay(background,
-											resizedBitmap_Placeholder, bitmap)))
+					MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(point.getLatitude(), point.getLongitude()))
+							.icon(BitmapDescriptorFactory.fromBitmap(this.overlay(background, resizedBitmap_Placeholder, bitmap)))
 							.title("Ihr aktueller Standort");
-					//
-					// bitmap = getResizedBitmap(bitmap, 80, 80);
-					//
-					// MarkerOptions markerOpt = new MarkerOptions()
-					// .position(
-					// new LatLng(point.getLatitude(), point
-					// .getLongitude()))
-					// .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-					// .title("Ihr aktueller Standort");
+//					
+//					bitmap = getResizedBitmap(bitmap, 80, 80);
+//
+//					MarkerOptions markerOpt = new MarkerOptions()
+//							.position(
+//									new LatLng(point.getLatitude(), point
+//											.getLongitude()))
+//							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+//							.title("Ihr aktueller Standort");
 
 					polylineOptions.add(new LatLng(point.getLatitude(), point
 							.getLongitude()));
@@ -264,47 +264,57 @@ public class Route implements Parcelable {
 
 	public static Bitmap getResizedBitmap(Bitmap image, int bgheight,
 			int bgwidth) {
-
+		
+	
 		int width = image.getWidth();
-		int height = image.getHeight();
-		int newWidth = bgwidth;
-		int newHeight = bgheight;
+        int height = image.getHeight();
+        int newWidth = bgwidth;
+        int newHeight = bgheight;
+   
+        
+        // calculate the scale
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
 
-		// calculate the scale
-		float scaleWidth = ((float) newWidth) / width;
-		float scaleHeight = ((float) newHeight) / height;
 
-		// create matrix for the manipulation
-		Matrix matrix = new Matrix();
+        
+     // create matrix for the manipulation
+        Matrix matrix = new Matrix();
 
-		// resize the bit map
-		matrix.postScale(scaleWidth, scaleHeight);
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+        
+        
+ 
+        
+        
+//        rotate bitmap
+//        if (height > width){
+//            matrix.postRotate(90);
+//            }
+        
+        // recreate the new Bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0,
+                          width, height, matrix, true);
 
-		// rotate bitmap
-		// if (height > width){
-		// matrix.postRotate(90);
-		// }
-
-		// recreate the new Bitmap
-		Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height,
-				matrix, true);
-
-		return resizedBitmap;
+		return resizedBitmap;		
 	}
-
-	public static Bitmap overlay(Bitmap background,
-			Bitmap resizedBitmap_Placeholder, Bitmap resizedBitmap) {
-		Bitmap bmOverlay = Bitmap.createBitmap(background.getWidth(),
-				background.getHeight(), background.getConfig());
-		Bitmap bmOverlay2 = Bitmap.createBitmap(resizedBitmap.getWidth(),
-				resizedBitmap.getHeight(), resizedBitmap.getConfig());
-
+	
+	
+	
+	public static Bitmap overlay(Bitmap background, Bitmap resizedBitmap_Placeholder, Bitmap resizedBitmap) {
+		Bitmap bmOverlay = Bitmap.createBitmap(background.getWidth(), background.getHeight(), background.getConfig());
+        Bitmap bmOverlay2 = Bitmap.createBitmap(resizedBitmap.getWidth(), resizedBitmap.getHeight(), resizedBitmap.getConfig());
+		
 		Canvas canvas = new Canvas(bmOverlay);
-		canvas.drawBitmap(resizedBitmap, 7, 7, null);
+		canvas.drawBitmap(resizedBitmap, 7, 7, null);  
 		canvas.drawBitmap(background, 0, 0, null);
-
-		return bmOverlay;
-	}
+        
+        
+        
+        return bmOverlay;
+    }
+	
 
 	public String getDate() {
 		return date;
