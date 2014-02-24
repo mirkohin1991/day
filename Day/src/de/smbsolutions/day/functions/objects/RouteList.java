@@ -48,6 +48,8 @@ public class RouteList implements Serializable {
 
 	public boolean isOpenRoute() {
 
+		
+		// It's enough to check the last route because the routes are sorted chronologically 
 		if (getlastRoute().getActive().equals("X")) {
 
 			return true;

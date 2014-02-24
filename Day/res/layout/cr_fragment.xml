@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.25"
-            android:background="@color/Weiß" >
+            android:background="@color/white" >
 
             <LinearLayout
                 android:id="@+id/LinearLayoutImage"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@color/Weiß" />
+            android:background="@color/white" />
     </RelativeLayout>
 
     <LinearLayout
@@ -84,7 +84,7 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/slr_camera"
                         android:text="Button"
-                        android:textColor="@color/Weiß"
+                        android:textColor="@color/white"
                         android:textSize="25dp" />
 
                 </LinearLayout>

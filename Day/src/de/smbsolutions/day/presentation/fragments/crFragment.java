@@ -148,6 +148,12 @@ public class crFragment extends android.support.v4.app.Fragment {
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
+        
+		//Closed routes cannot generate a new picture
+		if (route.getActive().equals("")) {
+         imageButton.setVisibility(View.INVISIBLE);
+		}
+
 		linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
 

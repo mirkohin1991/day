@@ -10,6 +10,7 @@ import de.smbsolutions.day.presentation.fragments.crFragment;
 import de.smbsolutions.day.presentation.fragments.mainFragment;
 import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
+import de.smbsolutions.day.presentation.popups.StopRouteDialog;
 
 public class MainActivity extends FragmentActivity implements MainCallback {
 
@@ -96,6 +97,24 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		dialog.show(getSupportFragmentManager(), "DeleteDialog");
 
 	}
+	
+	@Override
+	public void onStopPopup(RouteList routeList) {
+
+		StopRouteDialog dialog = new StopRouteDialog();
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("routeList", routeList);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "StopRouteDialog");
+
+	}
+	
+	
+	
+	
 
 	@Override
 	public void onDeleteRoute() {
@@ -105,6 +124,19 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				.replace(R.id.fragment, mfrag, tag).commit();
 
 	}
+	
+	//GLEICH WIE DELETE ROUTE
+	@Override
+	public void onStopRoute() {
+		mfrag = new mainFragment();
+		tag = mfrag.getClass().getName();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.fragment, mfrag, tag).commit();
+
+	}
+	
+	
+	
 
 	@Override
 	public void onCamStart(Route route) {

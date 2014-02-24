@@ -5,6 +5,7 @@
       <integer name="weightTextBarMainMap">1</integer>
       <integer name="weightPictureView">1</integer>
           <integer name ="weightDetailMap">7</integer>
+          <integer name="lengthRouteName"> 50</integer>
        
        
     
