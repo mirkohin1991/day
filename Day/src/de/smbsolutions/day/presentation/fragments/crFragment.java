@@ -158,10 +158,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 				linlayout.removeView(view.findViewById(R.id.RelativeHorizontalScrollViewLayout));
 			}
 		
-		
-			LinearLayout linlayout = (LinearLayout) view.findViewById(R.id.LinearLayoutcR);
-			// RelativeLayout rellayout = (RelativeLayout) view.findViewById(R.id.RelativeHorizontalScrollViewLayout);
-			linlayout.removeView(view.findViewById(R.id.RelativeHorizontalScrollViewLayout));
+
 		
         
 		//Closed routes cannot generate a new picture
