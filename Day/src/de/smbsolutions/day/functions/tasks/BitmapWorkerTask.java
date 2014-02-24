@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
@@ -16,33 +17,45 @@ import android.widget.LinearLayout;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
-public class BitmapWorkerTask extends AsyncTask<Route, Void, List<Bitmap>> {
+public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private final WeakReference<LinearLayout> layoutReference;
 	private Route route;
 	private File targetDirector;
-	private List<Bitmap> bml;
+	private List<ImageView> bml;
 	private Context context;
 	private LinearLayout layout;
+	LinearLayout myGallery;
 
 	public BitmapWorkerTask(LinearLayout layout, Context context) {
 		// Use a WeakReference to ensure the ImageView can be garbage collected
 		layoutReference = new WeakReference<LinearLayout>(layout);
 		this.context = context;
-		bml = new ArrayList<Bitmap>();
+		bml = new ArrayList<ImageView>();
 
 	}
 
 	// Decode image in background.
 	@Override
-	protected List<Bitmap> doInBackground(Route... params) {
+	protected List<ImageView> doInBackground(Route... params) {
+
 		route = params[0];
+		layout = new LinearLayout(context);
+		// layout.setLayoutParams(LayoutParams.MATCH_PARENT,
+		// LayoutParams.MATCH_PARENT);
+		layout.setGravity(Gravity.CENTER);
 		for (RoutePoint point : route.getRoutePoints()) {
 			if (point.getPicture() != null) {
+
 				targetDirector = new File(point.getPicture());
 				Bitmap bm = decodeSampledBitmapFromUri(
-						targetDirector.getPath(), 220, 220);
+						targetDirector.getPath(), 220, 220);//richtige größe?
 				if (bm != null) {
-					bml.add(bm);
+					
+					ImageView imageView = new ImageView(context);
+					imageView.setLayoutParams(new LayoutParams(220, 220));
+					imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+					imageView.setImageBitmap(bm);
+					bml.add(imageView);
 				}
 
 			}
@@ -52,26 +65,16 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<Bitmap>> {
 	}
 
 	@Override
-	protected void onPostExecute(List<Bitmap> bitmaps) {
+	protected void onPostExecute(List<ImageView> images) {
 		if (layoutReference != null && bml != null) {
-			final LinearLayout myGallery = layoutReference.get();
+
+			myGallery = layoutReference.get();
 			if (myGallery != null) {
-				LinearLayout layoutv = new LinearLayout(context);
-				for (Bitmap bitmap : bitmaps) {
-					layoutv = new LinearLayout(context);
-					layoutv.setLayoutParams(new LayoutParams(250, 250));
-					layoutv.setGravity(Gravity.CENTER);
-					ImageView imageView = new ImageView(context);
-					imageView.setLayoutParams(new LayoutParams(220, 220));
-					imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-					imageView.setImageBitmap(bitmap);
-
-					layoutv.addView(imageView);
-
+				for (ImageView image : images) {
+					layout.addView(image);
 				}
-				myGallery.addView(layoutv);
-				int x = 0;
-				x++;
+				myGallery.addView(layout);
+
 			}
 		}
 	}

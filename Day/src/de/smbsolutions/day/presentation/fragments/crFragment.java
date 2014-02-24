@@ -61,7 +61,10 @@ public class crFragment extends android.support.v4.app.Fragment {
 		config = getResources().getConfiguration();
 
 		view = inflater.inflate(R.layout.cr_fragment, container, false);
-
+		data = getArguments();
+		route = (Route) data.getParcelable("route");
+		index = data.getInt("index");
+		addPhotos2Gallery();
 		return view;
 
 	}
@@ -76,6 +79,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnButtonClick Interface");
 		}
+
 	}
 
 	@Override
@@ -92,10 +96,6 @@ public class crFragment extends android.support.v4.app.Fragment {
 
 	public void onResume() {
 		super.onResume();
-
-		data = getArguments();
-		route = (Route) data.getParcelable("route");
-		index = data.getInt("index");
 
 		if (map == null) {
 			map = fragment.getMap();
@@ -141,6 +141,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 	}
 
 	public void initializeFragmentPortrait() {
+
 		map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		map.setPadding(0, 100, 0, 100);
 		map.getUiSettings().setZoomControlsEnabled(false);
@@ -155,10 +156,11 @@ public class crFragment extends android.support.v4.app.Fragment {
 						if (route != null) {
 							if (mapPrepared == false) {
 								map = route
-										.prepareMap(map, getActivity(), true);
+										.prepareMap(map, getActivity(), false);
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
-//								addPhotos2Gallery();
+						
+
 							}
 
 						}
@@ -166,21 +168,19 @@ public class crFragment extends android.support.v4.app.Fragment {
 					}
 
 				});
-		
+
 	}
 
 	public void addPhotos2Gallery() {
 		LinearLayout myGallery = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutImage);
-	
+
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
 		task.execute(route);
-	
 
 	}
-
 
 	public void addButtonClickListener(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
