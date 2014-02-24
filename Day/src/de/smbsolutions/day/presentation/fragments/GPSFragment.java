@@ -46,7 +46,7 @@ public class GPSFragment extends Fragment {
         	
         switchGPSOnOff.setChecked(true);
         seekBarFrequency.setEnabled(true);
-    	actSec.setText("Aktuell: " + Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) + " Sekunden");
+    	actSec.setText("Aktuell: " + Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 100 + " Sekunden");
     	
         }
         else {

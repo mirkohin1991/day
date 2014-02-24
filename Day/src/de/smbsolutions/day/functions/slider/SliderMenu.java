@@ -215,14 +215,18 @@ public class SliderMenu{
 //			Einstellungen
 			break;
 		
-		case 5:
+		case 4:
 //			GPS
 			fragment = new GPSFragment();
 			break;
 			
-		case 6:
+		case 5:
 //			Kamera
 			fragment = new CameraFragment();
+			break;
+			
+		case 6:
+			//Info
 			break;
 
 		default:
