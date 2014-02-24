@@ -5,10 +5,6 @@
     android:layout_gravity="center_horizontal"
     android:background="#ECECEC"
     android:orientation="horizontal" >
-    <!--
-    Setting the background to lightgreen. If it is a element of the list later on it is overwritten and changed
-    to white
-    -->
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -25,48 +21,23 @@
             android:textColor="#333"
             android:textSize="20dp" />
 
-    <!--     <TextView
-            android:id="@+id/textRouteDateActive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="test2"
-            android:textColor="@drawable/textcolor_selected_item"
-            android:textSize="18sp" />
-            -->
-
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="horizontal" >
-            
-          <!--    <Button
-                android:id="@+id/imagebuttonContinue"
-                android:layout_width="50px"
-                android:layout_height="50px"
-                android:background="@drawable/icon_continue"
-                android:clickable="true"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:textColor="@color/Weiß"
-                android:textSize="@dimen/h1" />
-             --> 
-                     <Button
+
+            <Button
                 android:id="@+id/imagebuttonCreate"
-                android:layout_width="50px"
-                android:layout_height="50px"
-                android:background="@drawable/icon_create_route_small"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/icon_new_route"
                 android:clickable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/h1" />
-            
-            
         </LinearLayout>
-        
-        
     </LinearLayout>
 
 </LinearLayout>
