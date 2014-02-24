@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
@@ -44,10 +45,11 @@ public class mainFragment extends android.support.v4.app.Fragment {
 	private TextView txtView;
 	private ListView meineListView;
 	private Button startButton;
-	private Button btnStopRoute;
+	// private Button btnStopRoute;
 	private Button btnContinueRoute;
 	private Button btnCreateRoute;
-	private ViewFlipper viewFlipper;
+	private ViewFlipper vfNewOrCurrent;
+	private ViewFlipper vfPauseOrRun;
 	private Configuration config;
 	private Route sel_Route;
 	private int index = 0;
@@ -131,7 +133,11 @@ public class mainFragment extends android.support.v4.app.Fragment {
 		try {
 
 			// viewflipper are used to change views at the same position
-			viewFlipper = (ViewFlipper) view.findViewById(R.id.vf);
+			//--> Flipper to change between current route view and create route view
+			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
+			
+			
+			
 
 			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			map.getUiSettings().setZoomControlsEnabled(false);
@@ -162,14 +168,14 @@ public class mainFragment extends android.support.v4.app.Fragment {
 						.findViewById(R.id.textRouteNameActive);
 				txtRouteName.setText(routeList.getlastRoute().getRouteName());
 				// Showing the current active route as the first item
-				viewFlipper.setDisplayedChild(1);
-				btnStopRoute = (Button) view.findViewById(R.id.imagebuttonStop);
+				vfNewOrCurrent.setDisplayedChild(1);
+			//	btnStopRoute = (Button) view.findViewById(R.id.imagebuttonStop);
 				btnContinueRoute = (Button) view
 						.findViewById(R.id.imagebuttonContinue);
 
 			} else {
 				// Showing the "create new route item"
-				viewFlipper.setDisplayedChild(0);
+				vfNewOrCurrent.setDisplayedChild(0);
 				btnCreateRoute = (Button) view
 						.findViewById(R.id.imagebuttonCreate);
 			}
@@ -195,10 +201,10 @@ public class mainFragment extends android.support.v4.app.Fragment {
 
 							// Child == 1 --> the "active route item" layout is
 							// displayed
-							if (viewFlipper.getDisplayedChild() == 1) {
+							if (vfNewOrCurrent.getDisplayedChild() == 1) {
 
 								addButtonClickListenerContinue(btnContinueRoute);
-								addButtonClickListenerStop(btnStopRoute);
+							//	addButtonClickListenerStop(btnStopRoute);
 
 								// Getting the whole line (including the two
 								// buttons)
@@ -209,7 +215,7 @@ public class mainFragment extends android.support.v4.app.Fragment {
 
 								// No current route -> add listener to create
 								// new one
-							} else if (viewFlipper.getDisplayedChild() == 0) {
+							} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
 
 								View viewInclude = (View) view
 										.findViewById(R.id.includeNewElement);
@@ -269,25 +275,25 @@ public class mainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	public void addButtonClickListenerStop(Button button) {
-		button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				// SOLLTE ABER EIGENTLICH IMMER OFFEN SEIN, NUR DANN WIRD
-				// NÄMLICH DER LISTENER GESETZT
-				if (routeList.isOpenRoute()) {
-					// A route is active -> user wants to stop it
-
-					mCallback.onStopPopup(routeList);
-
-				}
-
-			}
-		});
-
-	}
+//	public void addButtonClickListenerStop(Button button) {
+//		button.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				// SOLLTE ABER EIGENTLICH IMMER OFFEN SEIN, NUR DANN WIRD
+//				// NÄMLICH DER LISTENER GESETZT
+//				if (routeList.isOpenRoute()) {
+//					// A route is active -> user wants to stop it
+//
+//					mCallback.onStopPopup(routeList);
+//
+//				}
+//
+//			}
+//		});
+//
+//	}
 
 	public void addButtonClickListenerContinue(Button button) {
 		button.setOnClickListener(new OnClickListener() {
@@ -364,32 +370,26 @@ public class mainFragment extends android.support.v4.app.Fragment {
 
 			}
 		});
+		
+		
+		view.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (routeList.isOpenRoute()) {
+					// A route is active -> user wants to stop it
+
+					mCallback.onStopPopup(routeList);
+
+				}
+				return false;
+			}
+		});
 
 	}
 
-	// public void addButtonClickListener(Button button) {
-	//
-	// button.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// if (routeList.isOpenRoute()) {
-	// // A route is active -> user wants to stop it
-	//
-	// mCallback.onStopPopup(routeList);
-	//
-	//
-	//
-	// } else {
-	// // Route not active -> start new one
-	// mCallback.onOpenDialogNewRoute(routeList);
-	//
-	// }
-	//
-	// }
-	// });
-	//
-	// }
+
 
 	public void addListitemListender(ListView listView) {
 

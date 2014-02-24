@@ -42,6 +42,9 @@
             android:gravity="right"
             android:orientation="horizontal" >
             
+          
+             
+            
              <Button
                 android:id="@+id/imagebuttonContinue"
                 android:layout_width="35dp"
@@ -52,7 +55,7 @@
                 android:focusableInTouchMode="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/h1" />
-             
+           <!--   
                      <Button
                 android:id="@+id/imagebuttonStop"
                 android:layout_width="35dp"
@@ -62,7 +65,9 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/h1" />
+                android:textSize="@dimen/h1" /> -->
+                     
+                    
             
             
         </LinearLayout>

@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="#ECECEC"
+    android:background="#e4e4e4"
     android:orientation="horizontal" >
     <!--
     Setting the background to lightgreen. If it is a element of the list later on it is overwritten and changed
