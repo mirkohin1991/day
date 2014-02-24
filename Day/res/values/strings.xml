@@ -31,10 +31,11 @@
         <item>Landkarte</item>
         <item>Sattelite</item>
         <item>Terrain</item>
-        <item/>
         <item>Einstellungen</item>
         <item>GPS</item>
         <item>Kamera</item>
+        <item>Infos zur App</item>
+         <item/>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -43,13 +44,14 @@
     <!-- Keep them in order as the titles are in -->
 
     <array name="nav_drawer_icons">
-        <item/>
-        <item/>
-        <item/>
-        <item/>
-        <item/>
+       <item>@drawable/ic_gps</item>
+        <item>@drawable/ic_gps</item>
         <item>@drawable/ic_gps</item>
         <item/>
+        <item>@drawable/ic_gps</item>
+        <item>@drawable/ic_gps</item>
+         <item>@drawable/ic_gps</item>
+          <item/>
     </array>
 
     <!-- Content Description -->
