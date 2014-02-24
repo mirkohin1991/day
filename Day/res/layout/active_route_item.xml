@@ -43,8 +43,8 @@
             
              <Button
                 android:id="@+id/imagebuttonContinue"
-                android:layout_width="50px"
-                android:layout_height="50px"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/icon_continue"
                 android:clickable="true"
                 android:focusable="false"
@@ -54,8 +54,8 @@
              
                      <Button
                 android:id="@+id/imagebuttonStop"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/stop_small"
                 android:clickable="true"
                 android:focusable="false"
