@@ -35,6 +35,7 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
+import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
 public class crFragment extends android.support.v4.app.Fragment {
 
@@ -60,7 +61,10 @@ public class crFragment extends android.support.v4.app.Fragment {
 		config = getResources().getConfiguration();
 
 		view = inflater.inflate(R.layout.cr_fragment, container, false);
-
+		data = getArguments();
+		route = (Route) data.getParcelable("route");
+		index = data.getInt("index");
+		addPhotos2Gallery();
 		return view;
 
 	}
@@ -75,6 +79,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnButtonClick Interface");
 		}
+
 	}
 
 	@Override
@@ -91,10 +96,6 @@ public class crFragment extends android.support.v4.app.Fragment {
 
 	public void onResume() {
 		super.onResume();
-
-		data = getArguments();
-		route = (Route) data.getParcelable("route");
-		index = data.getInt("index");
 
 		if (map == null) {
 			map = fragment.getMap();
@@ -140,6 +141,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 	}
 
 	public void initializeFragmentPortrait() {
+
 		map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		map.setPadding(0, 100, 0, 100);
 		map.getUiSettings().setZoomControlsEnabled(false);
@@ -154,9 +156,11 @@ public class crFragment extends android.support.v4.app.Fragment {
 						if (route != null) {
 							if (mapPrepared == false) {
 								map = route
-										.prepareMap(map, getActivity(), true);
+										.prepareMap(map, getActivity(), false);
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
+						
+
 							}
 
 						}
@@ -164,86 +168,18 @@ public class crFragment extends android.support.v4.app.Fragment {
 					}
 
 				});
-		addPhotos2Gallery();
+
 	}
 
 	public void addPhotos2Gallery() {
 		LinearLayout myGallery = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutImage);
-		boolean pictavaiable = false;
-		File targetDirector;
+
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
-		for (RoutePoint point : route.getRoutePoints()) {
+		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
+		task.execute(route);
 
-			if (point.getPicture() != null) {
-				targetDirector = new File(point.getPicture());
-				myGallery.addView(insertPhoto(targetDirector.getPath()));
-				pictavaiable = true;
-			}
-
-		}
-		if (pictavaiable == false) {
-			TextView txtView = (TextView) view.findViewById(R.id.txtViewPic);
-			txtView.setText("Keine Bilder vorhanden");
-		}
-
-	}
-
-	public View insertPhoto(String path) {
-		Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
-		
-		LinearLayout layout = new LinearLayout(getActivity());
-		layout.setLayoutParams(new LayoutParams(250, 250));
-		layout.setGravity(Gravity.CENTER);
-
-		ImageView imageView = new ImageView(getActivity());
-		imageView.setLayoutParams(new LayoutParams(220, 220));
-		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		imageView.setImageBitmap(bm);
-
-		layout.addView(imageView);
-		return layout;
-
-	}
-
-	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
-			int reqHeight) {
-		Bitmap bm = null;
-
-		// First decode with inJustDecodeBounds=true to check dimensions
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(path, options);
-
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth,
-				reqHeight);
-		
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		bm = BitmapFactory.decodeFile(path, options);
-
-		return bm;
-	}
-
-	public int calculateInSampleSize(
-
-	BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-			if (width > height) {
-				inSampleSize = Math.round((float) height / (float) reqHeight);
-			} else {
-				inSampleSize = Math.round((float) width / (float) reqWidth);
-			}
-		}
-
-		return inSampleSize;
 	}
 
 	public void addButtonClickListener(ImageButton imageButton) {
