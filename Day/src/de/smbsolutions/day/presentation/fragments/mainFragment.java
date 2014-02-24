@@ -3,6 +3,7 @@ package de.smbsolutions.day.presentation.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -27,7 +28,6 @@ import android.widget.ViewFlipper;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.ListElement;
