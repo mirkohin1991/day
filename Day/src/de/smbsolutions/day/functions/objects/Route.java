@@ -145,6 +145,7 @@ public class Route implements Parcelable {
 						e.printStackTrace();
 					}
 
+					
 				
 
 				// A image is available and it shall be displayed (details =

@@ -140,12 +140,19 @@ public class crFragment extends android.support.v4.app.Fragment {
 	}
 
 	public void initializeFragmentPortrait() {
+
 		map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		map.setPadding(0, 100, 0, 100);
 		map.getUiSettings().setZoomControlsEnabled(false);
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
+        
+		//Closed routes cannot generate a new picture
+		if (route.getActive().equals("")) {
+         imageButton.setVisibility(View.INVISIBLE);
+		}
+
 		linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
 
@@ -165,6 +172,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 
 				});
 		addPhotos2Gallery();
+
 	}
 
 	public void addPhotos2Gallery() {
@@ -192,7 +200,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 
 	public View insertPhoto(String path) {
 		Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
-		
+
 		LinearLayout layout = new LinearLayout(getActivity());
 		layout.setLayoutParams(new LayoutParams(250, 250));
 		layout.setGravity(Gravity.CENTER);
@@ -219,7 +227,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 		// Calculate inSampleSize
 		options.inSampleSize = calculateInSampleSize(options, reqWidth,
 				reqHeight);
-		
+
 		// Decode bitmap with inSampleSize set
 		options.inJustDecodeBounds = false;
 		bm = BitmapFactory.decodeFile(path, options);

@@ -13,8 +13,12 @@ public interface MainCallback {
 	public void onNewRouteStarted(Route route);
 
 	public void onLongItemSelected(RouteList routeList, int index);
+	
+	public void onStopPopup(RouteList routeList);
 
 	public void onDeleteRoute();
+	
+	public void onStopRoute();
 	
 	public void onCamStart(Route route);
 }
