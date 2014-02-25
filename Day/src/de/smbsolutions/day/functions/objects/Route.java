@@ -1,8 +1,5 @@
 package de.smbsolutions.day.functions.objects;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,21 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -35,10 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
-import de.smbsolutions.day.presentation.activities.PictureActivity;
 
 public class Route implements Parcelable {
 
@@ -199,10 +187,10 @@ public class Route implements Parcelable {
 					// timestamp is null when the marker doesn't contain a
 					// picture
 					if (timestamp != null) {
-						Intent intent = new Intent(context,
-								PictureActivity.class);
-						intent.putExtra("timestamp", timestamp.toString());
-						context.startActivity(intent);
+//						Intent intent = new Intent(context,
+//								PictureActivity.class);
+//						intent.putExtra("timestamp", timestamp.toString());
+//						context.startActivity(intent);
 
 					}
 					return false;

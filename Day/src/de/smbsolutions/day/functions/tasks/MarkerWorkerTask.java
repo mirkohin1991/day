@@ -63,34 +63,19 @@ public class MarkerWorkerTask extends
 			if (point.getPicture() != null) {
 				File pic = new File(point.getPicture());
 				Uri uri = Uri.fromFile(pic);
-
-				try {
-					bitmap = MediaStore.Images.Media.getBitmap(
-							context.getContentResolver(), uri);
-
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				// A image is available and it shall be displayed (details =
-				// true)
-			
-
 				Bitmap resizedBitmap_Placeholder = BitmapFactory
 						.decodeResource(context.getResources(),
 								R.drawable.resizedbitmap_placeholder);
-				
+
 				int bgwidth = resizedBitmap_Placeholder.getWidth();
 				int bgheight = resizedBitmap_Placeholder.getHeight();
+
+				bitmap = BitmapManager.decodeSampledBitmapFromUri(
+						uri.getPath(), bgwidth, bgheight);
 
 				if (bitmap != null) {
 					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
 					markerMap.put(bitmap, point);
-					;
 
 				}
 
