@@ -50,22 +50,25 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 				targetDirector = new File(point.getPicture());
 				Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-						targetDirector.getPath(), 220, 220);// richtige größe?
+						targetDirector.getPath(),220, 220);// richtige größe?
 
 				if (bm != null) {
 
 					ImageView imageView = new ImageView(context);
-					imageView.setLayoutParams(new LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
+					imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+					imageView.setAdjustViewBounds(true);
 
+					imageView.setLayoutParams(new LayoutParams(android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT,
+							android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT));
+				
 					if (foreachindex == 0) {
 						imageView.setPadding(0, 0, 0, 0);
 					} else
-						imageView.setPadding(10, 0, 0, 0);
+						imageView.setPadding(1, 0, 0, 0);
 
-					imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				
 					imageView.setImageBitmap(bm);
+
 					bml.add(imageView);
 					imageAvailable = true;
 					foreachindex++;
