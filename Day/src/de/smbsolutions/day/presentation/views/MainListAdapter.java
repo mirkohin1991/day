@@ -17,16 +17,16 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 
 
-public class RouteListAdapter extends ArrayAdapter<ListElement> {
+public class MainListAdapter extends ArrayAdapter<MainListElement> {
 	
-    private List<ListElement> listElements;
+    private List<MainListElement> listElements;
     private Context context;
 	private MainCallback mCallback;
    
 
 
-    public RouteListAdapter(Context context, int resourceId, 
-                             List<ListElement> listElements, MainCallback mCallback ) {
+    public MainListAdapter(Context context, int resourceId, 
+                             List<MainListElement> listElements, MainCallback mCallback ) {
         super(context, resourceId, listElements);
         this.listElements = listElements;
         this.context = context;
@@ -59,7 +59,7 @@ public class RouteListAdapter extends ArrayAdapter<ListElement> {
         }
         
         
-        ListElement listElement = listElements.get(position);
+        MainListElement listElement = listElements.get(position);
         if (listElement != null) {
         	
 //        	
@@ -124,7 +124,7 @@ public class RouteListAdapter extends ArrayAdapter<ListElement> {
 
 
 
-	public List<ListElement> getListElements() {
+	public List<MainListElement> getListElements() {
 		return listElements;
 	}
     

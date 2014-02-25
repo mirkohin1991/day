@@ -31,7 +31,7 @@ import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
-public class crFragment extends android.support.v4.app.Fragment {
+public class DetailFragment extends android.support.v4.app.Fragment {
 
 	private SupportMapFragment fragment;
 	private View view;

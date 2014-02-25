@@ -15,8 +15,8 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.presentation.fragments.crFragment;
-import de.smbsolutions.day.presentation.fragments.mainFragment;
+import de.smbsolutions.day.presentation.fragments.DetailFragment;
+import de.smbsolutions.day.presentation.fragments.MainFragment;
 import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 import de.smbsolutions.day.presentation.popups.StopRouteDialog;
@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		slidermenu.getAdapter();
 		slidermenu.getActionBarDrawerToggle();
 
-		mfrag = new mainFragment();
+		mfrag = new MainFragment();
 		tag = mfrag.getClass().getName();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.frame_container, mfrag, tag).addToBackStack(tag)
@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onNewRouteStarted(Route route) {
 
-		crFrag = new crFragment();
+		crFrag = new DetailFragment();
 		tag = crFrag.getClass().getName();
 
 		Bundle bundle = new Bundle();
@@ -102,7 +102,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onShowRoute(Route route) {
 		// fragmen avaiable?
-		crFrag = new crFragment();
+		crFrag = new DetailFragment();
 		tag = crFrag.getClass().getName();
 
 		Bundle bundle = new Bundle();
@@ -161,7 +161,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onDeleteRoute() {
-		mfrag = new mainFragment();
+		mfrag = new MainFragment();
 		tag = mfrag.getClass().getName();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.frame_container, mfrag, tag).commit();
@@ -171,7 +171,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	// GLEICH WIE DELETE ROUTE
 	@Override
 	public void onStopRoute() {
-		mfrag = new mainFragment();
+		mfrag = new MainFragment();
 		tag = mfrag.getClass().getName();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.frame_container, mfrag, tag).commit();
@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onCamStart(Route route) {
-		crFrag = new crFragment();
+		crFrag = new DetailFragment();
 		tag = crFrag.getClass().getName();
 
 		Bundle bundle = new Bundle();

@@ -33,10 +33,10 @@ import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.presentation.views.ListElement;
-import de.smbsolutions.day.presentation.views.RouteListAdapter;
+import de.smbsolutions.day.presentation.views.MainListElement;
+import de.smbsolutions.day.presentation.views.MainListAdapter;
 
-public class mainFragment extends android.support.v4.app.Fragment {
+public class MainFragment extends android.support.v4.app.Fragment {
 
 	private GoogleMap map;
 	private SupportMapFragment fragment;
@@ -144,16 +144,16 @@ public class mainFragment extends android.support.v4.app.Fragment {
 			map.setPadding(0, 70, 0, 0);
 			// get views from fragment
 			meineListView = (ListView) view.findViewById(R.id.listView1);
-			List<ListElement> meineListe = new ArrayList<ListElement>();
+			List<MainListElement> meineListe = new ArrayList<MainListElement>();
 			for (Route route : routeList.getListRoutes()) {
 				// Only completed routes shall appear in the "recent routes"
 				// list
 				if (route.getActive().equals("")) {
-					meineListe.add(new ListElement(route));
+					meineListe.add(new MainListElement(route));
 				}
 			}
 			// Set the list view adapter
-			meineListView.setAdapter(new RouteListAdapter(getActivity(),
+			meineListView.setAdapter(new MainListAdapter(getActivity(),
 					R.id.listView1, meineListe, mCallback));
 
 			meineListView.setItemChecked(index, true);
@@ -399,7 +399,7 @@ public class mainFragment extends android.support.v4.app.Fragment {
 
 				try {
 					// Getting the route through the adapter
-					ListElement element = (ListElement) meineListView
+					MainListElement element = (MainListElement) meineListView
 							.getAdapter().getItem(position);
 					sel_Route = element.getRoute();
 					// OLD

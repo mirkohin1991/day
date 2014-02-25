@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.widget.BaseAdapter;
 
 
-public class ListElement {
+public class MainListElement {
 	
 	private Drawable icon;
 	private String textName;
@@ -19,7 +19,7 @@ public class ListElement {
 	private BaseAdapter adapter;
 	
 	
-	public ListElement( Route route) {
+	public MainListElement( Route route) {
 		super();
 		this.route = route;
 		

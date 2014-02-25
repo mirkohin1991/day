@@ -17,7 +17,7 @@ import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
-import de.smbsolutions.day.presentation.fragments.crFragment;
+import de.smbsolutions.day.presentation.fragments.DetailFragment;
 
 public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 
