@@ -61,7 +61,7 @@ public class BitmapManager {
 	
 
 	
-	public static File  savePreviewBitmapToStorage (Uri big_image_file) {
+	public static File savePreviewBitmapToStorage (Uri big_image_file) {
 		
 		File small_picutre_file =	getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
 //		Uri uri = Uri.fromFile(small_picutre);
@@ -72,7 +72,7 @@ public class BitmapManager {
 	        FileOutputStream fOut = null;
 			try {
 				fOut = new FileOutputStream(small_picutre_file);
-				 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+				 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fOut);
 				 fOut.flush();
 			     fOut.close();
 			     return  small_picutre_file;
