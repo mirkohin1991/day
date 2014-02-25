@@ -8,16 +8,18 @@ public class RoutePoint {
 	private int id;
 	private Timestamp timestamp;
 	private String picture;
+	private String picture_preview;
 	private double latitude;
 	private double longitude;
 
-	public RoutePoint(int id, Timestamp timestamp, String picture,
+	public RoutePoint(int id, Timestamp timestamp, String picture, String picture_preview,
 			double latitude, double longitude) {
 		this.id = id;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.timestamp = timestamp;
 		this.picture = picture;
+		this.picture_preview = picture_preview;
 
 	}
 
@@ -41,4 +43,8 @@ public class RoutePoint {
 		return longitude;
 	}
 
+	
+	public String getPicturePreview() {
+		return picture_preview;
+	}
 }

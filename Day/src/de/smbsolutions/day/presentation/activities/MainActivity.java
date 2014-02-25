@@ -1,5 +1,6 @@
 package de.smbsolutions.day.presentation.activities;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -67,6 +68,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		slidermenu.getNavDrawerItems();
 		slidermenu.getAdapter();
 		slidermenu.getActionBarDrawerToggle();
+		
+		
+		//Small screens only have a portait mode
+				int layout = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+				if ( layout == Configuration.SCREENLAYOUT_SIZE_NORMAL ||
+						layout == Configuration.SCREENLAYOUT_SIZE_SMALL	) {
+					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				}
 
 		mfrag = new MainFragment();
 		tag = mfrag.getClass().getName();

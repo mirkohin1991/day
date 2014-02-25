@@ -9,7 +9,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	private static final String DB_NAME = "routes.db";
 	private static final int DB_VERSION = 1;
 	private static final String ROUTES_CREATE = 
-			"CREATE TABLE route_points ( _id INTEGER NOT NULL, timestamp NOT NULL, picture TEXT , longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (_id, timestamp) ) ";
+			"CREATE TABLE route_points ( _id INTEGER NOT NULL, timestamp NOT NULL, picture TEXT, picture_preview TEXT , longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (_id, timestamp) ) ";
 	
 	private static final String ROUTE_INFO_CREATE = "CREATE TABLE route_info ( _id INTEGER NOT NULL, name TEXT NOT NULL, date TEXT NOT NULL, active TEXT, PRIMARY KEY (_id) ) ";
 	private static final String SETTINGS_CREATE = "CREATE TABLE settings (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER NOT NULL ) ";

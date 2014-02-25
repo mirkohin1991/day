@@ -48,7 +48,8 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 		for (RoutePoint point : route.getRoutePoints()) {
 			if (point.getPicture() != null) {
 
-				targetDirector = new File(point.getPicture());
+				targetDirector = new File(point.getPicturePreview
+						());
 				Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
 						targetDirector.getPath(),220, 220);// richtige größe?
 

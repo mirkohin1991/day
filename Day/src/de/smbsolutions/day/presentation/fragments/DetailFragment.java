@@ -1,6 +1,9 @@
 package de.smbsolutions.day.presentation.fragments;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +11,9 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,6 +36,7 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
+import de.smbsolutions.day.functions.tasks.BitmapManager;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
 public class DetailFragment extends android.support.v4.app.Fragment {
@@ -44,10 +52,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private ImageButton imageButton;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
-	private static String timeStamp;
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private boolean mapPrepared = false;
+	private static Activity context;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +98,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void onResume() {
 		super.onResume();
+		
+		
+		context = getActivity();
 
 		if (map == null) {
 			map = fragment.getMap();
@@ -116,6 +127,22 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	}
 
 	public void initializeFragmentLandscape() {
+		
+
+		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+		// LinearLayout linleaLayout = (LinearLayout) view
+		// .findViewById(R.id.LinearLayoutcR);
+		// linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+		// new OnGlobalLayoutListener() {
+		//
+		// @Override
+		// public void onGlobalLayout() {
+		//
+		// map = routelist.getListRoutes().get(index).prepareMap(map,
+		// getActivity(), false);
+		//
+		// }
+		// });
 
 	}
 
@@ -127,20 +154,20 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
-
-		// If a route doesn't have a picture point, the Picture Scrollbar is
-		// disabled
+		
+		
+		//If a route doesn't have a picture point, the Picture Scrollbar is disabled
 		if (route.hasPicturePoint() == false) {
+			    
+				LinearLayout linlayout = (LinearLayout) view.findViewById(R.id.LinearLayoutcR);
+				linlayout.removeView(view.findViewById(R.id.RelativeHorizontalScrollViewLayout));
+			}
+		
 
-			LinearLayout linlayout = (LinearLayout) view
-					.findViewById(R.id.LinearLayoutcR);
-			linlayout.removeView(view
-					.findViewById(R.id.RelativeHorizontalScrollViewLayout));
-		}
-
-		// Closed routes cannot generate a new picture
+		
+       	//Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
-			imageButton.setVisibility(View.INVISIBLE);
+         imageButton.setVisibility(View.INVISIBLE);
 		}
 
 		linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -151,9 +178,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 						if (route != null) {
 							if (mapPrepared == false) {
 								map = route
-										.prepareMap(map, getActivity(), true);
+										.prepareMap(map, getActivity(), false);
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
+						
 
 							}
 
@@ -172,7 +200,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
-		task.execute(route);
+		task.execute(route); 
+		
+	
 
 	}
 
@@ -182,7 +212,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 
-				fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE, false);
 
 				// create intent with ACTION_IMAGE_CAPTURE action
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -198,46 +228,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	private static Uri getOutputMediaFileUri(int type) {
-		return Uri.fromFile(getOutputMediaFile(type));
-	}
-
-	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(int type) {
-		// To be safe, you should check that the SDCard is mounted
-		// using Environment.getExternalStorageState() before doing this.
-
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"MyCameraApp");
-		// This location works best if you want the created images to be shared
-		// between applications and persist after your app has been uninstalled.
-
-		// Create the storage directory if it does not exist
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
-
-		// Create a media file name
-
-		timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		File mediaFile;
-		if (type == MEDIA_TYPE_IMAGE) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + timeStamp + ".jpg");
-		} else if (type == MEDIA_TYPE_VIDEO) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "VID_" + timeStamp + ".mp4");
-		} else {
-			return null;
-		}
-
-		return mediaFile;
-	}
+	
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -245,18 +236,62 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			GPSTracker gps = GPSTracker.getInstance(getActivity());
 			if (gps.canGetLocation()) {
-
+				
+				
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+				
+			File small_picture = BitmapManager.savePreviewBitmapToStorage(fileUri);
+			
+			
+			if(small_picture != null) {
+				
+				Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
+			   
+			        FileOutputStream fOut = null;
+					try {
+						fOut = new FileOutputStream(small_picture);
+						 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+						 fOut.flush();
+					     fOut.close();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
 
+					route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
+							fileUri.getPath(), small_picture.getPath(), gps.getLatitude(), gps
+									.getLongitude()));
+					
+				// If no small picture could be created, NULL is stored	
+			} else {
 				route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
-						fileUri.getPath(), gps.getLatitude(), gps
+						fileUri.getPath(), null, gps.getLatitude(), gps
 								.getLongitude()));
-				// route zu routelist hinzufügen?
+				
+			}
+
+
+			
+				// route erneut anzeigen
 				mCallback.onCamStart(route);
 
+			} else {
+				// route erneut anzeigen
+				mCallback.onCamStart(route);
+				
+				Toast.makeText(getActivity(), "Keine Ortung möglich, bitte erneut versuchen", Toast.LENGTH_LONG);
+				
 			}
 
 		}
 	}
+	
+	
+	
 }
