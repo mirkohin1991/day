@@ -98,8 +98,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void onResume() {
 		super.onResume();
-		
-		
+
 		context = getActivity();
 
 		if (map == null) {
@@ -127,7 +126,6 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	}
 
 	public void initializeFragmentLandscape() {
-		
 
 		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		// LinearLayout linleaLayout = (LinearLayout) view
@@ -154,20 +152,20 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
-		
-		
-		//If a route doesn't have a picture point, the Picture Scrollbar is disabled
-		if (route.hasPicturePoint() == false) {
-			    
-				LinearLayout linlayout = (LinearLayout) view.findViewById(R.id.LinearLayoutcR);
-				linlayout.removeView(view.findViewById(R.id.RelativeHorizontalScrollViewLayout));
-			}
-		
 
-		
-       	//Closed routes cannot generate a new picture
+		// If a route doesn't have a picture point, the Picture Scrollbar is
+		// disabled
+		if (route.hasPicturePoint() == false) {
+
+			LinearLayout linlayout = (LinearLayout) view
+					.findViewById(R.id.LinearLayoutcR);
+			linlayout.removeView(view
+					.findViewById(R.id.RelativeHorizontalScrollViewLayout));
+		}
+
+		// Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
-         imageButton.setVisibility(View.INVISIBLE);
+			imageButton.setVisibility(View.INVISIBLE);
 		}
 
 		linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -178,10 +176,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 						if (route != null) {
 							if (mapPrepared == false) {
 								map = route
-										.prepareMap(map, getActivity(), false);
+										.prepareMap(map, getActivity(), true);
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
-						
 
 							}
 
@@ -200,9 +197,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
-		task.execute(route); 
-		
-	
+		task.execute(route);
 
 	}
 
@@ -212,7 +207,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 
-				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE, false);
+				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE,
+						false);
 
 				// create intent with ACTION_IMAGE_CAPTURE action
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -228,70 +224,70 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			GPSTracker gps = GPSTracker.getInstance(getActivity());
 			if (gps.canGetLocation()) {
-				
-				
+              
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
-				
-			File small_picture = BitmapManager.savePreviewBitmapToStorage(fileUri);
-			
-			
-			if(small_picture != null) {
-				
-				Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
-			   
-			        FileOutputStream fOut = null;
-					try {
-						fOut = new FileOutputStream(small_picture);
-						 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-						 fOut.flush();
-					     fOut.close();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				if (resultCode == -1) {
+
+					File small_picture = BitmapManager
+							.savePreviewBitmapToStorage(fileUri);
+
+					if (small_picture != null) {
+
+						Bitmap bitmap = BitmapManager
+								.decodeSampledBitmapFromUri(fileUri.getPath(),
+										250, 250);
+
+						FileOutputStream fOut = null;
+						try {
+							fOut = new FileOutputStream(small_picture);
+							bitmap.compress(Bitmap.CompressFormat.PNG, 100,
+									fOut);
+							fOut.flush();
+							fOut.close();
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						route.addRoutePointDB(new RoutePoint(route.getId(),
+								tsTemp, fileUri.getPath(), small_picture
+										.getPath(), gps.getLatitude(), gps
+										.getLongitude()));
+
+						// If no small picture could be created, NULL is stored
+					} else {
+						route.addRoutePointDB(new RoutePoint(route.getId(),
+								tsTemp, fileUri.getPath(), null, gps
+										.getLatitude(), gps.getLongitude()));
+
 					}
-					
-					
 
-					route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
-							fileUri.getPath(), small_picture.getPath(), gps.getLatitude(), gps
-									.getLongitude()));
-					
-				// If no small picture could be created, NULL is stored	
-			} else {
-				route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
-						fileUri.getPath(), null, gps.getLatitude(), gps
-								.getLongitude()));
-				
-			}
+					// route erneut anzeigen
+					mCallback.onCamStart(route);
 
-
-			
-				// route erneut anzeigen
-				mCallback.onCamStart(route);
+				}
 
 			} else {
 				// route erneut anzeigen
 				mCallback.onCamStart(route);
-				
-				Toast.makeText(getActivity(), "Keine Ortung möglich, bitte erneut versuchen", Toast.LENGTH_LONG);
-				
+
+				Toast.makeText(getActivity(),
+						"Keine Ortung möglich, bitte erneut versuchen",
+						Toast.LENGTH_LONG);
+
 			}
 
 		}
 	}
-	
-	
-	
+
 }
