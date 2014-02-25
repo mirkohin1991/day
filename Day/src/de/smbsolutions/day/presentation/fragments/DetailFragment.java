@@ -36,6 +36,7 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
+import de.smbsolutions.day.functions.tasks.BitmapManager;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
 public class DetailFragment extends android.support.v4.app.Fragment {
@@ -283,36 +284,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			Uri uri = Uri.fromFile(small);
 			
 			
-			Bitmap bitmap  = decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
+			Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
 				
-//				try {
-//					bitmap = MediaStore.Images.Media.getBitmap(
-//							context.getContentResolver(), fileUri); //The parent picutre
-//				} catch (FileNotFoundException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//				
-//			// create matrix for the manipulation
-//		        Matrix matrix = new Matrix();
-////
-////		        // resize the bit map
-//	        matrix.postScale(50, 50);
-//		        
-		        
-		        
-//		        rotate bitmap
-//		        if (height > width){
-//		            matrix.postRotate(90);
-//		            }
-		        
-//		        // recreate the new Bitmap
-//		        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
-//		                          50, 50, matrix, true);
-//		        
 		        
 		   
 		        FileOutputStream fOut = null;
@@ -362,42 +335,5 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	}
 	
 	
-	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
-			int reqHeight) {
-		Bitmap bm = null;
-
-		// First decode with inJustDecodeBounds=true to check dimensions
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(path, options);
-
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth,
-				reqHeight);
-
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		bm = BitmapFactory.decodeFile(path, options);
-
-		return bm;
-	}
-
-	public int calculateInSampleSize(
-
-	BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-			if (width > height) {
-				inSampleSize = Math.round((float) height / (float) reqHeight);
-			} else {
-				inSampleSize = Math.round((float) width / (float) reqWidth);
-			}
-		}
-
-		return inSampleSize;
-	}
+	
 }
