@@ -5,25 +5,25 @@
     android:background="@color/settings_background"
     android:orientation="vertical"
     android:showDividers="beginning|middle|end" >
- 
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="GPS"
-            android:textColor="@color/settings_text"
-            android:textSize="20sp" />
-    
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="GPS"
+        android:textColor="@color/settings_text"
+        android:textSize="20sp" />
+
     <Switch
         android:id="@+id/switchGPSOnOff"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:thumb="@drawable/switch_control"
-    android:track="@drawable/switch_progress" 
-     android:layout_marginLeft="10dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="5dp" />
-    
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="5dp"
+        android:thumb="@drawable/switch_control"
+        android:track="@drawable/switch_progress" />
+
     <LinearLayout
         android:id="@+id/refresh_match_layout"
         android:layout_width="fill_parent"
@@ -39,26 +39,26 @@
             android:text="GPS Wiederholungsrate"
             android:textColor="@color/settings_text"
             android:textSize="20sp" />
-        
+
         <SeekBar
             android:id="@+id/seekBarFrequency"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginRight="30dp"
             android:layout_weight="1"
+            android:max="99"
             android:progressDrawable="@drawable/green_scrubber_progress"
             android:thumb="@drawable/green_scrubber_control" />
 
-       
- 		<TextView android:text=""  
-            android:textColor="@color/settings_text" 
-            android:id="@+id/actSec" 
+        <TextView
+            android:id="@+id/actSec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:layout_height="wrap_content" 
-            android:layout_width="wrap_content" 
-            android:textSize="20sp"/>
-        </LinearLayout>
+            android:text=""
+            android:textColor="@color/settings_text"
+            android:textSize="20sp" />
+    </LinearLayout>
 
-        </LinearLayout>
-
+</LinearLayout>

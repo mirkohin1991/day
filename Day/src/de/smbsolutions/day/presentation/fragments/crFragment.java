@@ -8,25 +8,18 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -122,22 +115,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	public void initializeFragmentLandscape() {
-
-		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-		// LinearLayout linleaLayout = (LinearLayout) view
-		// .findViewById(R.id.LinearLayoutcR);
-		// linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-		// new OnGlobalLayoutListener() {
-		//
-		// @Override
-		// public void onGlobalLayout() {
-		//
-		// map = routelist.getListRoutes().get(index).prepareMap(map,
-		// getActivity(), false);
-		//
-		// }
-		// });
+	public void initializeFragmentLandscape(){
 
 	}
 
@@ -174,7 +152,7 @@ public class crFragment extends android.support.v4.app.Fragment {
 						if (route != null) {
 							if (mapPrepared == false) {
 								map = route
-										.prepareMap(map, getActivity(), false);
+										.prepareMap(map, getActivity(), true);
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
 						

@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 import de.smbsolutions.day.presentation.activities.PictureActivity;
 
 public class Route implements Parcelable {
@@ -45,7 +46,7 @@ public class Route implements Parcelable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<RoutePoint> routePoints = new ArrayList<RoutePoint>();
+	private ArrayList<RoutePoint> routePoints = new ArrayList<RoutePoint>();
 	private String routeName;
 	private String date;
 	private GoogleMap map;
@@ -110,6 +111,7 @@ public class Route implements Parcelable {
 		routePoints.add(point);
 	}
 
+	@SuppressWarnings("unchecked")
 	public GoogleMap prepareMap(final GoogleMap map, final Context context,
 			boolean details) {
 
@@ -117,7 +119,6 @@ public class Route implements Parcelable {
 		this.context = context;
 
 		List<Marker> markers = new ArrayList<Marker>();
-
 		Bitmap bitmap = null;
 
 		// Necessary to save connect timestamp and marker
@@ -126,67 +127,42 @@ public class Route implements Parcelable {
 		PolylineOptions polylineOptions = new PolylineOptions();
 
 		// add markers to map
+		if (details == true) {
+			if (hasPicturePoint()) {
 
-		for (RoutePoint point : this.routePoints) {
-		
-				if (point.getPicture() != null && details == true ) {
-					File pic = new File(point.getPicture());
-					Uri uri = Uri.fromFile(pic);
-
-					try {
-						bitmap = MediaStore.Images.Media.getBitmap(
-								context.getContentResolver(), uri);
-
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-					
-				
-
-				// A image is available and it shall be displayed (details =
-				// true)
-				if (bitmap != null && details == true) {
-					
-					Bitmap background = BitmapFactory.decodeResource(context.getResources(), R.drawable.custom_marker);
-
-                	Bitmap resizedBitmap_Placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.resizedbitmap_placeholder);
-                	
-					int bgwidth = resizedBitmap_Placeholder.getWidth();
-					int bgheight = resizedBitmap_Placeholder.getHeight();
-
-					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
-					MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(point.getLatitude(), point.getLongitude()))
-							.icon(BitmapDescriptorFactory.fromBitmap(this.overlay(background, resizedBitmap_Placeholder, bitmap)))
-							.title("Ihr aktueller Standort");
-//					
-//					bitmap = getResizedBitmap(bitmap, 80, 80);
+				 MarkerWorkerTask task = new MarkerWorkerTask(context, map);
+				 task.execute(this.routePoints);
+//				for (RoutePoint point : this.routePoints) {
+//					polylineOptions.add(new LatLng(point.getLatitude(), point
+//							.getLongitude()));
+//					MarkerOptions markerOpt = new MarkerOptions().position(
+//							new LatLng(point.getLatitude(), point.getLongitude()))
 //
-//					MarkerOptions markerOpt = new MarkerOptions()
-//							.position(
-//									new LatLng(point.getLatitude(), point
-//											.getLongitude()))
-//							.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-//							.title("Ihr aktueller Standort");
+//					.title("Ihr aktueller Standort");
+//
+//					Marker marker = map.addMarker(markerOpt);
+//					markerMap.put(marker, point.getTimestamp());
+//					markers.add(marker);
+//				}
+//				Polyline polyline = map.addPolyline(polylineOptions);
+//
+//				// zoompoint
+//				LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//
+//				for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
+//
+//					builder.include(mapSet.getKey().getPosition());
+//
+//				}
+//
+//				LatLngBounds bounds = builder.build();
+//				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+//						bounds, 60);
+//				map.animateCamera(camUpdate);
 
-					polylineOptions.add(new LatLng(point.getLatitude(), point
-							.getLongitude()));
-
-					// adding the marker and storing its hashcode to identify it
-					// later on
-					Marker marker = map.addMarker(markerOpt);
-					int code = marker.hashCode();
-					markerMap.put(marker, point.getTimestamp());
-					markers.add(marker);
-
-					// no image
-				}
-			} else {
-
+			}
+		} else {
+			for (RoutePoint point : this.routePoints) {
 				polylineOptions.add(new LatLng(point.getLatitude(), point
 						.getLongitude()));
 
@@ -201,29 +177,23 @@ public class Route implements Parcelable {
 
 			}
 
+			Polyline polyline = map.addPolyline(polylineOptions);
+
+			// zoompoint
+			LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+			for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
+
+				builder.include(mapSet.getKey().getPosition());
+
+			}
+
+			LatLngBounds bounds = builder.build();
+			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+					bounds, 60);
+			map.animateCamera(camUpdate);
+
 		}
-
-		Polyline polyline = map.addPolyline(polylineOptions);
-
-		// zoompoint
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-		for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
-
-			builder.include(mapSet.getKey().getPosition());
-
-		}
-
-		// for (Marker marker : markers) {
-		// builder.include(marker.getPosition());
-		// }
-
-		LatLngBounds bounds = builder.build();
-		CameraUpdate camUpdate = CameraUpdateFactory
-				.newLatLngBounds(bounds, 60);
-		map.animateCamera(camUpdate);
-		// polyline
-		// bilder
 
 		if (details == true) {
 
@@ -231,9 +201,6 @@ public class Route implements Parcelable {
 
 				@Override
 				public boolean onMarkerClick(Marker marker) {
-
-					// int code = marker.hashCode();
-					// markerMap.containsValue(marker);
 
 					Timestamp timestamp = markerMap.get(marker);
 
@@ -257,72 +224,17 @@ public class Route implements Parcelable {
 
 	}
 
-	public static Bitmap getResizedBitmap(Bitmap image, int bgheight,
-			int bgwidth) {
-		
-	
-		int width = image.getWidth();
-        int height = image.getHeight();
-        int newWidth = bgwidth;
-        int newHeight = bgheight;
-   
-        
-        // calculate the scale
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
+	public boolean hasPicturePoint() {
 
-
-        
-     // create matrix for the manipulation
-        Matrix matrix = new Matrix();
-
-        // resize the bit map
-        matrix.postScale(scaleWidth, scaleHeight);
-        
-        
- 
-        
-        
-//        rotate bitmap
-//        if (height > width){
-//            matrix.postRotate(90);
-//            }
-        
-        // recreate the new Bitmap
-        Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0,
-                          width, height, matrix, true);
-
-		return resizedBitmap;		
-	}
-	
-	
-	
-	public static Bitmap overlay(Bitmap background, Bitmap resizedBitmap_Placeholder, Bitmap resizedBitmap) {
-		Bitmap bmOverlay = Bitmap.createBitmap(background.getWidth(), background.getHeight(), background.getConfig());
-        Bitmap bmOverlay2 = Bitmap.createBitmap(resizedBitmap.getWidth(), resizedBitmap.getHeight(), resizedBitmap.getConfig());
-		
-		Canvas canvas = new Canvas(bmOverlay);
-		canvas.drawBitmap(resizedBitmap, 7, 7, null);  
-		canvas.drawBitmap(background, 0, 0, null);
-        
-        
-        
-        return bmOverlay;
-    }
-	
-	
-	public boolean  hasPicturePoint () {
-		
 		for (RoutePoint point : routePoints) {
-			//As soon as one point contains a picture path, true is returned
-			if((point.getPicture() != null)) {
+			// As soon as one point contains a picture path, true is returned
+			if ((point.getPicture() != null)) {
 				return true;
 			}
 		}
 		return false;
-		
+
 	}
-	
 
 	public String getDate() {
 		return date;
@@ -344,7 +256,7 @@ public class Route implements Parcelable {
 		return routePoints;
 	}
 
-	public void setRoutePoints(List<RoutePoint> routePoints) {
+	public void setRoutePoints(ArrayList<RoutePoint> routePoints) {
 		this.routePoints = routePoints;
 	}
 
