@@ -190,7 +190,17 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onCamStart(Route route) {
-		// TODO Auto-generated method stub
+		crFrag = new crFragment();
+		tag = crFrag.getClass().getName();
+
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		crFrag.setArguments(bundle);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+		ft.replace(R.id.frame_container, crFrag, tag).addToBackStack(tag)
+				.commit();
 
 	}
 

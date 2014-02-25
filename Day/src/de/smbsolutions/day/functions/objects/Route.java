@@ -156,13 +156,8 @@ public class Route implements Parcelable {
 
                 	Bitmap resizedBitmap_Placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.resizedbitmap_placeholder);
                 	
- 
-
-                			
 					int bgwidth = resizedBitmap_Placeholder.getWidth();
 					int bgheight = resizedBitmap_Placeholder.getHeight();
-
-                	
 
 					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
 					MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(point.getLatitude(), point.getLongitude()))
