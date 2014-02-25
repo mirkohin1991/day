@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -55,7 +56,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
 
 		// nav drawer icons from resources
-		navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		navMenuIcons = getResources()
+				.obtainTypedArray(R.array.nav_drawer_icons);
 
 		// mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		// mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -69,7 +71,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		mfrag = new mainFragment();
 		tag = mfrag.getClass().getName();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.frame_container, mfrag, tag).commit();
+		ft.replace(R.id.frame_container, mfrag, tag).addToBackStack(tag)
+				.commit();
 
 	}
 
@@ -176,7 +179,18 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
+	public void onSliderClick(Fragment frag) {
+
+		tag = frag.getClass().getName();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.frame_container, frag, tag).addToBackStack(tag)
+				.commit();
+
+	}
+
+	@Override
 	public void onCamStart(Route route) {
+		// TODO Auto-generated method stub
 
 	}
 

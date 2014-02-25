@@ -18,7 +18,7 @@ import android.widget.Toast;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 
-public class CameraFragment extends Fragment {
+public class CameraFragment extends android.support.v4.app.Fragment {
 	
 	public CameraFragment(){}
 	

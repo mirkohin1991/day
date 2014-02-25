@@ -1,7 +1,6 @@
 package de.smbsolutions.day.presentation.fragments;
 
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +10,10 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 
-public class GPSFragment extends Fragment {
+public class GPSFragment extends android.support.v4.app.Fragment {
 	
 	public GPSFragment(){}
 	private SeekBar seekBarFrequency;

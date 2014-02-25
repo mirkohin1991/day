@@ -1,5 +1,6 @@
 package de.smbsolutions.day.functions.interfaces;
 
+import android.support.v4.app.Fragment;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 
@@ -13,12 +14,14 @@ public interface MainCallback {
 	public void onNewRouteStarted(Route route);
 
 	public void onLongItemSelected(RouteList routeList, int index);
-	
+
 	public void onStopPopup(RouteList routeList);
 
 	public void onDeleteRoute();
-	
+
 	public void onStopRoute();
-	
+
 	public void onCamStart(Route route);
+
+	public void onSliderClick(Fragment fragment);
 }
