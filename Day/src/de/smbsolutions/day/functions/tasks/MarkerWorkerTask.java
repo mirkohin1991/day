@@ -83,6 +83,7 @@ public class MarkerWorkerTask extends
 				Bitmap resizedBitmap_Placeholder = BitmapFactory
 						.decodeResource(context.getResources(),
 								R.drawable.resizedbitmap_placeholder);
+				
 				int bgwidth = resizedBitmap_Placeholder.getWidth();
 				int bgheight = resizedBitmap_Placeholder.getHeight();
 
@@ -128,10 +129,7 @@ public class MarkerWorkerTask extends
 			builder.include(marker.getPosition());
 
 		}
-		LatLngBounds bounds = builder.build();
-		CameraUpdate camUpdate = CameraUpdateFactory
-				.newLatLngBounds(bounds, 60);
-		map.animateCamera(camUpdate);
+
 	}
 
 	public static Bitmap getResizedBitmap(Bitmap image, int bgheight,

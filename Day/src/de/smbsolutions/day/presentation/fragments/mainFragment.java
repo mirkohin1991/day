@@ -31,10 +31,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.objects.ListElement;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.functions.objects.RouteListAdapter;
+import de.smbsolutions.day.presentation.views.ListElement;
+import de.smbsolutions.day.presentation.views.RouteListAdapter;
 
 public class mainFragment extends android.support.v4.app.Fragment {
 

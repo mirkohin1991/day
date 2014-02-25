@@ -1,6 +1,7 @@
-package de.smbsolutions.day.functions.objects;
+package de.smbsolutions.day.presentation.views;
 
 
+import de.smbsolutions.day.functions.objects.Route;
 import android.graphics.drawable.Drawable;
 import android.widget.BaseAdapter;
 

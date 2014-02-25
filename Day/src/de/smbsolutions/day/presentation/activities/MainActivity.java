@@ -15,12 +15,12 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.functions.slider.SliderMenu;
 import de.smbsolutions.day.presentation.fragments.crFragment;
 import de.smbsolutions.day.presentation.fragments.mainFragment;
 import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 import de.smbsolutions.day.presentation.popups.StopRouteDialog;
+import de.smbsolutions.day.presentation.views.SliderMenu;
 
 public class MainActivity extends FragmentActivity implements MainCallback {
 	// Bijan

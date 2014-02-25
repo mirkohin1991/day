@@ -1,4 +1,4 @@
-package de.smbsolutions.day.functions.slider;
+package de.smbsolutions.day.presentation.views;
 
 public class NavDrawerItem {
 	

@@ -125,40 +125,32 @@ public class Route implements Parcelable {
 		markerMap = new HashMap<Marker, Timestamp>();
 
 		PolylineOptions polylineOptions = new PolylineOptions();
-
+		
 		// add markers to map
 		if (details == true) {
 			if (hasPicturePoint()) {
-
-				 MarkerWorkerTask task = new MarkerWorkerTask(context, map);
-				 task.execute(this.routePoints);
-//				for (RoutePoint point : this.routePoints) {
-//					polylineOptions.add(new LatLng(point.getLatitude(), point
-//							.getLongitude()));
-//					MarkerOptions markerOpt = new MarkerOptions().position(
-//							new LatLng(point.getLatitude(), point.getLongitude()))
-//
-//					.title("Ihr aktueller Standort");
-//
-//					Marker marker = map.addMarker(markerOpt);
-//					markerMap.put(marker, point.getTimestamp());
-//					markers.add(marker);
-//				}
-//				Polyline polyline = map.addPolyline(polylineOptions);
-//
-//				// zoompoint
-//				LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//
-//				for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
-//
-//					builder.include(mapSet.getKey().getPosition());
-//
-//				}
-//
-//				LatLngBounds bounds = builder.build();
-//				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-//						bounds, 60);
-//				map.animateCamera(camUpdate);
+				LatLngBounds.Builder builder = new LatLngBounds.Builder();
+				for (RoutePoint point : this.routePoints) {
+					polylineOptions.add(new LatLng(point.getLatitude(), point
+							.getLongitude()));
+					builder.include(new LatLng(point.getLatitude(), point
+							.getLongitude()));
+					// MarkerOptions markerOpt = new MarkerOptions().position(
+					// new LatLng(point.getLatitude(), point.getLongitude()))
+					//
+					// .title("Ihr aktueller Standort");
+					//
+					// Marker marker = map.addMarker(markerOpt);
+					// markerMap.put(marker, point.getTimestamp());
+					// markers.add(marker);
+				}
+				Polyline polyline = map.addPolyline(polylineOptions);
+				LatLngBounds bounds = builder.build();
+				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+						bounds, 60);
+				map.animateCamera(camUpdate);
+				MarkerWorkerTask task = new MarkerWorkerTask(context, map);
+				task.execute(this.routePoints);
 
 			}
 		} else {

@@ -1,4 +1,4 @@
-package de.smbsolutions.day.functions.objects;
+package de.smbsolutions.day.presentation.views;
 
 import java.util.List;
 
