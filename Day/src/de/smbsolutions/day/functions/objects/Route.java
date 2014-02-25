@@ -315,6 +315,19 @@ public class Route implements Parcelable {
         return bmOverlay;
     }
 	
+	
+	public boolean  hasPicturePoint () {
+		
+		for (RoutePoint point : routePoints) {
+			//As soon as one point contains a picture path, true is returned
+			if((point.getPicture() != null)) {
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	
 
 	public String getDate() {
 		return date;

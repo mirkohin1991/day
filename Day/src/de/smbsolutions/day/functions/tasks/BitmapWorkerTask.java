@@ -24,6 +24,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private List<ImageView> bml;
 	private Context context;
 	private LinearLayout layout;
+	private boolean imageAvailable = false;
 	LinearLayout myGallery;
 
 	public BitmapWorkerTask(LinearLayout layout, Context context) {
@@ -56,6 +57,9 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 					imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 					imageView.setImageBitmap(bm);
 					bml.add(imageView);
+					imageAvailable = true;
+					
+					
 				}
 
 			}
@@ -76,6 +80,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 				myGallery.addView(layout);
 
 			}
+			
 		}
 	}
 
@@ -116,6 +121,10 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 		}
 
 		return inSampleSize;
+	}
+
+	public boolean isImageAvailable() {
+		return imageAvailable;
 	}
 
 }

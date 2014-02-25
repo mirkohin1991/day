@@ -64,80 +64,76 @@ public class SliderMenu {
 		return mDrawerList;
 	}
 
-	public ArrayList<NavDrawerItem> getNavDrawerItems() {
-
+	public ArrayList<NavDrawerItem> getNavDrawerItems(){
+		
 		mTitle = mDrawerTitle = context.getTitle();
 
 		// load slide menu items
-		navMenuTitles = context.getResources().getStringArray(
-				R.array.nav_drawer_items);
+		navMenuTitles = context.getResources().getStringArray(R.array.nav_drawer_items);
 
 		// nav drawer icons from resources
-		navMenuIcons = context.getResources().obtainTypedArray(
-				R.array.nav_drawer_icons);
+		navMenuIcons = context.getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
+
+
+		
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 
 		// adding nav drawer items to array
-		// Landkarte
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons
-				.getResourceId(0, -1)));
-		// Sattelite
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons
-				.getResourceId(1, -1)));
-		// Terrain
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons
-				.getResourceId(2, -1)));
-
-		// leer
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons
-				.getResourceId(3, -1)));
-
+		//Landkarte
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+		//Sattelite
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+		//Terrain
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		
+		
 		// Einstellungen (Ueberschrift)
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons
-				.getResourceId(4, -1)));
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 		// GPS
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons
-				.getResourceId(5, -1)));
-		// Kamera
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons
-				.getResourceId(6, -1)));
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+//		Kamera
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+		//App Info
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+		
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
 		return navDrawerItems;
 	}
-
-	public NavDrawerListAdapter getAdapter() {
-
+	
+	public NavDrawerListAdapter getAdapter(){
+		
 		// Recycle the typed array
-		navMenuIcons.recycle();
-
-		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-
+				navMenuIcons.recycle();
+				
+				mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+				
+				
 		// setting the nav drawer list adapter
 		adapter = new NavDrawerListAdapter(context.getApplicationContext(),
 				navDrawerItems);
 		mDrawerList.setAdapter(adapter);
-
+		
 		// enabling action bar app icon and behaving it as toggle button
-
+		
 		context.getActionBar().setDisplayHomeAsUpEnabled(true);
 		context.getActionBar().setHomeButtonEnabled(true);
-
-		return adapter;
+		
+	return adapter;	
 	}
 
-	public ActionBarDrawerToggle getActionBarDrawerToggle() {
-
-		mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
-				R.drawable.ic_drawer, // nav menu toggle icon
-				R.string.app_name, // nav drawer open - description for
-									// accessibility
-				R.string.app_name // nav drawer close - description for
-									// accessibility
+	public ActionBarDrawerToggle getActionBarDrawerToggle(){
+		
+	
+			mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
+				R.drawable.ic_drawer, //nav menu toggle icon
+				R.string.app_name, // nav drawer open - description for accessibility
+				R.string.app_name // nav drawer close - description for accessibility
 		) {
 			public void onDrawerClosed(View view) {
-//				context.getActionBar().setTitle(mTitle);
+				context.getActionBar().setTitle(mTitle);
 				// calling onPrepareOptionsMenu() to show action bar icons
-//				context.invalidateOptionsMenu();
+				context.invalidateOptionsMenu();
 			}
 
 			public void onDrawerOpened(View drawerView) {
@@ -152,9 +148,9 @@ public class SliderMenu {
 			// on first time display view for first nav item
 			displayView(0);
 		}
-
+		
 		return mDrawerToggle;
-
+		
 	}
 
 	//
@@ -189,35 +185,38 @@ public class SliderMenu {
 
 		switch (position) {
 		case 0:
-			// MapType: Karte
-			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 1);
+//			MapType: Karte
+//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 1);
 			break;
 		case 1:
-			// MapType: Sattelite
-			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 2);
+//			MapType: Sattelite
+//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 2);
 			break;
 		case 2:
-			// MapType: Terrain
-			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 3);
+//			MapType: Terrain
+//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 3);
 			break;
 		case 3:
-			// Einstellungen
+//			Einstellungen
 			break;
-
-		case 5:
-			// GPS
+		
+		case 4:
+//			GPS
 			fragment = new GPSFragment();
 			break;
-
-		case 6:
-			// Kamera
+			
+		case 5:
+//			Kamera
 			fragment = new CameraFragment();
+			break;
+			
+		case 6:
+			//Info
 			break;
 
 		default:
 			break;
 		}
-
 		if (fragment != null) {
 
 			mCallback.onSliderClick(fragment);

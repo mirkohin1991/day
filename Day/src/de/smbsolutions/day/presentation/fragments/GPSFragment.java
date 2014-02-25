@@ -44,7 +44,7 @@ public class GPSFragment extends android.support.v4.app.Fragment {
         	
         switchGPSOnOff.setChecked(true);
         seekBarFrequency.setEnabled(true);
-    	actSec.setText("Aktuell: " + Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) + " Sekunden");
+    	actSec.setText("Aktuell: " + Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 100 + " Sekunden");
     	
         }
         else {

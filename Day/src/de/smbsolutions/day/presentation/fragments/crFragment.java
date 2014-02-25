@@ -25,6 +25,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -148,6 +149,17 @@ public class crFragment extends android.support.v4.app.Fragment {
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
+		
+		
+		//If a route doesn't have a picture point, the Picture Scrollbar is disabled
+		if (route.hasPicturePoint() == false) {
+			    
+				LinearLayout linlayout = (LinearLayout) view.findViewById(R.id.LinearLayoutcR);
+				linlayout.removeView(view.findViewById(R.id.RelativeHorizontalScrollViewLayout));
+			}
+		
+
+		
         
 		//Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
@@ -184,7 +196,9 @@ public class crFragment extends android.support.v4.app.Fragment {
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
-		task.execute(route);
+		task.execute(route); 
+		
+	
 
 	}
 
