@@ -1,6 +1,9 @@
 package de.smbsolutions.day.presentation.fragments;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +11,9 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -48,6 +55,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private boolean mapPrepared = false;
+	private static Activity context;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +98,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void onResume() {
 		super.onResume();
+		
+		
+		context = getActivity();
 
 		if (map == null) {
 			map = fragment.getMap();
@@ -117,6 +128,21 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void initializeFragmentLandscape() {
 
+		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+		// LinearLayout linleaLayout = (LinearLayout) view
+		// .findViewById(R.id.LinearLayoutcR);
+		// linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+		// new OnGlobalLayoutListener() {
+		//
+		// @Override
+		// public void onGlobalLayout() {
+		//
+		// map = routelist.getListRoutes().get(index).prepareMap(map,
+		// getActivity(), false);
+		//
+		// }
+		// });
+
 	}
 
 	public void initializeFragmentPortrait() {
@@ -127,20 +153,21 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
-
-		// If a route doesn't have a picture point, the Picture Scrollbar is
-		// disabled
+		
+		
+		//If a route doesn't have a picture point, the Picture Scrollbar is disabled
 		if (route.hasPicturePoint() == false) {
+			    
+				LinearLayout linlayout = (LinearLayout) view.findViewById(R.id.LinearLayoutcR);
+				linlayout.removeView(view.findViewById(R.id.RelativeHorizontalScrollViewLayout));
+			}
+		
 
-			LinearLayout linlayout = (LinearLayout) view
-					.findViewById(R.id.LinearLayoutcR);
-			linlayout.removeView(view
-					.findViewById(R.id.RelativeHorizontalScrollViewLayout));
-		}
-
-		// Closed routes cannot generate a new picture
+		
+        
+		//Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
-			imageButton.setVisibility(View.INVISIBLE);
+         imageButton.setVisibility(View.INVISIBLE);
 		}
 
 		linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -151,9 +178,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 						if (route != null) {
 							if (mapPrepared == false) {
 								map = route
-										.prepareMap(map, getActivity(), true);
+										.prepareMap(map, getActivity(), false);
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
+						
 
 							}
 
@@ -172,7 +200,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
-		task.execute(route);
+		task.execute(route); 
+		
+	
 
 	}
 
@@ -182,7 +212,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 
-				fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+				fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE, false);
 
 				// create intent with ACTION_IMAGE_CAPTURE action
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -198,12 +228,12 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	private static Uri getOutputMediaFileUri(int type) {
-		return Uri.fromFile(getOutputMediaFile(type));
+	private static Uri getOutputMediaFileUri(int type, boolean small) {
+		return Uri.fromFile(getOutputMediaFile(type, small));
 	}
 
 	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(int type) {
+	private static File getOutputMediaFile(int type, boolean small) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 
@@ -235,6 +265,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		} else {
 			return null;
 		}
+		
+
 
 		return mediaFile;
 	}
@@ -245,18 +277,127 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			GPSTracker gps = GPSTracker.getInstance(getActivity());
 			if (gps.canGetLocation()) {
+				
+				
+			File small =	getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
+			Uri uri = Uri.fromFile(small);
+			
+			
+			Bitmap bitmap  = decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
+				
+//				try {
+//					bitmap = MediaStore.Images.Media.getBitmap(
+//							context.getContentResolver(), fileUri); //The parent picutre
+//				} catch (FileNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			// create matrix for the manipulation
+//		        Matrix matrix = new Matrix();
+////
+////		        // resize the bit map
+//	        matrix.postScale(50, 50);
+//		        
+		        
+		        
+//		        rotate bitmap
+//		        if (height > width){
+//		            matrix.postRotate(90);
+//		            }
+		        
+//		        // recreate the new Bitmap
+//		        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+//		                          50, 50, matrix, true);
+//		        
+		        
+		   
+		        FileOutputStream fOut = null;
+				try {
+					fOut = new FileOutputStream(small);
+					 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+					 fOut.flush();
+				     fOut.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+		       
+		       
+		       
+//		        
+//				String newUrl = 	MediaStore.Images.Media.insertImage(context.getContentResolver(),resizedBitmap ,small.getName(),small.getName());
+//				Toast.makeText(getActivity(), newUrl, Toast.LENGTH_SHORT);
+//		     
+		        
+		        
+		       
+		        
 
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
 
 				route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
-						fileUri.getPath(), gps.getLatitude(), gps
+						fileUri.getPath(), small.getPath(), gps.getLatitude(), gps
 								.getLongitude()));
-				// route zu routelist hinzufügen?
+				// route erneut anzeigen
 				mCallback.onCamStart(route);
 
+			} else {
+				// route erneut anzeigen
+				mCallback.onCamStart(route);
+				
+				Toast.makeText(getActivity(), "Keine Ortung möglich, bitte erneut versuchen", Toast.LENGTH_LONG);
+				
 			}
 
 		}
+	}
+	
+	
+	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
+			int reqHeight) {
+		Bitmap bm = null;
+
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		bm = BitmapFactory.decodeFile(path, options);
+
+		return bm;
+	}
+
+	public int calculateInSampleSize(
+
+	BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+			if (width > height) {
+				inSampleSize = Math.round((float) height / (float) reqHeight);
+			} else {
+				inSampleSize = Math.round((float) width / (float) reqWidth);
+			}
+		}
+
+		return inSampleSize;
 	}
 }

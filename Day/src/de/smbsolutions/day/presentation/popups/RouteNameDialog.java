@@ -54,7 +54,7 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 						Route route = new Route(routeName);
 						route.addRoutePointDB(new RoutePoint(route.getId(),
 								new Timestamp(System.currentTimeMillis()),
-								null, tracker.getLatitude(), tracker
+								null, null, tracker.getLatitude(), tracker
 										.getLongitude()));
 						routeList.addRoute(route);
 						
