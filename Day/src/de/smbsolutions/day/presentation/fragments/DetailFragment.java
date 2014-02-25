@@ -52,7 +52,6 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private ImageButton imageButton;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
-	private static String timeStamp;
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private boolean mapPrepared = false;
@@ -128,6 +127,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	}
 
 	public void initializeFragmentLandscape() {
+		
 
 		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 		// LinearLayout linleaLayout = (LinearLayout) view
@@ -165,8 +165,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		
 
 		
-        
-		//Closed routes cannot generate a new picture
+       	//Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
          imageButton.setVisibility(View.INVISIBLE);
 		}
@@ -213,7 +212,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 
-				fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE, false);
+				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE, false);
 
 				// create intent with ACTION_IMAGE_CAPTURE action
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -229,48 +228,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	private static Uri getOutputMediaFileUri(int type, boolean small) {
-		return Uri.fromFile(getOutputMediaFile(type, small));
-	}
-
-	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(int type, boolean small) {
-		// To be safe, you should check that the SDCard is mounted
-		// using Environment.getExternalStorageState() before doing this.
-
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"MyCameraApp");
-		// This location works best if you want the created images to be shared
-		// between applications and persist after your app has been uninstalled.
-
-		// Create the storage directory if it does not exist
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
-
-		// Create a media file name
-
-		timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		File mediaFile;
-		if (type == MEDIA_TYPE_IMAGE) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + timeStamp + ".jpg");
-		} else if (type == MEDIA_TYPE_VIDEO) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "VID_" + timeStamp + ".mp4");
-		} else {
-			return null;
-		}
-		
-
-
-		return mediaFile;
-	}
+	
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -280,46 +238,46 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			if (gps.canGetLocation()) {
 				
 				
-			File small =	getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
-			Uri uri = Uri.fromFile(small);
-			
-			
-			Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
-				
-		        
-		   
-		        FileOutputStream fOut = null;
-				try {
-					fOut = new FileOutputStream(small);
-					 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-					 fOut.flush();
-				     fOut.close();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-		       
-		       
-		       
-//		        
-//				String newUrl = 	MediaStore.Images.Media.insertImage(context.getContentResolver(),resizedBitmap ,small.getName(),small.getName());
-//				Toast.makeText(getActivity(), newUrl, Toast.LENGTH_SHORT);
-//		     
-		        
-		        
-		       
-		        
-
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+				
+			File small_picture = BitmapManager.savePreviewBitmapToStorage(fileUri);
+			
+			
+			if(small_picture != null) {
+				
+				Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(fileUri.getPath(), 220, 220);
+			   
+			        FileOutputStream fOut = null;
+					try {
+						fOut = new FileOutputStream(small_picture);
+						 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+						 fOut.flush();
+					     fOut.close();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
 
+					route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
+							fileUri.getPath(), small_picture.getPath(), gps.getLatitude(), gps
+									.getLongitude()));
+					
+				// If no small picture could be created, NULL is stored	
+			} else {
 				route.addRoutePointDB(new RoutePoint(route.getId(), tsTemp,
-						fileUri.getPath(), small.getPath(), gps.getLatitude(), gps
+						fileUri.getPath(), null, gps.getLatitude(), gps
 								.getLongitude()));
+				
+			}
+
+
+			
 				// route erneut anzeigen
 				mCallback.onCamStart(route);
 
