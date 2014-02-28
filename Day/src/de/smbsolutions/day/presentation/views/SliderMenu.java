@@ -48,6 +48,8 @@ public class SliderMenu {
 
 		mDrawerLayout = (DrawerLayout) context.findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) context.findViewById(R.id.list_slidermenu);
+		
+		
 		try {
 			mCallback = (MainCallback) context;
 		} catch (ClassCastException e) {
@@ -79,6 +81,7 @@ public class SliderMenu {
 		
 		navDrawerItems = new ArrayList<NavDrawerItem>();
 
+		
 		// adding nav drawer items to array
 		//Landkarte
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
@@ -104,9 +107,9 @@ public class SliderMenu {
 	public NavDrawerListAdapter getAdapter(){
 		
 		// Recycle the typed array
-				navMenuIcons.recycle();
+		navMenuIcons.recycle();
 				
-				mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 				
 				
 		// setting the nav drawer list adapter

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -96,6 +97,7 @@ public class MarkerWorkerTask extends
 			polylineOptions.add(new LatLng(mapSet.getValue().getLatitude(),
 					mapSet.getValue().getLongitude()));
 			Polyline polyline = map.addPolyline(polylineOptions);
+			polyline.setColor(Color.rgb(136, 204,0));
 			Bitmap background = BitmapFactory.decodeResource(
 					context.getResources(), R.drawable.custom_marker);
 
