@@ -139,7 +139,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			
 			
 
-			map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setPadding(0, 70, 0, 0);
 			// get views from fragment

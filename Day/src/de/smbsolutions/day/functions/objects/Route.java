@@ -11,6 +11,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -113,7 +114,7 @@ public class Route implements Parcelable {
 		markerMap = new HashMap<Marker, Timestamp>();
 
 		PolylineOptions polylineOptions = new PolylineOptions();
-		
+
 		// add markers to map
 		if (details == true) {
 			if (hasPicturePoint()) {
@@ -123,16 +124,10 @@ public class Route implements Parcelable {
 							.getLongitude()));
 					builder.include(new LatLng(point.getLatitude(), point
 							.getLongitude()));
-					// MarkerOptions markerOpt = new MarkerOptions().position(
-					// new LatLng(point.getLatitude(), point.getLongitude()))
-					//
-					// .title("Ihr aktueller Standort");
-					//
-					// Marker marker = map.addMarker(markerOpt);
-					// markerMap.put(marker, point.getTimestamp());
-					// markers.add(marker);
+
 				}
 				Polyline polyline = map.addPolyline(polylineOptions);
+				polyline.setColor(Color.rgb(136, 204,0));
 				LatLngBounds bounds = builder.build();
 				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 						bounds, 60);
@@ -158,7 +153,7 @@ public class Route implements Parcelable {
 			}
 
 			Polyline polyline = map.addPolyline(polylineOptions);
-
+			polyline.setColor(Color.rgb(136, 204,0));
 			// zoompoint
 			LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -187,10 +182,10 @@ public class Route implements Parcelable {
 					// timestamp is null when the marker doesn't contain a
 					// picture
 					if (timestamp != null) {
-//						Intent intent = new Intent(context,
-//								PictureActivity.class);
-//						intent.putExtra("timestamp", timestamp.toString());
-//						context.startActivity(intent);
+						// Intent intent = new Intent(context,
+						// PictureActivity.class);
+						// intent.putExtra("timestamp", timestamp.toString());
+						// context.startActivity(intent);
 
 					}
 					return false;
@@ -232,7 +227,7 @@ public class Route implements Parcelable {
 		this.id = id;
 	}
 
-	public List<RoutePoint> getRoutePoints() {
+	public ArrayList<RoutePoint> getRoutePoints() {
 		return routePoints;
 	}
 
