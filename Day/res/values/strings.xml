@@ -19,14 +19,14 @@
     <!-- Nav Drawer Menu Items -->
 
     <string-array name="nav_drawer_items">
-        <item>Landkarte</item>
-        <item>Sattelite</item>
+        <item>Normal</item>
+        <item>Satellit</item>
         <item>Terrain</item>
         <item>Einstellungen</item>
         <item>GPS</item>
         <item>Kamera</item>
         <item>Infos zur App</item>
-         <item/>
+        <item/>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -35,14 +35,14 @@
     <!-- Keep them in order as the titles are in -->
 
     <array name="nav_drawer_icons">
-       <item>@drawable/ic_gps</item>
-        <item>@drawable/ic_gps</item>
-        <item>@drawable/ic_gps</item>
+        <item>@drawable/map_normal</item>
+        <item>@drawable/map_satelite</item>
+        <item>@drawable/map_terrain</item>
         <item/>
-        <item>@drawable/ic_gps</item>
-        <item>@drawable/ic_gps</item>
-         <item>@drawable/ic_gps</item>
-          <item/>
+        <item>@drawable/setting_gps</item>
+        <item>@drawable/setting_camera</item>
+        <item>@drawable/setting_info</item>
+        <item/>
     </array>
 
     <!-- Content Description -->

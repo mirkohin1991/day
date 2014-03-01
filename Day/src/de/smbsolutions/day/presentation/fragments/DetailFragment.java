@@ -38,6 +38,7 @@ import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
+import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 
 public class DetailFragment extends android.support.v4.app.Fragment {
 
@@ -146,8 +147,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void initializeFragmentPortrait() {
 
-		map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-		map.setPadding(0, 100, 0, 100);
+		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+//		map.setPadding(0, 0, 99999, 0); // weg isses :D
 		map.getUiSettings().setZoomControlsEnabled(false);
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
@@ -230,7 +231,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			GPSTracker gps = GPSTracker.getInstance(getActivity());
 			if (gps.canGetLocation()) {
-              
+
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
 				if (resultCode == -1) {
@@ -272,14 +273,36 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 					}
 
-					// route erneut anzeigen
-					mCallback.onCamStart(route);
+					LinearLayout myGallery = (LinearLayout) view
+							.findViewById(R.id.LinearLayoutImage);
 
+					myGallery.removeAllViews(); // bessere lösung, immer nur das
+												// neue bild
+												// einfügen?
+					BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
+							getActivity());
+					task.execute(route);
+					
+					MarkerWorkerTask markertask = new MarkerWorkerTask(
+							getActivity(), map);
+					markertask.execute(route.getRoutePoints());
+					
+					// mCallback.onCamStart(route);
 				}
 
 			} else {
-				// route erneut anzeigen
-				mCallback.onCamStart(route);
+				LinearLayout myGallery = (LinearLayout) view
+						.findViewById(R.id.LinearLayoutImage);
+
+				myGallery.removeAllViews(); // bessere lösung, immer nur das
+											// neue bild
+											// einfügen?
+				BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
+						getActivity());
+				task.execute(route);
+				MarkerWorkerTask markertask = new MarkerWorkerTask(
+						getActivity(), map);
+				markertask.execute(route.getRoutePoints());
 
 				Toast.makeText(getActivity(),
 						"Keine Ortung möglich, bitte erneut versuchen",
