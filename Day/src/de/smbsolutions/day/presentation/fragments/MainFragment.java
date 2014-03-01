@@ -42,7 +42,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private SupportMapFragment fragment;
 	private View view;
 	private RouteList routeList;
-	private TextView txtView;
+	private TextView txtViewPic;
+	private TextView txtViewDate;
 	private ListView meineListView;
 	private Button startButton;
 	// private Button btnStopRoute;
@@ -159,7 +160,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			meineListView.setItemChecked(index, true);
 			sel_Route = routeList.getListRoutes().get(index);
 
-			changeButtontext(routeList.getlastRoute());
+			
 			changeDisplayedRouteDesc(routeList.getlastRoute());
 
 			if (routeList.isOpenRoute()) {
@@ -246,8 +247,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				meineListe.add(route.getRouteName());
 			}
 
-			// last route = active route?
-			changeButtontext(routeList.getlastRoute());
+		
 			changeDisplayedRouteDesc(routeList.getlastRoute());
 			ListAdapter listenAdapter = new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, meineListe);
@@ -365,7 +365,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				}
 
 				map = sel_Route.prepareMap(map, getActivity(), false);
-				changeButtontext(sel_Route);
+			
 				changeDisplayedRouteDesc(sel_Route);
 
 			}
@@ -389,8 +389,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-
-
 	public void addListitemListender(ListView listView) {
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -411,10 +409,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				}
 
 				map = sel_Route.prepareMap(map, getActivity(), false);
-				changeButtontext(routeList.getListRoutes().get(position));
+				
 				changeDisplayedRouteDesc(routeList.getListRoutes()
 						.get(position));
-
 			}
 		});
 
@@ -430,26 +427,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		});
 	}
 
-	// Über routeList oder lastroute als parameter?
-	public void changeButtontext(Route route) {
-
-		startButton = (Button) view.findViewById(R.id.imagebutton1);
-
-		startButton.setText(route.getDate());
-
-		// //If there is an open route
-		// if (routeList.isOpenRoute()) {
-		// startButton.setText("Route stoppen");
-		//
-		// //No open route -> a new one can be started
-		// } else {
-		// startButton.setText("Route starten");
-		// }
-	}
 
 	public void changeDisplayedRouteDesc(Route route) {
-		txtView = (TextView) view.findViewById(R.id.txtViewPic);
-		txtView.setText(route.getRouteName());
+		txtViewPic = (TextView) view.findViewById(R.id.txtViewPic);
+		txtViewPic.setText(route.getRouteName());
+		
+		txtViewDate = (TextView) view.findViewById(R.id.txtViewDatePreview);
+		txtViewDate.setText(route.getDate());
+		
+		
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			Bundle savedInstanceState) {
 		config = getResources().getConfiguration();
 
-		view = inflater.inflate(R.layout.cr_fragment, container, false);
+		view = inflater.inflate(R.layout.detail_fragment, container, false);
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
 		index = data.getInt("index");

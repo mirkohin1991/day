@@ -47,11 +47,13 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/h1" />
 
-                    <Button
-                        android:id="@+id/imagebutton1"
+                    <TextView
+                        android:id="@+id/txtViewDatePreview"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:background="#00000000"
                         android:text="Button"
                         android:textColor="@color/white"
