@@ -148,19 +148,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	public void addPictureClickListener (ImageView image) {
 		
 		
-		
-		image.setOnFocusChangeListener( new View.OnFocusChangeListener() {
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				
-				int i; 
-				
-				i = 1;
-				
-			}
-		});
-		
+	
 		
 		image.setOnClickListener(new OnClickListener() {
 			
@@ -175,10 +163,9 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 					if (tsClicked == point.getTimestamp()) {
 						
 						
-						mCallback.onPictureClick(route, point);
 						
 						//DAS SOLL SPÄTER MAL PASSIEREN!
-						//route.setZoomSpecificMarker(point);
+						route.setZoomSpecificMarker(point);
 						
 					}
 					

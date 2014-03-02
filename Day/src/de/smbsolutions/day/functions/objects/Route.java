@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class Route implements Parcelable {
 	private int id;
 
 	private Context context;
-	public HashMap<Marker, Timestamp> markerMap;
+	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
 	// Constructor for routes that have already been created
 	public Route() {
@@ -113,7 +114,7 @@ public class Route implements Parcelable {
 		Bitmap bitmap = null;
 
 		// Necessary to save in order to connect timestamp and marker
-		markerMap = new HashMap<Marker, Timestamp>();
+		markerMap = new LinkedHashMap<RoutePoint, Marker>();
 
 		PolylineOptions polylineOptions = new PolylineOptions();
 
@@ -125,7 +126,7 @@ public class Route implements Parcelable {
 				.title(getRouteName());
 
 				Marker marker = map.addMarker(markerOpt);
-				markerMap.put(marker, point.getTimestamp());
+				markerMap.put(point, marker);
 				
 			}
 
@@ -155,69 +156,66 @@ public class Route implements Parcelable {
 
 
 		// Necessary to save connect timestamp and marker
-		markerMap = new HashMap<Marker, Timestamp>();
+		if (markerMap != null)  {
+		markerMap.clear();
+		}else {
+			markerMap = new LinkedHashMap<RoutePoint, Marker>();
+		}
 
 		PolylineOptions polylineOptions = new PolylineOptions();
 		
-				LatLngBounds.Builder builder = new LatLngBounds.Builder();
-				for (RoutePoint point : this.routePoints) {
-					polylineOptions.add(new LatLng(point.getLatitude(), point
-							.getLongitude()));
-					
-					MarkerOptions markerOpt = new MarkerOptions().position(
-							new LatLng(point.getLatitude(), point.getLongitude()))
-					.title(getRouteName());
 
-					Marker marker = map.addMarker(markerOpt);
-					markerMap.put(marker, point.getTimestamp());
-
-				}
-				Polyline polyline = map.addPolyline(polylineOptions);
-				polyline.setColor(Color.rgb(136, 204,0));
-//				LatLngBounds bounds = builder.build();
-//				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-//						bounds, 60);
-//				map.animateCamera(camUpdate)
-				
 //				
 				
 				// add markers to map
 				if (hasPicturePoint()) {
 				
-				// Unsaubere Lösung! Oben alle hingefügt, jetzt wieder gelöscht	
-			   //  map.clear();
+					for (RoutePoint point : this.routePoints) {
+						
+						
+						MarkerOptions markerOpt = new MarkerOptions().position(
+								new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName());
+
+						Marker marker = map.addMarker(markerOpt);
+						markerMap.put(point, marker);
+					
+					
+					}
 				
-				MarkerWorkerTask task = new MarkerWorkerTask(context, map, markerMap);
+				MarkerWorkerTask task = new MarkerWorkerTask(context, map, markerMap, this);
 				task.execute(this.routePoints);
 				
 					
 				} else {
+					
+					LatLngBounds.Builder builder = new LatLngBounds.Builder();
+					for (RoutePoint point : this.routePoints) {
+						polylineOptions.add(new LatLng(point.getLatitude(), point
+								.getLongitude()));
+						
+						MarkerOptions markerOpt = new MarkerOptions().position(
+								new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName());
+
+						Marker marker = map.addMarker(markerOpt);
+						markerMap.put(point, marker);
+
+					}
+					Polyline polyline = map.addPolyline(polylineOptions);
+					polyline.setColor(Color.rgb(136, 204,0));
+//					LatLngBounds bounds = builder.build();
+//					CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+//							bounds, 60);
+//					map.animateCamera(camUpdate)
+					
 					//Setting the zoom
  				setZoomAllMarkers();
 					
 				}
 
 		
-			map.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-				@Override
-				public boolean onMarkerClick(Marker marker) {
-
-					Timestamp timestamp = markerMap.get(marker);
-
-					// timestamp is null when the marker doesn't contain a
-					// picture
-					if (timestamp != null) {
-						// Intent intent = new Intent(context,
-						// PictureActivity.class);
-						// intent.putExtra("timestamp", timestamp.toString());
-						// context.startActivity(intent);
-
-					}
-					return false;
-				}
-
-			});
+			
 
 	
 		return map;
@@ -230,9 +228,9 @@ public class Route implements Parcelable {
 		// zoompoint
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
+		for (Map.Entry<RoutePoint,Marker> mapSet : markerMap.entrySet()) {
 
-			builder.include(mapSet.getKey().getPosition());
+			builder.include(mapSet.getValue().getPosition());
 
 		}
 
@@ -250,24 +248,22 @@ public class Route implements Parcelable {
 		
 		//Getting the marker for the routepoint
 	    // There is no way to access the KEY via VALUE directly
-		for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
-			
-			if (mapSet.getValue() == point.getTimestamp()) {
-				
-				builder.include(mapSet.getKey().getPosition());
-				
-				//leaving the for each loop
-				//HAS OT BE PROVED!
-				
-			}
-			
-			LatLngBounds bounds = builder.build();
-			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-					bounds, 60);
-			map.animateCamera(camUpdate);
-			
+		
+		LatLng latlng = markerMap.get(point).getPosition();
+		
+		if ( latlng != null){
+		
+		builder.include(latlng);
 
+		LatLngBounds bounds = builder.build();
+		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+				bounds, 60);
+		map.animateCamera(camUpdate);
+		
 		}
+
+
+	
 		
 	
 		
@@ -356,8 +352,8 @@ public class Route implements Parcelable {
 		
 	}
 
-	public HashMap<Marker, Timestamp> getMarkerMap() {
-		return markerMap;
-	}
+//	public LinkedHashMap<RoutePoint, Marker> getMarkerMap() {
+//		return markerMap;
+//	}
 
 }
