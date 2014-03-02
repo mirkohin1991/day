@@ -16,7 +16,6 @@ public class AppSettings {
 				.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
 		CAMERA_SAVEINGALLERY = Database
 				.getSettingValue(Database.SETTINGS_SHOW_IN_GAL);
-		
 	}
 
 	public static int getMAP_TYPE() {
