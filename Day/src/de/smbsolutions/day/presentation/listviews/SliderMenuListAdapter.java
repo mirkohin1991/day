@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.views;
+package de.smbsolutions.day.presentation.listviews;
 
 import java.util.ArrayList;
 
@@ -16,13 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.smbsolutions.day.R;
 
-public class NavDrawerListAdapter extends BaseAdapter {
+public class SliderMenuListAdapter extends BaseAdapter {
 
 	private Context context;
-	private ArrayList<NavDrawerItem> navDrawerItems;
+	private ArrayList<SliderMenuItem> navDrawerItems;
 
-	public NavDrawerListAdapter(Context context,
-			ArrayList<NavDrawerItem> navDrawerItems) {
+	public SliderMenuListAdapter(Context context,
+			ArrayList<SliderMenuItem> navDrawerItems) {
 		this.context = context;
 		this.navDrawerItems = navDrawerItems;
 
@@ -49,7 +49,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			LayoutInflater mInflater = (LayoutInflater) context
 					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-			convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+			convertView = mInflater.inflate(R.layout.slidermenu_list_item, null);
 		}
 
 		ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);

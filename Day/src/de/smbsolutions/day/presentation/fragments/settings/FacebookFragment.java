@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.fragments;
+package de.smbsolutions.day.presentation.fragments.settings;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ public class FacebookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
-        View rootView = inflater.inflate(R.layout.fragment_facebook, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings_facebook, container, false);
          
         return rootView;
     }

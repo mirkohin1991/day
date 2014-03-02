@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.views;
+package de.smbsolutions.day.functions.objects;
 
 import java.util.ArrayList;
 
@@ -14,8 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.presentation.fragments.CameraFragment;
-import de.smbsolutions.day.presentation.fragments.GPSFragment;
+import de.smbsolutions.day.presentation.fragments.settings.CameraFragment;
+import de.smbsolutions.day.presentation.fragments.settings.GPSFragment;
+import de.smbsolutions.day.presentation.listviews.SliderMenuItem;
+import de.smbsolutions.day.presentation.listviews.SliderMenuListAdapter;
 
 public class SliderMenu {
 
@@ -34,8 +36,8 @@ public class SliderMenu {
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
-	private ArrayList<NavDrawerItem> navDrawerItems;
-	private NavDrawerListAdapter adapter;
+	private ArrayList<SliderMenuItem> navDrawerItems;
+	private SliderMenuListAdapter adapter;
 
 	private Bundle savedInstanceState;
 
@@ -66,7 +68,7 @@ public class SliderMenu {
 		return mDrawerList;
 	}
 
-	public ArrayList<NavDrawerItem> getNavDrawerItems(){
+	public ArrayList<SliderMenuItem> getNavDrawerItems(){
 		
 		mTitle = mDrawerTitle = context.getTitle();
 
@@ -79,32 +81,32 @@ public class SliderMenu {
 
 
 		
-		navDrawerItems = new ArrayList<NavDrawerItem>();
+		navDrawerItems = new ArrayList<SliderMenuItem>();
 
 		
 		// adding nav drawer items to array
 		//Landkarte
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
 		//Sattelite
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		//Terrain
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 		
 		
 		// Einstellungen (Ueberschrift)
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 		// GPS
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
 //		Kamera
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
 		//App Info
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
 		
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
 		return navDrawerItems;
 	}
 	
-	public NavDrawerListAdapter getAdapter(){
+	public SliderMenuListAdapter getAdapter(){
 		
 		// Recycle the typed array
 		navMenuIcons.recycle();
@@ -113,7 +115,7 @@ public class SliderMenu {
 				
 				
 		// setting the nav drawer list adapter
-		adapter = new NavDrawerListAdapter(context.getApplicationContext(),
+		adapter = new SliderMenuListAdapter(context.getApplicationContext(),
 				navDrawerItems);
 		mDrawerList.setAdapter(adapter);
 		

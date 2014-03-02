@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.views;
+package de.smbsolutions.day.presentation.listviews;
 
 import java.util.List;
 
@@ -17,16 +17,16 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 
 
-public class MainListAdapter extends ArrayAdapter<MainListElement> {
+public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 	
-    private List<MainListElement> listElements;
+    private List<AllRoutesListElement> listElements;
     private Context context;
 	private MainCallback mCallback;
    
 
 
-    public MainListAdapter(Context context, int resourceId, 
-                             List<MainListElement> listElements, MainCallback mCallback ) {
+    public AllRoutesListAdapter(Context context, int resourceId, 
+                             List<AllRoutesListElement> listElements, MainCallback mCallback ) {
         super(context, resourceId, listElements);
         this.listElements = listElements;
         this.context = context;
@@ -54,12 +54,12 @@ public class MainListAdapter extends ArrayAdapter<MainListElement> {
             LayoutInflater inflater =
                     (LayoutInflater) 
                     context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-           view = inflater.inflate(R.layout.list_item, null);
+           view = inflater.inflate(R.layout.allrouteslist_list_item, null);
            
         }
         
         
-        MainListElement listElement = listElements.get(position);
+        AllRoutesListElement listElement = listElements.get(position);
         if (listElement != null) {
         	
 //        	
@@ -124,7 +124,7 @@ public class MainListAdapter extends ArrayAdapter<MainListElement> {
 
 
 
-	public List<MainListElement> getListElements() {
+	public List<AllRoutesListElement> getListElements() {
 		return listElements;
 	}
     

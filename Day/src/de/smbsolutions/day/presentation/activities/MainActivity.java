@@ -17,6 +17,7 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
+import de.smbsolutions.day.functions.objects.SliderMenu;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
 import de.smbsolutions.day.presentation.fragments.PictureFragment;
@@ -24,7 +25,6 @@ import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.DeletePictureDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 import de.smbsolutions.day.presentation.popups.StopRouteDialog;
-import de.smbsolutions.day.presentation.views.SliderMenu;
 
 public class MainActivity extends FragmentActivity implements MainCallback {
 	// Bijan
@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
-		setContentView(R.layout.main_activity);
+		setContentView(R.layout.activity_main);
 
 		mTitle = mDrawerTitle = getTitle();
 

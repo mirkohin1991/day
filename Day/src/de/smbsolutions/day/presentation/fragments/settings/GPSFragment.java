@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.fragments;
+package de.smbsolutions.day.presentation.fragments.settings;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -27,7 +27,7 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_gps, container,
+		View rootView = inflater.inflate(R.layout.fragment_settings_gps, container,
 				false);
 		//
 

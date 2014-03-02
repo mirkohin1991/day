@@ -33,8 +33,8 @@ import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.presentation.views.MainListElement;
-import de.smbsolutions.day.presentation.views.MainListAdapter;
+import de.smbsolutions.day.presentation.listviews.AllRoutesListAdapter;
+import de.smbsolutions.day.presentation.listviews.AllRoutesListElement;
 
 public class MainFragment extends android.support.v4.app.Fragment {
 
@@ -65,7 +65,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		routeList = new RouteList();
 		// Configuration for device orientation and shit
 		config = getResources().getConfiguration();
-		view = inflater.inflate(R.layout.main_fragment, container, false);
+		view = inflater.inflate(R.layout.fragment_main, container, false);
 		return view;
 	}
 
@@ -145,16 +145,16 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			map.setPadding(0, 70, 0, 0);
 			// get views from fragment
 			meineListView = (ListView) view.findViewById(R.id.listView1);
-			List<MainListElement> meineListe = new ArrayList<MainListElement>();
+			List<AllRoutesListElement> meineListe = new ArrayList<AllRoutesListElement>();
 			for (Route route : routeList.getListRoutes()) {
 				// Only completed routes shall appear in the "recent routes"
 				// list
 				if (route.getActive().equals("")) {
-					meineListe.add(new MainListElement(route));
+					meineListe.add(new AllRoutesListElement(route));
 				}
 			}
 			// Set the list view adapter
-			meineListView.setAdapter(new MainListAdapter(getActivity(),
+			meineListView.setAdapter(new AllRoutesListAdapter(getActivity(),
 					R.id.listView1, meineListe, mCallback));
 
 			meineListView.setItemChecked(index, true);
@@ -191,8 +191,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 							if (flag_first == true) {
 
-								map = routeList.getlastRoute().prepareMap(map,
-										getActivity(), false);
+								map = routeList.getlastRoute().prepareMapPreview(map,
+										getActivity());
 
 								flag_first = false;
 							}
@@ -262,8 +262,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 						@Override
 						public void onGlobalLayout() {
 
-							map = routeList.getlastRoute().prepareMap(map,
-									getActivity(), false);
+							map = routeList.getlastRoute().prepareMapPreview(map,
+									getActivity());
 							addListitemListender(meineListView);
 							// LandscapeButtonCLick
 						}
@@ -345,7 +345,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				}
 
-				map = sel_Route.prepareMap(map, getActivity(), false);
+				map = sel_Route.prepareMapPreview(map, getActivity());
 			
 				changeDisplayedRouteDesc(sel_Route);
 
@@ -378,7 +378,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				try {
 					// Getting the route through the adapter
-					MainListElement element = (MainListElement) meineListView
+					AllRoutesListElement element = (AllRoutesListElement) meineListView
 							.getAdapter().getItem(position);
 					sel_Route = element.getRoute();
 					// OLD
@@ -389,7 +389,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				}
 
-				map = sel_Route.prepareMap(map, getActivity(), false);
+				map = sel_Route.prepareMapPreview(map, getActivity());
 				
 				changeDisplayedRouteDesc(routeList.getListRoutes()
 						.get(position));

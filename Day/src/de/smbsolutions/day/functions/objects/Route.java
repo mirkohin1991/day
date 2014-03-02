@@ -43,7 +43,7 @@ public class Route implements Parcelable {
 	private int id;
 
 	private Context context;
-	private HashMap<Marker, Timestamp> markerMap;
+	public HashMap<Marker, Timestamp> markerMap;
 
 	// Constructor for routes that have already been created
 	public Route() {
@@ -99,10 +99,56 @@ public class Route implements Parcelable {
 	public void addRoutePoint(RoutePoint point) {
 		routePoints.add(point);
 	}
+	
+	
+	
+	
+
+	public GoogleMap prepareMapPreview(final GoogleMap mapImport, final Context context
+			) {
+		
+		//saving the map
+		this.map = mapImport;
+
+		// Intern speichern, damit der Action Listener unten anspringen kann
+		this.context = context;
+
+
+		Bitmap bitmap = null;
+
+		// Necessary to save in order to connect timestamp and marker
+		markerMap = new HashMap<Marker, Timestamp>();
+
+		PolylineOptions polylineOptions = new PolylineOptions();
+
+			for (RoutePoint point : this.routePoints) {
+				polylineOptions.add(new LatLng(point.getLatitude(), point
+						.getLongitude()));
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+				.title(getRouteName());
+
+				Marker marker = map.addMarker(markerOpt);
+				markerMap.put(marker, point.getTimestamp());
+				
+			}
+
+	
+			Polyline polyline = map.addPolyline(polylineOptions);
+			polyline.setColor(Color.rgb(136, 204,0));
+						
+			//Setting the zoom
+			setZoomAllMarkers();
+
+
+		return map;
+		
+
+	}
 
 	@SuppressWarnings("unchecked")
-	public GoogleMap prepareMap(final GoogleMap mapImport, final Context context,
-			boolean details) {
+	public GoogleMap prepareMapDetails(final GoogleMap mapImport, final Context context
+			) {
 		
 		
 		//saving the map
@@ -111,62 +157,53 @@ public class Route implements Parcelable {
 		// Intern speichern, damit der Action Listener unten anspringen kann
 		this.context = context;
 
-		List<Marker> markers = new ArrayList<Marker>();
-		Bitmap bitmap = null;
 
 		// Necessary to save connect timestamp and marker
 		markerMap = new HashMap<Marker, Timestamp>();
 
 		PolylineOptions polylineOptions = new PolylineOptions();
-
-		// add markers to map
-		if (details == true && hasPicturePoint()) {
-			// if (hasPicturePoint()) {
+		
 				LatLngBounds.Builder builder = new LatLngBounds.Builder();
 				for (RoutePoint point : this.routePoints) {
 					polylineOptions.add(new LatLng(point.getLatitude(), point
 							.getLongitude()));
-					builder.include(new LatLng(point.getLatitude(), point
-							.getLongitude()));
+					
+					
+					MarkerOptions markerOpt = new MarkerOptions().position(
+							new LatLng(point.getLatitude(), point.getLongitude()))
+					.title(getRouteName());
+
+					
+					Marker marker = map.addMarker(markerOpt);
+					markerMap.put(marker, point.getTimestamp());
 
 				}
 				Polyline polyline = map.addPolyline(polylineOptions);
 				polyline.setColor(Color.rgb(136, 204,0));
-				LatLngBounds bounds = builder.build();
-				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-						bounds, 60);
-				map.animateCamera(camUpdate);
-				MarkerWorkerTask task = new MarkerWorkerTask(context, map);
+//				LatLngBounds bounds = builder.build();
+//				CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+//						bounds, 60);
+//				map.animateCamera(camUpdate)
+				
+//				
+				
+				// add markers to map
+				if (hasPicturePoint()) {
+				
+				// Unsaubere Lösung! Oben alle hingefügt, jetzt wieder gelöscht	
+			    map.clear();
+				
+				MarkerWorkerTask task = new MarkerWorkerTask(context, map, markerMap);
 				task.execute(this.routePoints);
+				
+					
+				} else {
+					//Setting the zoom
+ 				setZoomAllMarkers();
+					
+				}
 
-			//}
-		} else {
-			for (RoutePoint point : this.routePoints) {
-				polylineOptions.add(new LatLng(point.getLatitude(), point
-						.getLongitude()));
-
-				MarkerOptions markerOpt = new MarkerOptions().position(
-						new LatLng(point.getLatitude(), point.getLongitude()))
-
-				.title("Ihr aktueller Standort");
-
-				Marker marker = map.addMarker(markerOpt);
-				markerMap.put(marker, point.getTimestamp());
-				markers.add(marker);
-
-			}
-
-			Polyline polyline = map.addPolyline(polylineOptions);
-			polyline.setColor(Color.rgb(136, 204,0));
-			
-			
-			//Setting the zoom
-			setZoomAllMarkers();
-
-		}
-
-		if (details == true) {
-
+		
 			map.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 				@Override
@@ -188,8 +225,7 @@ public class Route implements Parcelable {
 
 			});
 
-		}
-
+	
 		return map;
 
 	}
@@ -228,7 +264,7 @@ public class Route implements Parcelable {
 				
 				//leaving the for each loop
 				//HAS OT BE PROVED!
-				break;
+				
 			}
 			
 			LatLngBounds bounds = builder.build();
@@ -324,6 +360,10 @@ public class Route implements Parcelable {
 			
 //		}
 		
+	}
+
+	public HashMap<Marker, Timestamp> getMarkerMap() {
+		return markerMap;
 	}
 
 }

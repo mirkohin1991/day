@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.fragments;
+package de.smbsolutions.day.presentation.fragments.settings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +26,7 @@ public class CameraFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
-        View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings_camera, container, false);
         
         
         int show_in_gal = Database.getSettingValue(Database.SETTINGS_TRACKING);

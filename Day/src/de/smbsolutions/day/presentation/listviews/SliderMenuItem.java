@@ -1,13 +1,13 @@
-package de.smbsolutions.day.presentation.views;
+package de.smbsolutions.day.presentation.listviews;
 
-public class NavDrawerItem {
+public class SliderMenuItem {
 	
 	private String title;
 	private int icon;
 
-	public NavDrawerItem(){}
+	public SliderMenuItem(){}
 
-	public NavDrawerItem(String title, int icon){
+	public SliderMenuItem(String title, int icon){
 		this.title = title;
 		this.icon = icon;
 	}

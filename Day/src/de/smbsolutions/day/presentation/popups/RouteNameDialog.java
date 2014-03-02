@@ -35,7 +35,7 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
-		final View nameView = inflater.inflate(R.layout.routename_dialog, null);
+		final View nameView = inflater.inflate(R.layout.dialog_createroute, null);
 		// Adding the customized popup layout
 		builder.setView(nameView);
 

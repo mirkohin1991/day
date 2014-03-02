@@ -67,7 +67,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 			Bundle savedInstanceState) {
 		config = getResources().getConfiguration();
 
-		view = inflater.inflate(R.layout.detail_fragment, container, false);
+		view = inflater.inflate(R.layout.fragment_detail, container, false);
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
 		
@@ -193,8 +193,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 					public void onGlobalLayout() {
 						if (route != null) {
 							if (mapPrepared == false) {
-								map = route
-										.prepareMap(map, getActivity(), true);
+								map = route.prepareMapDetails(map, getActivity());
 								mapPrepared = true;
 								addButtonClickListener(imageButton);
 
@@ -316,7 +315,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				task.execute(route);
 				
 				MarkerWorkerTask markertask = new MarkerWorkerTask(
-						getActivity(), map);
+						getActivity(), map, route.getMarkerMap());
 				markertask.execute(route.getRoutePoints());
 		        }
 

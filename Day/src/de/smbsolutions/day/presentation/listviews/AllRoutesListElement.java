@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.views;
+package de.smbsolutions.day.presentation.listviews;
 
 
 import de.smbsolutions.day.functions.objects.Route;
@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.widget.BaseAdapter;
 
 
-public class MainListElement {
+public class AllRoutesListElement {
 	
 	private Drawable icon;
 	private String textName;
@@ -19,7 +19,7 @@ public class MainListElement {
 	private BaseAdapter adapter;
 	
 	
-	public MainListElement( Route route) {
+	public AllRoutesListElement( Route route) {
 		super();
 		this.route = route;
 		

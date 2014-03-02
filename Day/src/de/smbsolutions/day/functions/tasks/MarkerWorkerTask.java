@@ -43,14 +43,19 @@ public class MarkerWorkerTask extends
 	MarkerOptions markerOpt = new MarkerOptions();
 
 	// Necessary to save connect timestamp and marker
-	HashMap<Bitmap, RoutePoint> markerMap = new HashMap<Bitmap, RoutePoint>();
+	HashMap<Bitmap, RoutePoint> bitmapMap = new HashMap<Bitmap, RoutePoint>();
+	HashMap<Marker, Timestamp> markerMap;
+	
 
 	PolylineOptions polylineOptions = new PolylineOptions();
 
-	public MarkerWorkerTask(Context context, GoogleMap map) {
+	public MarkerWorkerTask(Context context, GoogleMap map, HashMap<Marker, Timestamp> markerMap) {
 		markers = new ArrayList<Marker>();
 		this.context = context;
 		this.map = map;
+		
+		//Saving the markermap. Necessary, because the route object shall get the changes!
+		this.markerMap = markerMap;
 	}
 
 	@Override
@@ -76,15 +81,17 @@ public class MarkerWorkerTask extends
 
 				if (bitmap != null) {
 					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
-					markerMap.put(bitmap, point);
+					bitmapMap.put(bitmap, point);
 
 				}
+				
+
 
 			}
 
 		}
 
-		return markerMap;
+		return bitmapMap;
 	}
 
 	@Override
@@ -114,6 +121,9 @@ public class MarkerWorkerTask extends
 
 			Marker marker = map.addMarker(markerOpt);
 			builder.include(marker.getPosition());
+			
+			//Fill the markerMap
+			markerMap.put(marker, mapSet.getValue().getTimestamp());
 
 		}
 
