@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.popups;
+package de.smbsolutions.day.presentation.dialogs;
 
 import java.io.File;
 
@@ -58,13 +58,9 @@ public class DeletePictureDialog extends DialogFragment {
 							if ( deleteFile.delete() == true && deleteFilePreview.delete()
 									) {
 								
-							//	refresh gallery after delete image
-								getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-										 Uri.parse("file://" +  Environment.getExternalStorageDirectory())));
-								
 								//Remove the picture paths
 								route.deletePictureDB(point);
-				
+
 							}
 							
 							mCallback.onDeletePicture(route);

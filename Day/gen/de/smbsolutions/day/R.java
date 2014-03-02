@@ -12,10 +12,10 @@ public final class R {
         /**  Nav Drawer List Item Icons 
  Keep them in order as the titles are in 
          */
-        public static final int nav_drawer_icons=0x7f090001;
+        public static final int nav_drawer_icons=0x7f0a0001;
         /**  Nav Drawer Menu Items 
          */
-        public static final int nav_drawer_items=0x7f090000;
+        public static final int nav_drawer_items=0x7f0a0000;
     }
     public static final class attr {
         /** 
@@ -171,6 +171,14 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int zOrderOnTop=0x7f010010;
+    }
+    public static final class bool {
+        /** 
+         Customize dimensions originally defined in res/values/dimens.xml (such as
+         screen margins) for sw600dp devices (e.g. 7" tablets) here.
+    
+         */
+        public static final int isTablet=0x7f090000;
     }
     public static final class color {
         public static final int Weiss=0x7f040015;
@@ -402,7 +410,7 @@ containing a value of this type.
         public static final int slidermenu_list_item=0x7f03000c;
     }
     public static final class menu {
-        public static final int main=0x7f0b0000;
+        public static final int main=0x7f0c0000;
     }
     public static final class string {
         public static final int action_settings=0x7f06001b;
@@ -516,10 +524,10 @@ containing a value of this type.
         public static final int stop_service=0x7f060021;
     }
     public static final class style {
-        public static final int ActionBar_Solid_Appbasetheme=0x7f0a0001;
-        public static final int ActionBar_Transparent_Appbasetheme=0x7f0a0003;
-        public static final int ActionBarTabStyle_Appbasetheme=0x7f0a0006;
-        public static final int ActionButton_CloseMode_Appbasetheme=0x7f0a0009;
+        public static final int ActionBar_Solid_Appbasetheme=0x7f0b0001;
+        public static final int ActionBar_Transparent_Appbasetheme=0x7f0b0003;
+        public static final int ActionBarTabStyle_Appbasetheme=0x7f0b0006;
+        public static final int ActionButton_CloseMode_Appbasetheme=0x7f0b0009;
         /** 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
@@ -532,16 +540,16 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0a000b;
-        public static final int DropDownListView_Appbasetheme=0x7f0a0005;
-        public static final int DropDownNav_Appbasetheme=0x7f0a0007;
-        public static final int MyTheme_ActionBar_TitleTextStyle=0x7f0a0002;
-        public static final int PopupMenu_Appbasetheme=0x7f0a0004;
-        public static final int ProgressBar_Appbasetheme=0x7f0a0008;
-        public static final int Theme_Appbasetheme=0x7f0a0000;
+        public static final int AppBaseTheme=0x7f0b000b;
+        public static final int DropDownListView_Appbasetheme=0x7f0b0005;
+        public static final int DropDownNav_Appbasetheme=0x7f0b0007;
+        public static final int MyTheme_ActionBar_TitleTextStyle=0x7f0b0002;
+        public static final int PopupMenu_Appbasetheme=0x7f0b0004;
+        public static final int ProgressBar_Appbasetheme=0x7f0b0008;
+        public static final int Theme_Appbasetheme=0x7f0b0000;
         /**  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int Theme_Appbasetheme_Widget=0x7f0a000a;
+        public static final int Theme_Appbasetheme_Widget=0x7f0b000a;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.

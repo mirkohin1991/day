@@ -175,8 +175,10 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 					if (tsClicked == point.getTimestamp()) {
 						
 						
-						//GEHT NOCH NICHT, DA HASHMAP MIT DEN MARKERN KOMISCHERWEISE LEER IST!
-						route.setZoomSpecificMarker(point);
+						mCallback.onPictureClick(route, point);
+						
+						//DAS SOLL SPÄTER MAL PASSIEREN!
+						//route.setZoomSpecificMarker(point);
 						
 					}
 					

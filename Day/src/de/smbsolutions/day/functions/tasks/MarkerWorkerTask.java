@@ -60,14 +60,15 @@ public class MarkerWorkerTask extends
 
 	@Override
 	protected HashMap<Bitmap, RoutePoint> doInBackground(
+			
 			ArrayList<RoutePoint>... params) {
 		List<Bitmap> bitmaps = new ArrayList<Bitmap>();
 		Bitmap bitmap = null;
 		routePoints = params[0];
 
 		for (RoutePoint point : routePoints) {
-			if (point.getPicture() != null) {
-				File pic = new File(point.getPicture());
+			if (point.getPicturePreview() != null) {
+				File pic = new File(point.getPicturePreview());
 				Uri uri = Uri.fromFile(pic);
 				Bitmap resizedBitmap_Placeholder = BitmapFactory
 						.decodeResource(context.getResources(),
@@ -85,8 +86,8 @@ public class MarkerWorkerTask extends
 
 				}
 				
-
-
+				
+				
 			}
 
 		}
@@ -126,6 +127,11 @@ public class MarkerWorkerTask extends
 			markerMap.put(marker, mapSet.getValue().getTimestamp());
 
 		}
+		
+		LatLngBounds bounds = builder.build();
+		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+				bounds, 60);
+		map.animateCamera(camUpdate);
 
 	}
 

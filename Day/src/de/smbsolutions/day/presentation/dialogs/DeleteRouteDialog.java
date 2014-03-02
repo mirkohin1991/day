@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.popups;
+package de.smbsolutions.day.presentation.dialogs;
 
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.RouteList;
@@ -10,7 +10,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class DeleteDialog extends DialogFragment {
+public class DeleteRouteDialog extends DialogFragment {
 
 	private RouteList routeList;
 	private Bundle bundle;

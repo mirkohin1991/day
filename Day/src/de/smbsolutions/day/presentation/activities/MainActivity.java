@@ -13,18 +13,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.database.DatabaseManager;
+import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.objects.SliderMenu;
+import de.smbsolutions.day.presentation.dialogs.DeletePictureDialog;
+import de.smbsolutions.day.presentation.dialogs.DeleteRouteDialog;
+import de.smbsolutions.day.presentation.dialogs.RouteNameDialog;
+import de.smbsolutions.day.presentation.dialogs.StopRouteDialog;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
 import de.smbsolutions.day.presentation.fragments.PictureFragment;
-import de.smbsolutions.day.presentation.popups.DeleteDialog;
-import de.smbsolutions.day.presentation.popups.DeletePictureDialog;
-import de.smbsolutions.day.presentation.popups.RouteNameDialog;
-import de.smbsolutions.day.presentation.popups.StopRouteDialog;
 
 public class MainActivity extends FragmentActivity implements MainCallback {
 	// Bijan
@@ -54,6 +57,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 		setContentView(R.layout.activity_main);
+		
+		
+		Database.getInstance(this);
+		Device device = new Device(this);
 
 		mTitle = mDrawerTitle = getTitle();
 
@@ -74,12 +81,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		slidermenu.getActionBarDrawerToggle();
 		
 		
-		//Small screens only have a portait mode
-				int layout = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-				if ( layout == Configuration.SCREENLAYOUT_SIZE_NORMAL ||
-						layout == Configuration.SCREENLAYOUT_SIZE_SMALL	) {
-					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-				}
+
+		if (device.isTablet()) {
+
+		} else {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		mfrag = new MainFragment();
 		tag = mfrag.getClass().getName();
@@ -146,7 +153,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onLongItemSelected(RouteList routeList, int index) {
 
-		DeleteDialog dialog = new DeleteDialog();
+		DeleteRouteDialog dialog = new DeleteRouteDialog();
 		Bundle bundle = new Bundle();
 		bundle.putInt("routeIndex", index);
 		bundle.putSerializable("routeList", routeList);
@@ -329,7 +336,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				
 				ft.replace(R.id.frame_container, pictureFrag, tag).addToBackStack(tag)
 						.commit();
-		
 		
 	}
 

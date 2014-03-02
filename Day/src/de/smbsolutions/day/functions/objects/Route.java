@@ -73,7 +73,7 @@ public class Route implements Parcelable {
 		}
 
 	}
-
+	
 	public void closeRoute() {
 
 		if (Database.closeRoute(id) == true) {
@@ -100,9 +100,6 @@ public class Route implements Parcelable {
 		routePoints.add(point);
 	}
 	
-	
-	
-	
 
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport, final Context context
 			) {
@@ -112,7 +109,6 @@ public class Route implements Parcelable {
 
 		// Intern speichern, damit der Action Listener unten anspringen kann
 		this.context = context;
-
 
 		Bitmap bitmap = null;
 
@@ -168,12 +164,10 @@ public class Route implements Parcelable {
 					polylineOptions.add(new LatLng(point.getLatitude(), point
 							.getLongitude()));
 					
-					
 					MarkerOptions markerOpt = new MarkerOptions().position(
 							new LatLng(point.getLatitude(), point.getLongitude()))
 					.title(getRouteName());
 
-					
 					Marker marker = map.addMarker(markerOpt);
 					markerMap.put(marker, point.getTimestamp());
 
@@ -191,7 +185,7 @@ public class Route implements Parcelable {
 				if (hasPicturePoint()) {
 				
 				// Unsaubere Lösung! Oben alle hingefügt, jetzt wieder gelöscht	
-			    map.clear();
+			   //  map.clear();
 				
 				MarkerWorkerTask task = new MarkerWorkerTask(context, map, markerMap);
 				task.execute(this.routePoints);

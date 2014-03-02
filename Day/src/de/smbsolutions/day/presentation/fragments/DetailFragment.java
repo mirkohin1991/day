@@ -307,6 +307,8 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 			if(removedView != null && route.hasPicturePoint() == true) {
 				removedView.setVisibility(View.VISIBLE);
 				
+			 }
+				
 				myGallery.removeAllViews(); // bessere lösung, immer nur das
 											// neue bild
 											// einfügen?
@@ -317,7 +319,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				MarkerWorkerTask markertask = new MarkerWorkerTask(
 						getActivity(), map, route.getMarkerMap());
 				markertask.execute(route.getRoutePoints());
-		        }
+		       
 
 			
 			

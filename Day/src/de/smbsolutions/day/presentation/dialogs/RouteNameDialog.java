@@ -1,4 +1,4 @@
-package de.smbsolutions.day.presentation.popups;
+package de.smbsolutions.day.presentation.dialogs;
 
 import java.sql.Timestamp;
 
