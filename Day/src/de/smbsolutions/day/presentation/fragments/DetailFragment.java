@@ -32,6 +32,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.interfaces.DetailsCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
@@ -40,7 +41,7 @@ import de.smbsolutions.day.functions.tasks.BitmapManager;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 
-public class DetailFragment extends android.support.v4.app.Fragment {
+public class DetailFragment extends android.support.v4.app.Fragment  {
 
 	private SupportMapFragment fragment;
 	private View view;
@@ -48,7 +49,6 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private Configuration config;
 	private Bundle data;
 	private Route route;
-	private int index;
 	private MainCallback mCallback;
 	private ImageButton imageButton;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -57,20 +57,30 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private boolean mapPrepared = false;
 	private static Activity context;
+	private LinearLayout myGallery;
+	private View removedView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			
 			Bundle savedInstanceState) {
 		config = getResources().getConfiguration();
 
 		view = inflater.inflate(R.layout.detail_fragment, container, false);
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
-		index = data.getInt("index");
-		addPhotos2Gallery();
+		
+		myGallery = (LinearLayout) view
+				.findViewById(R.id.LinearLayoutImage);
+		
+		
+		addPhotos2Gallery(myGallery);
+
 		return view;
 
 	}
+
+	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -160,8 +170,12 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 			LinearLayout linlayout = (LinearLayout) view
 					.findViewById(R.id.LinearLayoutcR);
-			linlayout.removeView(view
-					.findViewById(R.id.RelativeHorizontalScrollViewLayout));
+			
+			//Saving the removed view, to add it later on again, if a picture is taken
+			removedView = view
+					.findViewById(R.id.RelativeHorizontalScrollViewLayout);
+			//linlayout.removeView(removedView);
+			removedView.setVisibility(View.GONE);
 		}
 
 		// Closed routes cannot generate a new picture
@@ -191,9 +205,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	public void addPhotos2Gallery() {
-		LinearLayout myGallery = (LinearLayout) view
-				.findViewById(R.id.LinearLayoutImage);
+	public void addPhotos2Gallery( LinearLayout myGallery) {
+		
 
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
@@ -272,25 +285,26 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 										.getLatitude(), gps.getLongitude()));
 
 					}
+		
 
-					LinearLayout myGallery = (LinearLayout) view
-							.findViewById(R.id.LinearLayoutImage);
-
-					myGallery.removeAllViews(); // bessere lösung, immer nur das
-												// neue bild
-												// einfügen?
-					BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
-							getActivity());
-					task.execute(route);
-					
-					MarkerWorkerTask markertask = new MarkerWorkerTask(
-							getActivity(), map);
-					markertask.execute(route.getRoutePoints());
-					
-					// mCallback.onCamStart(route);
 				}
-
+            
+				//No Signal is available to detect the current location
 			} else {
+				
+
+				Toast.makeText(getActivity(),
+						"Keine Ortung möglich, bitte erneut versuchen",
+						Toast.LENGTH_LONG);
+			}
+			
+			
+			
+			
+			 // the view to show the picture scrollbar is disabled yet, but now a picture was taken
+			if(removedView != null && route.hasPicturePoint() == true) {
+				removedView.setVisibility(View.VISIBLE);
+				
 				LinearLayout myGallery = (LinearLayout) view
 						.findViewById(R.id.LinearLayoutImage);
 
@@ -300,17 +314,21 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
 						getActivity());
 				task.execute(route);
+				
 				MarkerWorkerTask markertask = new MarkerWorkerTask(
 						getActivity(), map);
 				markertask.execute(route.getRoutePoints());
+		        }
 
-				Toast.makeText(getActivity(),
-						"Keine Ortung möglich, bitte erneut versuchen",
-						Toast.LENGTH_LONG);
-
-			}
+			
+			
+				
+				// mCallback.onCamStart(route);
 
 		}
 	}
+
+
+
 
 }

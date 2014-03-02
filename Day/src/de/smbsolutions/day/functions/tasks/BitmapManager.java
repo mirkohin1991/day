@@ -66,7 +66,6 @@ public class BitmapManager {
 		File small_picutre_file =	getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
 //		Uri uri = Uri.fromFile(small_picutre);
 		
-		
 		Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(big_image_file.getPath(), 220, 220);
 	   
 	        FileOutputStream fOut = null;

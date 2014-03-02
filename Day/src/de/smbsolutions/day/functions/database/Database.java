@@ -45,10 +45,7 @@ public class Database implements DatabaseInterface {
 		return db_data;
 	}
 
-	public static void closeDBsession() {
 
-		mDatabase.close();
-	}
 
 	public static boolean addNewRoutePoint(RoutePoint point) {
 
@@ -65,6 +62,7 @@ public class Database implements DatabaseInterface {
 			route_values.put("picture_preview", point.getPicturePreview()); 
 			route_values.put("longitude", point.getLongitude());
 			mDatabase.insert("route_points", null, route_values);
+			mDatabase.close();
 
 			// everything was ok
 			return true;
@@ -79,8 +77,10 @@ public class Database implements DatabaseInterface {
 	public static boolean deleteRoute (Route route) {
 		
 		try {
+			mDatabase = mHelper.getWritableDatabase();
 			mDatabase.delete("route_points", "_id=?", new String[] { String.valueOf(route.getId()) });
 			mDatabase.delete("route_info", "_id=?", new String[] { String.valueOf(route.getId()) });
+			mDatabase.close();
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -88,11 +88,22 @@ public class Database implements DatabaseInterface {
 		}
 	}
 	
-public static boolean deleteRoutePoint (RoutePoint routePoint) {
+public static boolean deletePicturePath (RoutePoint routePoint) {
+	
+	
+	
+	
+	
 		
 		try {
-			mDatabase.delete("route_points", "timestamp=?", new String[] { String.valueOf(routePoint.getTimestamp()) });
+			mDatabase = mHelper.getWritableDatabase();
+
+			ContentValues values = new ContentValues();
+			values.putNull(Database.ROUTE_POINTS_PICTURE);
+			values.putNull( Database.ROUTE_POINTS_PICTURE_PREVIEW);
 			
+			mDatabase.update("route_points", values, "timestamp=?", new String[] { String.valueOf(routePoint.getTimestamp()) });
+			mDatabase.close();
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -106,7 +117,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		// the name has to be stored
 
 		try {
-
+			mDatabase = mHelper.getWritableDatabase();
 			ContentValues route_info = new ContentValues();
 			route_info.put("_id", String.valueOf(route.getId()));
 			route_info.put("name", route.getRouteName());
@@ -115,6 +126,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 			mDatabase.insert("route_info", null, route_info);
 
 			lastRouteID = route.getId();
+			mDatabase.close();
 
 			// Everything was ok
 			return true;
@@ -136,6 +148,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 
 			mDatabase.update("route_info", route_value, "_id=?",
 					new String[] { String.valueOf(id) }); // Which columns
+			mDatabase.close();
 
 			// Everything was ok
 			return true;
@@ -154,7 +167,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		String[] db_columns = { "_ID" };
 		int lastRecord;
 
-		mDatabase = mHelper.getWritableDatabase();
+		mDatabase = mHelper.getReadableDatabase();
 
 		// Check if an entry exists. Ordered descending to get the latest route
 		db_cursor = mDatabase.query("route_points", // table
@@ -180,6 +193,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		}
 
 		db_cursor.close();
+		mDatabase.close();
 		return lastRecord;
 	}
 
@@ -193,7 +207,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		List<RoutePoint> allRoutes = new ArrayList<RoutePoint>();
 		Cursor db_cursor;
 
-		mDatabase = mHelper.getWritableDatabase();
+		mDatabase = mHelper.getReadableDatabase();
 
 		String condition;
 
@@ -275,6 +289,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		}
 
 		db_cursor.close();
+		mDatabase.close();
 
 		return route_list;
 
@@ -286,7 +301,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 
 		Cursor db_cursor;
 
-		mDatabase = mHelper.getWritableDatabase();
+		mDatabase = mHelper.getReadableDatabase();
 
 		db_cursor = mDatabase.query("route_points", // table
 				null, // which column
@@ -324,6 +339,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		}
 
 		db_cursor.close();
+		mDatabase.close();
 
 		return route_point;
 	}
@@ -332,7 +348,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 
 		Cursor db_cursor;
 
-		mDatabase = mHelper.getWritableDatabase();
+		mDatabase = mHelper.getReadableDatabase();
 
 		db_cursor = mDatabase.query("route_info", // table
 				null, // which column
@@ -358,6 +374,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		}
 
 		db_cursor.close();
+		mDatabase.close();
 	}
 
 	public static int getlastRouteID() {
@@ -370,7 +387,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 
 		Cursor db_cursor;
 
-		mDatabase = mHelper.getWritableDatabase();
+		mDatabase = mHelper.getReadableDatabase();
 
 		db_cursor = mDatabase.query("settings", // table
 				null, // which column
@@ -386,6 +403,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		value = db_cursor.getInt(db_cursor.getColumnIndex("value"));
 
 		db_cursor.close();
+		mDatabase.close();
 
 		return value;
 
@@ -400,11 +418,15 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 		values.put("value", value);
 		mDatabase
 				.update("settings", values, "name=?", new String[] { setting });
+		
+		mDatabase.close();
 
 	}
 
 	public static void createDefaultRoutes() {
 		try {
+			
+			mDatabase = mHelper.getWritableDatabase();
 
 			for (int i = 0; i <= 2; i++) {
 				String ts = new SimpleDateFormat("yyyyMMdd_HHmmss")
@@ -429,6 +451,7 @@ public static boolean deleteRoutePoint (RoutePoint routePoint) {
 
 					closeRoute(route.getId());
 				}
+				mDatabase.close();
 
 			}
 

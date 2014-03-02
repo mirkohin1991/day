@@ -24,8 +24,8 @@ public class DeleteDialog extends DialogFragment {
 		routeList = (RouteList) bundle.getSerializable("routeList");
 		index = bundle.getInt("routeIndex");
 
-		return new AlertDialog.Builder(getActivity()).setTitle("Löschen")
-				.setMessage("Möchten Sie wirklich löschen?")
+		return new AlertDialog.Builder(getActivity()).setTitle("Route löschen")
+				.setMessage("Möchten Sie die Route wirklich löschen?")
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

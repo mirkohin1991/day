@@ -3,6 +3,7 @@ package de.smbsolutions.day.functions.interfaces;
 import android.support.v4.app.Fragment;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public interface MainCallback {
 	public void onItemSelected(int position);
@@ -18,6 +19,10 @@ public interface MainCallback {
 	public void onStopPopup(RouteList routeList);
 
 	public void onDeleteRoute();
+	
+	public void onDeletePicture(Route route);
+	
+	public void onLongPictureClick(Route route, RoutePoint point);
 
 	public void onStopRoute();
 

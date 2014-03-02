@@ -16,9 +16,11 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
 import de.smbsolutions.day.presentation.popups.DeleteDialog;
+import de.smbsolutions.day.presentation.popups.DeletePictureDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
 import de.smbsolutions.day.presentation.popups.StopRouteDialog;
 import de.smbsolutions.day.presentation.views.SliderMenu;
@@ -176,6 +178,44 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				.replace(R.id.frame_container, mfrag, tag).commit();
 
 	}
+	
+	
+	//GLEICH WIE SHOWROUTE
+	@Override
+	public void onDeletePicture(Route route) {
+		
+		// fragment avaiable?
+				crFrag = new DetailFragment();
+				tag = crFrag.getClass().getName();
+
+				Bundle bundle = new Bundle();
+				// Übergabe Routenliste
+				bundle.putParcelable("route", route);
+				crFrag.setArguments(bundle);
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+				ft.replace(R.id.frame_container, crFrag, tag).addToBackStack(tag)
+						.commit();
+		
+	}
+
+	@Override
+	public void onLongPictureClick(Route route, RoutePoint point) {
+		// TODO Auto-generated method stub
+		
+		
+		DeletePictureDialog dialog = new DeletePictureDialog();
+		Bundle bundle = new Bundle();
+		bundle.putParcelable("route", route);
+		bundle.putParcelable("point", point);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "DeletePictureDialog");
+		
+		
+	}
 
 	// GLEICH WIE DELETE ROUTE
 	@Override
@@ -270,5 +310,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
+
+
 
 }

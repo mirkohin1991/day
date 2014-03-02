@@ -10,6 +10,7 @@ public interface DatabaseInterface {
 	 String ROUTE_POINTS_LATITUDE = "latitude";
 	 String ROUTE_POINTS_LONGITUDE = "longitude";
 	 String ROUTE_POINTS_PICTURE = "picture";
+	 String ROUTE_POINTS_PICTURE_PREVIEW = "picture_preview";
 	 String ROUTE_POINTS_TIMESTAMP = "timestamp";
 	 String ROUTE_INFO_NAME = "name";
 	 String ROUTE_INFO_DATE = "date";

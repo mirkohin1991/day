@@ -275,25 +275,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-//	public void addButtonClickListenerStop(Button button) {
-//		button.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				// SOLLTE ABER EIGENTLICH IMMER OFFEN SEIN, NUR DANN WIRD
-//				// NÄMLICH DER LISTENER GESETZT
-//				if (routeList.isOpenRoute()) {
-//					// A route is active -> user wants to stop it
-//
-//					mCallback.onStopPopup(routeList);
-//
-//				}
-//
-//			}
-//		});
-//
-//	}
 
 	public void addButtonClickListenerContinue(Button button) {
 		button.setOnClickListener(new OnClickListener() {

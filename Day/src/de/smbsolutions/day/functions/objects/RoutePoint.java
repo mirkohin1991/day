@@ -2,7 +2,10 @@ package de.smbsolutions.day.functions.objects;
 
 import java.sql.Timestamp;
 
-public class RoutePoint {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class RoutePoint implements Parcelable {
 
 	// Route_points table
 	private int id;
@@ -46,5 +49,17 @@ public class RoutePoint {
 	
 	public String getPicturePreview() {
 		return picture_preview;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }

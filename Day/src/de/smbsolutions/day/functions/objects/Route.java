@@ -116,8 +116,8 @@ public class Route implements Parcelable {
 		PolylineOptions polylineOptions = new PolylineOptions();
 
 		// add markers to map
-		if (details == true) {
-			if (hasPicturePoint()) {
+		if (details == true && hasPicturePoint()) {
+			// if (hasPicturePoint()) {
 				LatLngBounds.Builder builder = new LatLngBounds.Builder();
 				for (RoutePoint point : this.routePoints) {
 					polylineOptions.add(new LatLng(point.getLatitude(), point
@@ -135,7 +135,7 @@ public class Route implements Parcelable {
 				MarkerWorkerTask task = new MarkerWorkerTask(context, map);
 				task.execute(this.routePoints);
 
-			}
+			//}
 		} else {
 			for (RoutePoint point : this.routePoints) {
 				polylineOptions.add(new LatLng(point.getLatitude(), point
@@ -262,6 +262,23 @@ public class Route implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void deletePictureDB (RoutePoint deletePoint) {
+		
+//		for (RoutePoint routePoint : routePoints) {
+//			
+//			if (routePoint.getTimestamp() == deletePoint.getTimestamp() ) {
+				
+				
+				if(Database.deletePicturePath(deletePoint) == true){
+				routePoints.remove(deletePoint);
+				}
+				
+//			}
+			
+//		}
+		
 	}
 
 }
