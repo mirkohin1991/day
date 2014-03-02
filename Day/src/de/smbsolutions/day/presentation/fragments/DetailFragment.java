@@ -316,10 +316,11 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 						getActivity());
 				task.execute(route);
 				
-				MarkerWorkerTask markertask = new MarkerWorkerTask(
-						getActivity(), map, route.getMarkerMap());
-				markertask.execute(route.getRoutePoints());
-		       
+//				MarkerWorkerTask markertask = new MarkerWorkerTask(
+//						getActivity(), map, route.getMarkerMap());
+//				markertask.execute(route.getRoutePoints());
+//		       
+				route.prepareMapDetails(map, getActivity());
 
 			
 			

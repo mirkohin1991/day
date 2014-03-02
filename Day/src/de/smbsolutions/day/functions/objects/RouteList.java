@@ -6,10 +6,7 @@ import java.util.List;
 import de.smbsolutions.day.functions.database.Database;
 
 public class RouteList implements Serializable {
-
-	/**
-	 * 
-	 */
+	//RouteList object, that contains all Route objects
 	private static final long serialVersionUID = 1L;
 	private int count;
 	private List<Route> listRoutes;
@@ -48,8 +45,8 @@ public class RouteList implements Serializable {
 
 	public boolean isOpenRoute() {
 
-		
-		// It's enough to check the last route because the routes are sorted chronologically 
+		// It's enough to check the last route because the routes are sorted
+		// chronologically
 		if (getlastRoute().getActive().equals("X")) {
 
 			return true;
@@ -64,21 +61,15 @@ public class RouteList implements Serializable {
 	public void addRoute(Route route) {
 		listRoutes.add(route);
 	}
-	
-	
+
 	public void deleteRouteDB(int index) {
-		
-		
-	 if (Database.deleteRoute(listRoutes.get(index)) == true ){
-	 
-	    listRoutes.remove(index);
-	    
-	 }
-	 
-	 
-	 //VIEW MUSS NOCH REFRESHT WERDEN!
-		
-		
+
+		if (Database.deleteRoute(listRoutes.get(index)) == true) {
+
+			listRoutes.remove(index);
+
+		}
+
 	}
 
 }

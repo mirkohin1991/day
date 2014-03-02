@@ -30,23 +30,24 @@ import de.smbsolutions.day.functions.objects.RoutePoint;
 public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private final WeakReference<LinearLayout> layoutReference;
 	private Route route;
-	private File targetDirector;
-	private List<ImageView> bml;
+	private File bitmapFile;
+	private List<ImageView> bitmapList;
 	private Context context;
-	private LinearLayout layout;
+	private LinearLayout imageContainer;
 	private boolean imageAvailable = false;
 	private MainCallback mCallback;
 	LinearLayout myGallery;
 	private HorizontalScrollView scrollView;
 
-	public BitmapWorkerTask(LinearLayout layout, HorizontalScrollView scrollView, Context context) {
+	public BitmapWorkerTask(LinearLayout layout,
+			HorizontalScrollView scrollView, Context context) {
 		// Use a WeakReference to ensure the ImageView can be garbage collected
 		layoutReference = new WeakReference<LinearLayout>(layout);
 		this.context = context;
-		bml = new ArrayList<ImageView>();
-		
+		bitmapList = new ArrayList<ImageView>();
+
 		this.scrollView = scrollView;
-		
+
 		try {
 			mCallback = (MainCallback) context;
 		} catch (ClassCastException e) {
@@ -61,165 +62,141 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	protected List<ImageView> doInBackground(Route... params) {
 
 		route = params[0];
-		layout = new LinearLayout(context);
-		// layout.setLayoutParams(LayoutParams.MATCH_PARENT,
-		// LayoutParams.MATCH_PARENT);
-		layout.setGravity(Gravity.CENTER);
+		imageContainer = new LinearLayout(context);
+		imageContainer.setGravity(Gravity.CENTER);
 		int foreachindex = 0;
 		for (RoutePoint point : route.getRoutePoints()) {
 			if (point.getPicture() != null) {
-			
-				targetDirector = new File(point.getPicturePreview
-						());
+
+				bitmapFile = new File(point.getPicturePreview());
 				Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-						targetDirector.getPath(),220, 220);// richtige größe?
+						bitmapFile.getPath(), 220, 220);// richtige größe?
 
 				if (bm != null) {
-
+					// Bilder sollten automatisch ins Layout passen
 					ImageView imageView = new ImageView(context);
 					imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 					imageView.setAdjustViewBounds(true);
 
-					imageView.setLayoutParams(new LayoutParams(android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT,
-							android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT));
-				
+					imageView
+							.setLayoutParams(new LayoutParams(
+									android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT,
+									android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT));
+
 					if (foreachindex == 0) {
 						imageView.setPadding(0, 0, 0, 0);
 					} else
 						imageView.setPadding(1, 0, 0, 0);
 
-				
 					imageView.setImageBitmap(bm);
-					
-					//Saving the timestamp to identify the picture later on
+
+					// Saving the timestamp to identify the picture later on
 					imageView.setTag(point.getTimestamp());
 
-					bml.add(imageView);
-					
-				
+					bitmapList.add(imageView);
+
 					imageAvailable = true;
 					foreachindex++;
 				}
 
 			}
 		}
-		return bml;
+		return bitmapList;
 
 	}
 
 	@Override
 	protected void onPostExecute(List<ImageView> images) {
-		if (layoutReference != null && bml != null) {
+		if (layoutReference != null && bitmapList != null) {
 
 			myGallery = layoutReference.get();
 			if (myGallery != null) {
 				for (ImageView image : images) {
-					
-					layout.addView(image);
-					
+
+					imageContainer.addView(image);
+
 					scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-					
-					//Handling events for the picture
+
+					// Handling events for the picture
 					addPictureClickListener(image);
-					
-					
+
 				}
-				myGallery.addView(layout);
-				
-				
-				
-				
-				
-				
-			
+				myGallery.addView(imageContainer);
 
 			}
 
 		}
 
-		
 	}
 
 	public boolean isImageAvailable() {
 		return imageAvailable;
 	}
-	
-	
-	public void addPictureClickListener (ImageView image) {
-		
-		
-		
-		image.setOnFocusChangeListener( new View.OnFocusChangeListener() {
-			
+
+	public void addPictureClickListener(ImageView image) {
+
+		image.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				
-				int i; 
-				
+
+				int i;
+
 				i = 1;
-				
+
 			}
 		});
-		
-		
+
 		image.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
+
 				for (RoutePoint point : route.getRoutePoints()) {
-					
-					//Timestamp of the clicked picture
+
+					// Timestamp of the clicked picture
 					Timestamp tsClicked = (Timestamp) v.getTag();
-					
+
 					if (tsClicked == point.getTimestamp()) {
-						
-						
+
 						mCallback.onPictureClick(route, point);
-						
-						//DAS SOLL SPÄTER MAL PASSIEREN!
-						//route.setZoomSpecificMarker(point);
-						
+
+						// DAS SOLL SPÄTER MAL PASSIEREN!
+						// route.setZoomSpecificMarker(point);
+
 					}
-					
+
 				}
-				
-				
-				
+
 			}
 		});
-		
-		
+
 		image.setOnLongClickListener(new View.OnLongClickListener() {
-			
+
 			@Override
 			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
-				
-				//Looping over the routelist to get the right picture
+
+				// Looping over the routelist to get the right picture
 				for (RoutePoint point : route.getRoutePoints()) {
-				
-					//Timestamp of the clicked picture
+
+					// Timestamp of the clicked picture
 					Timestamp tsClicked = (Timestamp) v.getTag();
-					
+
 					if (tsClicked == point.getTimestamp()) {
-						
-						//Call the Callback interface to execute the required action
+
+						// Call the Callback interface to execute the required
+						// action
 						mCallback.onLongPictureClick(route, point);
-				
-	                  return true;
-						
+
+						return true;
+
 					}
-					
+
 				}
 				return false;
 			}
 		});
-	 
-	
+
 	}
-	
-	
-	
 
 }

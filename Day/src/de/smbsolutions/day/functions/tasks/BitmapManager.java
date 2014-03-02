@@ -16,8 +16,9 @@ import android.util.Log;
 public class BitmapManager {
 	
 	public static final int MEDIA_TYPE_IMAGE = 1;
-	private static String timeStamp;
 	public static final int MEDIA_TYPE_VIDEO = 2;
+	private static String timeStamp;
+
 	
 	public static Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
 			int reqHeight) {
@@ -63,8 +64,7 @@ public class BitmapManager {
 	
 	public static File savePreviewBitmapToStorage (Uri big_image_file) {
 		
-		File small_picutre_file =	getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
-//		Uri uri = Uri.fromFile(small_picutre);
+		File small_picutre_file = getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
 		
 		Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(big_image_file.getPath(), 220, 220);
 	   

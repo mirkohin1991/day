@@ -10,6 +10,7 @@ public class AppSettings {
 	private static int CAMERA_SAVEINGALLERY;
 
 	public AppSettings() {
+		//get settings data from database
 		MAP_TYPE = Database.getSettingValue(Database.SETTINGS_MAP_TYPE);
 		GPS = Database.getSettingValue(Database.SETTINGS_TRACKING);
 		GPS_FREQUENCY = Database

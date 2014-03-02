@@ -7,7 +7,7 @@ import de.smbsolutions.day.R;
 
 public class Device {
 
-	private static Context context;
+	private  Context context;
 	private static AppSettings APP_SETTINGS;
 	private static String DEVICE_NAME;
 	private static String SCREEN_LAYOUT;
@@ -15,8 +15,10 @@ public class Device {
 
 	public Device(Context context) {
 		this.context = context;
+		// Screen = large, normal, small?
 		SCREEN_LAYOUT = initScreenLayout();
 		SCREEN_DENSITY = initScreenDensity();
+		// get App_settings
 		APP_SETTINGS = new AppSettings();
 	}
 
@@ -56,6 +58,38 @@ public class Device {
 		} else {
 			return "UNIDENTIFIED";
 		}
+	}
+
+	public static AppSettings getAPP_SETTINGS() {
+		return APP_SETTINGS;
+	}
+
+	public static void setAPP_SETTINGS(AppSettings aPP_SETTINGS) {
+		APP_SETTINGS = aPP_SETTINGS;
+	}
+
+	public static String getDEVICE_NAME() {
+		return DEVICE_NAME;
+	}
+
+	public static void setDEVICE_NAME(String dEVICE_NAME) {
+		DEVICE_NAME = dEVICE_NAME;
+	}
+
+	public static String getSCREEN_LAYOUT() {
+		return SCREEN_LAYOUT;
+	}
+
+	public static void setSCREEN_LAYOUT(String sCREEN_LAYOUT) {
+		SCREEN_LAYOUT = sCREEN_LAYOUT;
+	}
+
+	public static String getSCREEN_DENSITY() {
+		return SCREEN_DENSITY;
+	}
+
+	public static void setSCREEN_DENSITY(String sCREEN_DENSITY) {
+		SCREEN_DENSITY = sCREEN_DENSITY;
 	}
 
 }
