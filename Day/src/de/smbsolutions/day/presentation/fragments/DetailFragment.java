@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,7 +33,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.interfaces.DetailsCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
@@ -59,6 +59,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 	private static Activity context;
 	private LinearLayout myGallery;
 	private View removedView;
+	private HorizontalScrollView scrollView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +73,8 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 		
 		myGallery = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutImage);
+		
+		scrollView = (HorizontalScrollView) view.findViewById(R.id.horizontalScrollViewPictures);
 		
 		
 		addPhotos2Gallery(myGallery);
@@ -210,7 +213,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
-		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
+		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, scrollView, getActivity());
 		task.execute(route);
 
 	}
@@ -305,13 +308,10 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 			if(removedView != null && route.hasPicturePoint() == true) {
 				removedView.setVisibility(View.VISIBLE);
 				
-				LinearLayout myGallery = (LinearLayout) view
-						.findViewById(R.id.LinearLayoutImage);
-
 				myGallery.removeAllViews(); // bessere lösung, immer nur das
 											// neue bild
 											// einfügen?
-				BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
+				BitmapWorkerTask task = new BitmapWorkerTask(myGallery, scrollView,
 						getActivity());
 				task.execute(route);
 				

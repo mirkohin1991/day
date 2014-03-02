@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -36,12 +37,15 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private boolean imageAvailable = false;
 	private MainCallback mCallback;
 	LinearLayout myGallery;
+	private HorizontalScrollView scrollView;
 
-	public BitmapWorkerTask(LinearLayout layout, Context context) {
+	public BitmapWorkerTask(LinearLayout layout, HorizontalScrollView scrollView, Context context) {
 		// Use a WeakReference to ensure the ImageView can be garbage collected
 		layoutReference = new WeakReference<LinearLayout>(layout);
 		this.context = context;
 		bml = new ArrayList<ImageView>();
+		
+		this.scrollView = scrollView;
 		
 		try {
 			mCallback = (MainCallback) context;
@@ -91,6 +95,8 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 					imageView.setTag(point.getTimestamp());
 
 					bml.add(imageView);
+					
+				
 					imageAvailable = true;
 					foreachindex++;
 				}
@@ -111,12 +117,18 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 					
 					layout.addView(image);
 					
+					scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+					
 					//Handling events for the picture
 					addPictureClickListener(image);
 					
 					
 				}
 				myGallery.addView(layout);
+				
+				
+				
+				
 				
 				
 			
@@ -135,20 +147,37 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	
 	public void addPictureClickListener (ImageView image) {
 		
+		
+		
+		image.setOnFocusChangeListener( new View.OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				
+				int i; 
+				
+				i = 1;
+				
+			}
+		});
+		
+		
 		image.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				
 				for (RoutePoint point : route.getRoutePoints()) {
-					Timestamp ts1 = point.getTimestamp();
-					Timestamp ts2 = (Timestamp) v.getTag();
 					
-					if (ts1 == ts2) {
-						int i;
+					//Timestamp of the clicked picture
+					Timestamp tsClicked = (Timestamp) v.getTag();
+					
+					if (tsClicked == point.getTimestamp()) {
 						
-						i = 1;
-						Toast.makeText(context, v.getTag().toString(), Toast.LENGTH_SHORT);
+						
+						//GEHT NOCH NICHT, DA HASHMAP MIT DEN MARKERN KOMISCHERWEISE LEER IST!
+						route.setZoomSpecificMarker(point);
+						
 					}
 					
 				}
@@ -164,18 +193,18 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 			@Override
 			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
+				
+				//Looping over the routelist to get the right picture
 				for (RoutePoint point : route.getRoutePoints()) {
 				
-					
+					//Timestamp of the clicked picture
 					Timestamp tsClicked = (Timestamp) v.getTag();
-					
 					
 					if (tsClicked == point.getTimestamp()) {
 						
-						
+						//Call the Callback interface to execute the required action
 						mCallback.onLongPictureClick(route, point);
-						
-					
+				
 	                  return true;
 						
 					}
@@ -185,7 +214,6 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 			}
 		});
 	 
-		
 	
 	}
 	

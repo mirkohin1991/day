@@ -20,9 +20,12 @@ public interface MainCallback {
 
 	public void onDeleteRoute();
 	
-	public void onDeletePicture(Route route);
 	
+	//Methods regarding the PictureScrollbar
 	public void onLongPictureClick(Route route, RoutePoint point);
+	public void onPictureClick(Route route, RoutePoint point);
+	public void onDeletePicture(Route route);
+	public void onShowFullPicture(Route route);
 
 	public void onStopRoute();
 

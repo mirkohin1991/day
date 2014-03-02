@@ -101,8 +101,12 @@ public class Route implements Parcelable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public GoogleMap prepareMap(final GoogleMap map, final Context context,
+	public GoogleMap prepareMap(final GoogleMap mapImport, final Context context,
 			boolean details) {
+		
+		
+		//saving the map
+		this.map = mapImport;
 
 		// Intern speichern, damit der Action Listener unten anspringen kann
 		this.context = context;
@@ -154,19 +158,10 @@ public class Route implements Parcelable {
 
 			Polyline polyline = map.addPolyline(polylineOptions);
 			polyline.setColor(Color.rgb(136, 204,0));
-			// zoompoint
-			LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-			for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
-
-				builder.include(mapSet.getKey().getPosition());
-
-			}
-
-			LatLngBounds bounds = builder.build();
-			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-					bounds, 60);
-			map.animateCamera(camUpdate);
+			
+			
+			//Setting the zoom
+			setZoomAllMarkers();
 
 		}
 
@@ -197,6 +192,56 @@ public class Route implements Parcelable {
 
 		return map;
 
+	}
+
+	
+	//PERPARE MAP HAS TO BE CALLED BEFORE!
+	private void setZoomAllMarkers() {
+		// zoompoint
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+		for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
+
+			builder.include(mapSet.getKey().getPosition());
+
+		}
+
+		LatLngBounds bounds = builder.build();
+		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+				bounds, 60);
+		map.animateCamera(camUpdate);
+	}
+	
+	
+	
+	// Method to set the zoom of the map to a certain point
+	public void setZoomSpecificMarker (RoutePoint point) {
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		
+		//Getting the marker for the routepoint
+	    // There is no way to access the KEY via VALUE directly
+		for (Map.Entry<Marker, Timestamp> mapSet : markerMap.entrySet()) {
+			
+			if (mapSet.getValue() == point.getTimestamp()) {
+				
+				builder.include(mapSet.getKey().getPosition());
+				
+				//leaving the for each loop
+				//HAS OT BE PROVED!
+				break;
+			}
+			
+			LatLngBounds bounds = builder.build();
+			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+					bounds, 60);
+			map.animateCamera(camUpdate);
+			
+
+		}
+		
+	
+		
+		
 	}
 
 	public boolean hasPicturePoint() {

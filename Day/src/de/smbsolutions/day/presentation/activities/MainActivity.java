@@ -19,6 +19,7 @@ import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
+import de.smbsolutions.day.presentation.fragments.PictureFragment;
 import de.smbsolutions.day.presentation.popups.DeleteDialog;
 import de.smbsolutions.day.presentation.popups.DeletePictureDialog;
 import de.smbsolutions.day.presentation.popups.RouteNameDialog;
@@ -45,6 +46,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	private android.support.v4.app.Fragment mfrag;
 	private android.support.v4.app.Fragment crFrag;
+	private android.support.v4.app.Fragment pictureFrag;
 	private String tag;
 
 	/** Called when the activity is first created. */
@@ -309,6 +311,32 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				slidermenu.getmDrawerList());
 		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public void onPictureClick(Route route, RoutePoint point) {
+
+		// fragmen avaiable?
+				pictureFrag = new PictureFragment();
+				tag = pictureFrag.getClass().getName();
+
+				Bundle bundle = new Bundle();
+				// Übergabe Routenliste
+				bundle.putParcelable("route", route);
+				bundle.putParcelable("point", point);
+				pictureFrag.setArguments(bundle);
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				
+				ft.replace(R.id.frame_container, pictureFrag, tag).addToBackStack(tag)
+						.commit();
+		
+		
+	}
+
+	@Override
+	public void onShowFullPicture(Route route) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
