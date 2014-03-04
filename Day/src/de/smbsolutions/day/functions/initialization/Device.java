@@ -7,11 +7,13 @@ import de.smbsolutions.day.R;
 
 public class Device {
 
-	private  Context context;
+	private static Context context;
 	private static AppSettings APP_SETTINGS;
 	private static String DEVICE_NAME;
 	private static String SCREEN_LAYOUT;
 	private static String SCREEN_DENSITY;
+	
+	private static Device instance = null;
 
 	public Device(Context context) {
 		this.context = context;
@@ -20,6 +22,14 @@ public class Device {
 		SCREEN_DENSITY = initScreenDensity();
 		// get App_settings
 		APP_SETTINGS = new AppSettings();
+	}
+	
+	public static Device getInstance(Context context){
+		if (Device.instance == null) {
+			Device.instance = new Device(context);
+		}
+		
+		return Device.instance;
 	}
 
 	public boolean isTablet() {

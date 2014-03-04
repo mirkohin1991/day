@@ -33,6 +33,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
@@ -160,7 +161,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
 	public void initializeFragmentPortrait() {
 
-		map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
 //		map.setPadding(0, 0, 99999, 0); // weg isses :D
 		map.getUiSettings().setZoomControlsEnabled(false);
 		LinearLayout linleaLayout = (LinearLayout) view
