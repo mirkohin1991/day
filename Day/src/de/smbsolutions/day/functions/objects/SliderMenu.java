@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.presentation.fragments.settings.CameraFragment;
 import de.smbsolutions.day.presentation.fragments.settings.FacebookFragment;
@@ -194,15 +195,18 @@ public class SliderMenu {
 		switch (position) {
 		case 0:
 //			MapType: Karte
-//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 1);
+//			// MapType: Karte
+			Device.getAPP_SETTINGS().setMAP_TYPE(1);
+			mCallback.onRefreshMap();
 			break;
 		case 1:
 //			MapType: Sattelite
-//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 2);
+Device.getAPP_SETTINGS().setMAP_TYPE(2);
 			break;
 		case 2:
 //			MapType: Terrain
-//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 3);
+
+			Device.getAPP_SETTINGS().setMAP_TYPE(3);
 			break;
 			
 		case 3:

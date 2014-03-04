@@ -390,12 +390,13 @@ containing a value of this type.
         public static final int custom_mapmarker=0x7f030004;
         public static final int dialog_createroute=0x7f030005;
         public static final int fragment_detail=0x7f030006;
-        public static final int fragment_main=0x7f030007;
-        public static final int fragment_picture=0x7f030008;
-        public static final int fragment_settings_camera=0x7f030009;
-        public static final int fragment_settings_facebook=0x7f03000a;
-        public static final int fragment_settings_gps=0x7f03000b;
-        public static final int slidermenu_list_item=0x7f03000c;
+        public static final int fragment_detail_nopicture=0x7f030007;
+        public static final int fragment_main=0x7f030008;
+        public static final int fragment_picture=0x7f030009;
+        public static final int fragment_settings_camera=0x7f03000a;
+        public static final int fragment_settings_facebook=0x7f03000b;
+        public static final int fragment_settings_gps=0x7f03000c;
+        public static final int slidermenu_list_item=0x7f03000d;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;

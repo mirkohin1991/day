@@ -57,9 +57,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		super.onCreate(null);
 		setContentView(R.layout.activity_main);
 		
-		
+		//Get Singetons
 		Database.getInstance(this);
-		Device device = new Device(this);
+		Device.getInstance(this);
 
 		mTitle = mDrawerTitle = getTitle();
 
@@ -335,6 +335,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onShowFullPicture(Route route) {
 		// TODO Was soll hier geschehen?
 		
+	}
+
+	@Override
+	public void onRefreshMap() {
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(tag);
+		frag = frag;
 	}
 
 

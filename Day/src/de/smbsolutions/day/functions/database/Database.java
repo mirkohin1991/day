@@ -16,8 +16,6 @@ import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public class Database implements DatabaseInterface {
 
-	RoutePoint TEST;
-
 	private static DatabaseManager mHelper;
 	private static SQLiteDatabase mDatabase;
 	private static int lastRouteID = 0;

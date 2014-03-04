@@ -37,16 +37,16 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private boolean imageAvailable = false;
 	private MainCallback mCallback;
 	LinearLayout myGallery;
-	private HorizontalScrollView scrollView;
+
 
 	public BitmapWorkerTask(LinearLayout layout,
-			HorizontalScrollView scrollView, Context context) {
+			Context context) {
 		// Use a WeakReference to ensure the ImageView can be garbage collected
 		layoutReference = new WeakReference<LinearLayout>(layout);
 		this.context = context;
 		bitmapList = new ArrayList<ImageView>();
 
-		this.scrollView = scrollView;
+
 
 		try {
 			mCallback = (MainCallback) context;
@@ -115,7 +115,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					imageContainer.addView(image);
 
-					scrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+				
 
 					// Handling events for the picture
 					addPictureClickListener(image);
@@ -159,10 +159,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					if (tsClicked == point.getTimestamp()) {
 
-						mCallback.onPictureClick(route, point);
-
-						// DAS SOLL SP�TER MAL PASSIEREN!
-						// route.setZoomSpecificMarker(point);
+							route.setZoomSpecificMarker(point);
 
 					}
 
