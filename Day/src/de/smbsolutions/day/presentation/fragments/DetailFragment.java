@@ -60,25 +60,54 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 	private static Activity context;
 	private LinearLayout myGallery;
 	private View removedView;
-	private HorizontalScrollView scrollView;
 
+    private ViewGroup container;
+    private  LayoutInflater inflater;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			
 			Bundle savedInstanceState) {
+		
+		//Saved in order to access it in the onActivityResult method later on
+		this.container = container;
+		this.inflater = inflater;
+		
 		config = getResources().getConfiguration();
 
-		view = inflater.inflate(R.layout.fragment_detail, container, false);
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
 		
-		myGallery = (LinearLayout) view
-				.findViewById(R.id.LinearLayoutImage);
-		
-		scrollView = (HorizontalScrollView) view.findViewById(R.id.horizontalScrollViewPictures);
 		
 		
-		addPhotos2Gallery(myGallery);
+		// If a route doesn't have a picture point, the Picture Scrollbar is
+		// disabled
+		if (route.hasPicturePoint() == false) {
+			
+			view = inflater.inflate(R.layout.fragment_detail_nopicture, container, false);
+		}else {
+			view = inflater.inflate(R.layout.fragment_detail, container, false);
+			
+			myGallery = (LinearLayout) view
+					.findViewById(R.id.LinearLayoutImage);
+			
+			
+			
+			addPhotos2Gallery(myGallery);
+
+//			LinearLayout linlayout = (LinearLayout) view
+//					.findViewById(R.id.LinearLayoutcR);
+//			
+//			//Saving the removed view, to add it later on again, if a picture is taken
+//			removedView = view
+//					.findViewById(R.id.RelativeHorizontalScrollViewLayout);
+//			//linlayout.removeView(removedView);
+//			removedView.setVisibility(View.GONE);
+		}
+		
+		
+		
+		
+	
 
 		return view;
 
@@ -168,19 +197,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
 
-		// If a route doesn't have a picture point, the Picture Scrollbar is
-		// disabled
-		if (route.hasPicturePoint() == false) {
 
-			LinearLayout linlayout = (LinearLayout) view
-					.findViewById(R.id.LinearLayoutcR);
-			
-			//Saving the removed view, to add it later on again, if a picture is taken
-			removedView = view
-					.findViewById(R.id.RelativeHorizontalScrollViewLayout);
-			//linlayout.removeView(removedView);
-			removedView.setVisibility(View.GONE);
-		}
 
 		// Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
@@ -213,7 +230,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
-		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, scrollView, getActivity());
+		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
 		task.execute(route);
 
 	}
@@ -303,30 +320,35 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 			
 			
 			
+			 // now at least one picture was taken
+			if(route.hasPicturePoint() == true) {
+
+				//If it is the first picture ever taken the layout has to be changed to the one with picture scrollbar
+				if (myGallery == null) {
+					
+					
+					//Vielleicht gibt es noch eine bessere Lösung.
+					mCallback.onShowRoute(route);
+					
+//					//Das hier wird nämlich leider nicht refresht
+//					view = inflater.inflate(R.layout.fragment_detail, container, false);
+//
+//					myGallery = (LinearLayout) view
+//							.findViewById(R.id.LinearLayoutImage);
+				} else {
+					//refresh the image view
+					addPhotos2Gallery(myGallery);
+					route.prepareMapDetails(map, getActivity());
+				}
+ 				
 			
-			 // the view to show the picture scrollbar is disabled yet, but now a picture was taken
-			if(removedView != null && route.hasPicturePoint() == true) {
-				removedView.setVisibility(View.VISIBLE);
 				
+				
+			 } else {
+				 route.prepareMapDetails(map, getActivity());
 			 }
 				
-				myGallery.removeAllViews(); // bessere lösung, immer nur das
-											// neue bild
-											// einfügen?
-				BitmapWorkerTask task = new BitmapWorkerTask(myGallery, scrollView,
-						getActivity());
-				task.execute(route);
-				
-//				MarkerWorkerTask markertask = new MarkerWorkerTask(
-//						getActivity(), map, route.getMarkerMap());
-//				markertask.execute(route.getRoutePoints());
-//		       
-				route.prepareMapDetails(map, getActivity());
-
 			
-			
-				
-				// mCallback.onCamStart(route);
 
 		}
 	}
