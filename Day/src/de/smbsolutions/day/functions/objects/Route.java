@@ -44,6 +44,12 @@ public class Route implements Parcelable {
 	private int id;
 
 	private Context context;
+	
+	
+	PolylineOptions polylineOptions = new PolylineOptions();
+	PolylineOptions polylineOptions_back = new PolylineOptions().width(3).color(Color.rgb(136, 204, 0));
+	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(Color.rgb(19, 88, 5));
+	
 	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
 	// Constructor for routes that have already been created
@@ -116,13 +122,12 @@ public class Route implements Parcelable {
 		// Necessary to save in order to connect timestamp and marker
 		markerMap = new LinkedHashMap<RoutePoint, Marker>();
 
-		PolylineOptions polylineOptions = new PolylineOptions();
+		
 
 			for (RoutePoint point : this.routePoints) {
-				polylineOptions.add(new LatLng(point.getLatitude(), point
-						.getLongitude()));
-				MarkerOptions markerOpt = new MarkerOptions().position(
-						new LatLng(point.getLatitude(), point.getLongitude()))
+				polylineOptions_back.add(new LatLng(point.getLatitude(), point.getLongitude()));
+				polylineOptions_top.add(new LatLng(point.getLatitude(), point.getLongitude()));
+				MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(point.getLatitude(), point.getLongitude()))
 				.title(getRouteName());
 
 				Marker marker = map.addMarker(markerOpt);
@@ -131,8 +136,10 @@ public class Route implements Parcelable {
 			}
 
 	
-			Polyline polyline = map.addPolyline(polylineOptions);
-			polyline.setColor(Color.rgb(136, 204,0));
+			Polyline polyline_top = map.addPolyline(polylineOptions_top);
+			Polyline polyline_back = map.addPolyline(polylineOptions_back);
+			
+			
 						
 			//Setting the zoom
 			setZoomAllMarkers();
@@ -191,8 +198,10 @@ public class Route implements Parcelable {
 					
 					LatLngBounds.Builder builder = new LatLngBounds.Builder();
 					for (RoutePoint point : this.routePoints) {
-						polylineOptions.add(new LatLng(point.getLatitude(), point
-								.getLongitude()));
+						
+						polylineOptions_back.add(new LatLng(point.getLatitude(), point.getLongitude()));
+						polylineOptions_top.add(new LatLng(point.getLatitude(), point.getLongitude()));
+						polylineOptions.add(new LatLng(point.getLatitude(), point.getLongitude()));
 						
 						MarkerOptions markerOpt = new MarkerOptions().position(
 								new LatLng(point.getLatitude(), point.getLongitude()))
@@ -202,8 +211,8 @@ public class Route implements Parcelable {
 						markerMap.put(point, marker);
 
 					}
-					Polyline polyline = map.addPolyline(polylineOptions);
-					polyline.setColor(Color.rgb(136, 204,0));
+					Polyline polyline_top = map.addPolyline(polylineOptions_top);
+					Polyline polyline_back = map.addPolyline(polylineOptions_back);
 //					LatLngBounds bounds = builder.build();
 //					CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 //							bounds, 60);

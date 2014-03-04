@@ -46,7 +46,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 		this.context = context;
 		bitmapList = new ArrayList<ImageView>();
 
-		
+
 
 		try {
 			mCallback = (MainCallback) context;
@@ -70,7 +70,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 				bitmapFile = new File(point.getPicturePreview());
 				Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-						bitmapFile.getPath(), 220, 220);// richtige größe?
+						bitmapFile.getPath(), 220, 220);// richtige grï¿½ï¿½e?
 
 				if (bm != null) {
 					// Bilder sollten automatisch ins Layout passen
@@ -115,6 +115,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					imageContainer.addView(image);
 
+				
 
 					// Handling events for the picture
 					addPictureClickListener(image);
@@ -143,7 +144,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 				i = 1;
 
-			}
+			} 
 		});
 
 		image.setOnClickListener(new OnClickListener() {
@@ -158,8 +159,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					if (tsClicked == point.getTimestamp()) {
 
-						
-						route.setZoomSpecificMarker(point);
+							route.setZoomSpecificMarker(point);
 
 					}
 

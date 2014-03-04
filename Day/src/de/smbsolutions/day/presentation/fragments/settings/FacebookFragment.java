@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import de.smbsolutions.day.R;
 
-public class FacebookFragment extends Fragment {
+public class FacebookFragment extends android.support.v4.app.Fragment {
 	
 	public FacebookFragment(){}
 	
@@ -20,3 +20,4 @@ public class FacebookFragment extends Fragment {
         return rootView;
     }
 }
+
