@@ -254,8 +254,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 					.replace(R.id.frame_container, frag, tag)
 					.addToBackStack(tag).commit();
 		}
-		// Fragment oldFrag = (Fragment)
-		// getSupportFragmentManager().findFragmentById(id);
+		
+		mainfrag = null; //Speicher wieder freigeben
+		detailFrag = null;
 
 	}
 
