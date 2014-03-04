@@ -198,18 +198,30 @@ public class SliderMenu {
 		case 0:
 			// MapType: Karte
 			Device.getAPP_SETTINGS().setMAP_TYPE(1);
+			mDrawerList.setItemChecked(position, true);
+			mDrawerList.setSelection(position);
+			context.setTitle(navMenuTitles[position]);
+			mDrawerLayout.closeDrawer(mDrawerList);
 			mCallback.onRefreshMap();
 			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 1);
 			break;
 		case 1:
 			// MapType: Sattelite
 			Device.getAPP_SETTINGS().setMAP_TYPE(2);
+			mDrawerList.setItemChecked(position, true);
+			mDrawerList.setSelection(position);
+			context.setTitle(navMenuTitles[position]);
+			mDrawerLayout.closeDrawer(mDrawerList);
 			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 2);
 			break;
 		case 2:
 			// MapType: Terrain
 
 			Device.getAPP_SETTINGS().setMAP_TYPE(3);
+			mDrawerList.setItemChecked(position, true);
+			mDrawerList.setSelection(position);
+			context.setTitle(navMenuTitles[position]);
+			mDrawerLayout.closeDrawer(mDrawerList);
 			break;
 		case 3:
 			// Einstellungen

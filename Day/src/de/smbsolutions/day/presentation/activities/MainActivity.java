@@ -1,5 +1,7 @@
 package de.smbsolutions.day.presentation.activities;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -56,8 +58,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 		setContentView(R.layout.activity_main);
-		
-		//Get Singetons
+
+		// Get Singetons
 		Database.getInstance(this);
 		Device.getInstance(this);
 
@@ -78,9 +80,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		slidermenu.getNavDrawerItems();
 		slidermenu.getAdapter();
 		slidermenu.getActionBarDrawerToggle();
-		
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		mainfrag = new MainFragment();
 		tag = mainfrag.getClass().getName();
@@ -181,30 +182,29 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				.replace(R.id.frame_container, mainfrag, tag).commit();
 
 	}
-	
-	
-	//GLEICH WIE SHOWROUTE
+
+	// GLEICH WIE SHOWROUTE
 	@Override
 	public void onDeletePicture(Route route) {
-		
+
 		// fragment avaiable?
-				crFrag = new DetailFragment();
-				tag = crFrag.getClass().getName();
+		crFrag = new DetailFragment();
+		tag = crFrag.getClass().getName();
 
-				Bundle bundle = new Bundle();
-				// Übergabe Routenliste
-				bundle.putParcelable("route", route);
-				crFrag.setArguments(bundle);
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		crFrag.setArguments(bundle);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-				ft.replace(R.id.frame_container, crFrag, tag).addToBackStack(tag)
-						.commit();
-		
+		ft.replace(R.id.frame_container, crFrag, tag).addToBackStack(tag)
+				.commit();
+
 	}
 
 	@Override
 	public void onLongPictureClick(Route route, RoutePoint point) {
-		
+
 		DeletePictureDialog deletePictureDialog = new DeletePictureDialog();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
@@ -213,9 +213,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
 		// to identify the dialog
-		deletePictureDialog.show(getSupportFragmentManager(), "DeletePictureDialog");
-		
-		
+		deletePictureDialog.show(getSupportFragmentManager(),
+				"DeletePictureDialog");
+
 	}
 
 	// GLEICH WIE DELETE ROUTE
@@ -230,11 +230,32 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onSliderClick(Fragment frag) {
-
+		MainFragment mainFrag = new MainFragment();
+		String mainFragTag = mainFrag.getClass().getName();
+		DetailFragment detailFrag = new DetailFragment();
+		String detailFragTag = detailFrag.getClass().getName();
 		tag = frag.getClass().getName();
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.frame_container, frag, tag).addToBackStack(tag)
-				.commit();
+
+		String name = getSupportFragmentManager().getBackStackEntryAt(
+				getSupportFragmentManager().getBackStackEntryCount() - 1)
+				.getName();
+		if (!name.equals(detailFragTag) & !name.equals(mainFragTag)) {
+			Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(
+					name);
+			getSupportFragmentManager().beginTransaction().remove(oldFrag)
+					.commit();
+
+			getSupportFragmentManager().popBackStack();
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.frame_container, frag, tag)
+					.addToBackStack(tag).commit();
+		} else {
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.frame_container, frag, tag)
+					.addToBackStack(tag).commit();
+		}
+		// Fragment oldFrag = (Fragment)
+		// getSupportFragmentManager().findFragmentById(id);
 
 	}
 
@@ -316,33 +337,31 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onPictureClick(Route route, RoutePoint point) {
 
 		// fragment avaiable?
-				pictureFrag = new PictureFragment();
-				tag = pictureFrag.getClass().getName();
+		pictureFrag = new PictureFragment();
+		tag = pictureFrag.getClass().getName();
 
-				Bundle bundle = new Bundle();
-				// Übergabe Routenliste
-				bundle.putParcelable("route", route);
-				bundle.putParcelable("point", point);
-				pictureFrag.setArguments(bundle);
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				
-				ft.replace(R.id.frame_container, pictureFrag, tag).addToBackStack(tag)
-						.commit();
-		
+		Bundle bundle = new Bundle();
+		// Übergabe Routenliste
+		bundle.putParcelable("route", route);
+		bundle.putParcelable("point", point);
+		pictureFrag.setArguments(bundle);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+		ft.replace(R.id.frame_container, pictureFrag, tag).addToBackStack(tag)
+				.commit();
+
 	}
 
 	@Override
 	public void onShowFullPicture(Route route) {
 		// TODO Was soll hier geschehen?
-		
+
 	}
 
 	@Override
 	public void onRefreshMap() {
 		Fragment frag = getSupportFragmentManager().findFragmentByTag(tag);
-		frag = frag;
+
 	}
-
-
 
 }
