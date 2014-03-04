@@ -2,8 +2,9 @@ package de.smbsolutions.day.functions.objects;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.presentation.fragments.settings.CameraFragment;
 import de.smbsolutions.day.presentation.fragments.settings.GPSFragment;
@@ -50,8 +52,7 @@ public class SliderMenu {
 
 		mDrawerLayout = (DrawerLayout) context.findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) context.findViewById(R.id.list_slidermenu);
-		
-		
+
 		try {
 			mCallback = (MainCallback) context;
 		} catch (ClassCastException e) {
@@ -68,72 +69,77 @@ public class SliderMenu {
 		return mDrawerList;
 	}
 
-	public ArrayList<SliderMenuItem> getNavDrawerItems(){
-		
+	public ArrayList<SliderMenuItem> getNavDrawerItems() {
+
 		mTitle = mDrawerTitle = context.getTitle();
 
 		// load slide menu items
-		navMenuTitles = context.getResources().getStringArray(R.array.nav_drawer_items);
+		navMenuTitles = context.getResources().getStringArray(
+				R.array.nav_drawer_items);
 
 		// nav drawer icons from resources
-		navMenuIcons = context.getResources().obtainTypedArray(R.array.nav_drawer_icons);
+		navMenuIcons = context.getResources().obtainTypedArray(
+				R.array.nav_drawer_icons);
 
-
-
-		
 		navDrawerItems = new ArrayList<SliderMenuItem>();
 
-		
 		// adding nav drawer items to array
-		//Landkarte
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-		//Sattelite
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-		//Terrain
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-		
-		
+		// Landkarte
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[0], navMenuIcons
+				.getResourceId(0, -1)));
+		// Sattelite
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[1], navMenuIcons
+				.getResourceId(1, -1)));
+		// Terrain
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[2], navMenuIcons
+				.getResourceId(2, -1)));
+
 		// Einstellungen (Ueberschrift)
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[3], navMenuIcons
+				.getResourceId(3, -1)));
 		// GPS
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-//		Kamera
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
-		//App Info
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
-		
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[4], navMenuIcons
+				.getResourceId(4, -1)));
+		// Kamera
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[5], navMenuIcons
+				.getResourceId(5, -1)));
+		// App Info
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[6], navMenuIcons
+				.getResourceId(6, -1)));
+
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[7], navMenuIcons
+				.getResourceId(7, -1)));
 		return navDrawerItems;
 	}
-	
-	public SliderMenuListAdapter getAdapter(){
-		
+
+	public SliderMenuListAdapter getAdapter() {
+
 		// Recycle the typed array
 		navMenuIcons.recycle();
-				
+
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-				
-				
+
 		// setting the nav drawer list adapter
 		adapter = new SliderMenuListAdapter(context.getApplicationContext(),
 				navDrawerItems);
 		mDrawerList.setAdapter(adapter);
-		
+
 		// enabling action bar app icon and behaving it as toggle button
-		
+
 		context.getActionBar().setDisplayHomeAsUpEnabled(true);
 		context.getActionBar().setHomeButtonEnabled(true);
-		
-	return adapter;	
+
+		return adapter;
 	}
 
-	public ActionBarDrawerToggle getActionBarDrawerToggle(){
-		
-	
-			mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
-				R.drawable.ic_drawer, //nav menu toggle icon
-				R.string.app_name, // nav drawer open - description for accessibility
-				R.string.app_name // nav drawer close - description for accessibility
+	public ActionBarDrawerToggle getActionBarDrawerToggle() {
+
+		mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
+				R.drawable.ic_drawer, // nav menu toggle icon
+				R.string.app_name, // nav drawer open - description for
+									// accessibility
+				R.string.app_name // nav drawer close - description for
+									// accessibility
 		) {
 			public void onDrawerClosed(View view) {
 				context.getActionBar().setTitle(mTitle);
@@ -153,9 +159,9 @@ public class SliderMenu {
 			// on first time display view for first nav item
 			displayView(0);
 		}
-		
+
 		return mDrawerToggle;
-		
+
 	}
 
 	//
@@ -190,33 +196,37 @@ public class SliderMenu {
 
 		switch (position) {
 		case 0:
-//			MapType: Karte
-//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 1);
+			// MapType: Karte
+			Device.getAPP_SETTINGS().setMAP_TYPE(1);
+			mCallback.onRefreshMap();
+			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 1);
 			break;
 		case 1:
-//			MapType: Sattelite
-//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 2);
+			// MapType: Sattelite
+			Device.getAPP_SETTINGS().setMAP_TYPE(2);
+			// Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 2);
 			break;
 		case 2:
-//			MapType: Terrain
-//			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 3);
+			// MapType: Terrain
+
+			Device.getAPP_SETTINGS().setMAP_TYPE(3);
 			break;
 		case 3:
-//			Einstellungen
+			// Einstellungen
 			break;
-		
+
 		case 4:
-//			GPS
+			// GPS
 			fragment = new GPSFragment();
 			break;
-			
+
 		case 5:
-//			Kamera
+			// Kamera
 			fragment = new CameraFragment();
 			break;
-			
+
 		case 6:
-			//Info
+			// Info
 			break;
 
 		default:

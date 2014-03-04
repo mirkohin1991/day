@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
@@ -27,9 +28,8 @@ public class DeletePictureDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		bundle = this.getArguments();
-		 route = (Route) bundle.getParcelable("route");
-		 point = (RoutePoint) bundle.getParcelable("point");
-	
+		route = (Route) bundle.getParcelable("route");
+		point = (RoutePoint) bundle.getParcelable("point");
 
 		return new AlertDialog.Builder(getActivity()).setTitle("Bild löschen")
 				.setMessage("Möchten Sie das Bild wirklich löschen?")
@@ -42,36 +42,31 @@ public class DeletePictureDialog extends DialogFragment {
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						
+
 						try {
-							
-						
-							
-							//Getting the file
+
+							// Getting the file
 							File deleteFile = new File(point.getPicture());
-							
-							File deleteFilePreview = new File(point.getPicturePreview());
-							
-							
-							
-							//If the deletion was successful
-							if ( deleteFile.delete() == true && deleteFilePreview.delete()
-									) {
-								
-								//Remove the picture paths
+
+							File deleteFilePreview = new File(point
+									.getPicturePreview());
+
+							// If the deletion was successful
+							if (deleteFile.delete() == true
+									&& deleteFilePreview.delete()) {
+
+								// Remove the picture paths
 								route.deletePictureDB(point);
 
 							}
-							
-							mCallback.onDeletePicture(route);
-							
-						} catch (Exception e) {
-							
-							// TODO: handle exception
-						}
-						
 
-					
+							mCallback.onDeletePicture(route);
+
+						} catch (Exception e) {
+
+							Log.wtf(getTag(), e.getMessage());
+						}
+
 					}
 				}).create();
 	}

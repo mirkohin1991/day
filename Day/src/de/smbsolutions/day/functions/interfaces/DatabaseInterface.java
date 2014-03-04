@@ -2,7 +2,6 @@ package de.smbsolutions.day.functions.interfaces;
 
 public interface DatabaseInterface {
 	
-	
 	 String SETTINGS_TRACKING = "tracking";
 	 String SETTINGS_TRACKING_INTERVAL = "tracking_interval";
 	 String SETTINGS_MAP_TYPE = "map_type";
@@ -14,9 +13,5 @@ public interface DatabaseInterface {
 	 String ROUTE_POINTS_TIMESTAMP = "timestamp";
 	 String ROUTE_INFO_NAME = "name";
 	 String ROUTE_INFO_DATE = "date";
-	 
-	 
-	 
-	 
 
 }

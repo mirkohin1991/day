@@ -30,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
@@ -134,13 +135,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		try {
 
 			// viewflipper are used to change views at the same position
-			//--> Flipper to change between current route view and create route view
+			// --> Flipper to change between current route view and create route
+			// view
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
-			
-			
-			
 
-			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setPadding(0, 70, 0, 0);
 			// get views from fragment
@@ -160,7 +160,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			meineListView.setItemChecked(index, true);
 			sel_Route = routeList.getListRoutes().get(index);
 
-			
 			changeDisplayedRouteDesc(routeList.getlastRoute());
 
 			if (routeList.isOpenRoute()) {
@@ -170,7 +169,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				txtRouteName.setText(routeList.getlastRoute().getRouteName());
 				// Showing the current active route as the first item
 				vfNewOrCurrent.setDisplayedChild(1);
-			//	btnStopRoute = (Button) view.findViewById(R.id.imagebuttonStop);
+				// btnStopRoute = (Button)
+				// view.findViewById(R.id.imagebuttonStop);
 				btnContinueRoute = (Button) view
 						.findViewById(R.id.imagebuttonContinue);
 
@@ -191,8 +191,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 							if (flag_first == true) {
 
-								map = routeList.getlastRoute().prepareMapPreview(map,
-										getActivity());
+								map = routeList.getlastRoute()
+										.prepareMapPreview(map, getActivity());
 
 								flag_first = false;
 							}
@@ -205,7 +205,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 							if (vfNewOrCurrent.getDisplayedChild() == 1) {
 
 								addButtonClickListenerContinue(btnContinueRoute);
-							//	addButtonClickListenerStop(btnStopRoute);
+								// addButtonClickListenerStop(btnStopRoute);
 
 								// Getting the whole line (including the two
 								// buttons)
@@ -247,7 +247,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				meineListe.add(route.getRouteName());
 			}
 
-		
 			changeDisplayedRouteDesc(routeList.getlastRoute());
 			ListAdapter listenAdapter = new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, meineListe);
@@ -262,8 +261,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 						@Override
 						public void onGlobalLayout() {
 
-							map = routeList.getlastRoute().prepareMapPreview(map,
-									getActivity());
+							map = routeList.getlastRoute().prepareMapPreview(
+									map, getActivity());
 							addListitemListender(meineListView);
 							// LandscapeButtonCLick
 						}
@@ -274,7 +273,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		}
 
 	}
-
 
 	public void addButtonClickListenerContinue(Button button) {
 		button.setOnClickListener(new OnClickListener() {
@@ -346,15 +344,14 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				}
 
 				map = sel_Route.prepareMapPreview(map, getActivity());
-			
+
 				changeDisplayedRouteDesc(sel_Route);
 
 			}
 		});
-		
-		
+
 		view.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			@Override
 			public boolean onLongClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -390,7 +387,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				}
 
 				map = sel_Route.prepareMapPreview(map, getActivity());
-				
+
 				changeDisplayedRouteDesc(routeList.getListRoutes()
 						.get(position));
 			}
@@ -408,15 +405,13 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		});
 	}
 
-
 	public void changeDisplayedRouteDesc(Route route) {
 		txtViewPic = (TextView) view.findViewById(R.id.txtViewPic);
 		txtViewPic.setText(route.getRouteName());
-		
+
 		txtViewDate = (TextView) view.findViewById(R.id.txtViewDatePreview);
 		txtViewDate.setText(route.getDate());
-		
-		
+
 	}
 
 	@Override

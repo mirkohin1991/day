@@ -1,6 +1,3 @@
-
-
-
 	package de.smbsolutions.day.presentation.dialogs;
 
 	import de.smbsolutions.day.functions.interfaces.MainCallback;
@@ -17,7 +14,6 @@
 
 		private RouteList routeList;
 		private Bundle bundle;
-
 		private MainCallback mCallback;
 
 		@Override

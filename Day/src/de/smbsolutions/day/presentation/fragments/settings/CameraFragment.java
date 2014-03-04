@@ -17,6 +17,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
+import de.smbsolutions.day.functions.initialization.Device;
 
 public class CameraFragment extends android.support.v4.app.Fragment {
 	
@@ -50,6 +51,7 @@ public class CameraFragment extends android.support.v4.app.Fragment {
         switchShowInGal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                	
                 	Database.changeSettingValue(Database.SETTINGS_SHOW_IN_GAL, 1);
                 	
                 	File path = new File(Environment.getExternalStoragePublicDirectory(

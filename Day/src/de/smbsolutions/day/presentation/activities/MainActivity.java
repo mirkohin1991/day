@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.database.DatabaseManager;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
@@ -47,7 +46,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private TypedArray navMenuIcons;
 	private SliderMenu slidermenu;
 
-	private android.support.v4.app.Fragment mfrag;
+	private android.support.v4.app.Fragment mainfrag;
 	private android.support.v4.app.Fragment crFrag;
 	private android.support.v4.app.Fragment pictureFrag;
 	private String tag;
@@ -58,9 +57,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		super.onCreate(null);
 		setContentView(R.layout.activity_main);
 		
-		
+		//Get Singetons
 		Database.getInstance(this);
-		Device device = new Device(this);
+		Device.getInstance(this);
 
 		mTitle = mDrawerTitle = getTitle();
 
@@ -80,18 +79,13 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		slidermenu.getAdapter();
 		slidermenu.getActionBarDrawerToggle();
 		
-		
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		if (device.isTablet()) {
 
-		} else {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
-
-		mfrag = new MainFragment();
-		tag = mfrag.getClass().getName();
+		mainfrag = new MainFragment();
+		tag = mainfrag.getClass().getName();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.frame_container, mfrag, tag).addToBackStack(tag)
+		ft.replace(R.id.frame_container, mainfrag, tag).addToBackStack(tag)
 				.commit();
 
 	}
@@ -181,10 +175,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onDeleteRoute() {
-		mfrag = new MainFragment();
-		tag = mfrag.getClass().getName();
+		mainfrag = new MainFragment();
+		tag = mainfrag.getClass().getName();
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.frame_container, mfrag, tag).commit();
+				.replace(R.id.frame_container, mainfrag, tag).commit();
 
 	}
 	
@@ -210,18 +204,16 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onLongPictureClick(Route route, RoutePoint point) {
-		// TODO Auto-generated method stub
 		
-		
-		DeletePictureDialog dialog = new DeletePictureDialog();
+		DeletePictureDialog deletePictureDialog = new DeletePictureDialog();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		bundle.putParcelable("point", point);
-		dialog.setArguments(bundle);
+		deletePictureDialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
 		// to identify the dialog
-		dialog.show(getSupportFragmentManager(), "DeletePictureDialog");
+		deletePictureDialog.show(getSupportFragmentManager(), "DeletePictureDialog");
 		
 		
 	}
@@ -229,10 +221,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	// GLEICH WIE DELETE ROUTE
 	@Override
 	public void onStopRoute() {
-		mfrag = new MainFragment();
-		tag = mfrag.getClass().getName();
+		mainfrag = new MainFragment();
+		tag = mainfrag.getClass().getName();
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.frame_container, mfrag, tag).commit();
+				.replace(R.id.frame_container, mainfrag, tag).commit();
 
 	}
 
@@ -323,7 +315,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onPictureClick(Route route, RoutePoint point) {
 
-		// fragmen avaiable?
+		// fragment avaiable?
 				pictureFrag = new PictureFragment();
 				tag = pictureFrag.getClass().getName();
 
@@ -341,8 +333,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onShowFullPicture(Route route) {
-		// TODO Auto-generated method stub
+		// TODO Was soll hier geschehen?
 		
+	}
+
+	@Override
+	public void onRefreshMap() {
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(tag);
+		frag = frag;
 	}
 
 
