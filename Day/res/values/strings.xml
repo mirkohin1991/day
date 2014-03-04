@@ -25,6 +25,7 @@
         <item>Einstellungen</item>
         <item>GPS</item>
         <item>Kamera</item>
+        <item>Facebook</item>
         <item>Infos zur App</item>
         <item/>
     </string-array>
@@ -41,6 +42,7 @@
         <item/>
         <item>@drawable/setting_gps</item>
         <item>@drawable/setting_camera</item>
+         <item>@drawable/setting_facebook</item>
         <item>@drawable/setting_info</item>
         <item/>
     </array>

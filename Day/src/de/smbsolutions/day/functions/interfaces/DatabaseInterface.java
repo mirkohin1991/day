@@ -4,6 +4,7 @@ public interface DatabaseInterface {
 	
 	 String SETTINGS_TRACKING = "tracking";
 	 String SETTINGS_TRACKING_INTERVAL = "tracking_interval";
+	 String SETTINGS_TRACKING_METER = "tracking_meter";
 	 String SETTINGS_MAP_TYPE = "map_type";
 	 String SETTINGS_SHOW_IN_GAL = "show_in_gal";
 	 String ROUTE_POINTS_LATITUDE = "latitude";

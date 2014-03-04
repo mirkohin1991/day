@@ -1,24 +1,26 @@
 package de.smbsolutions.day.functions.tasks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -52,7 +54,9 @@ public class MarkerWorkerTask extends
 	LinkedHashMap<RoutePoint, Bitmap> bitmapMap = new LinkedHashMap<RoutePoint, Bitmap>();
 	LinkedHashMap<RoutePoint, Marker> markerMap;
 	
-	PolylineOptions polylineOptions = new PolylineOptions();
+
+	PolylineOptions polylineOptions_back = new PolylineOptions().width(3).color(Color.rgb(136, 204, 0));
+	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(Color.rgb(19, 88, 5));
 
 	public MarkerWorkerTask(Context context, GoogleMap map, LinkedHashMap<RoutePoint, Marker> markerMap, Route route) {
 		markers = new ArrayList<Marker>();
@@ -92,12 +96,17 @@ public class MarkerWorkerTask extends
 
 				int bgwidth = resizedBitmap_Placeholder.getWidth();
 				int bgheight = resizedBitmap_Placeholder.getHeight();
+				
+
 
 				bitmap = BitmapManager.decodeSampledBitmapFromUri(
 						uri.getPath(), bgwidth, bgheight);
 
 				if (bitmap != null) {
-					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
+//					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
+					
+					bitmap = getRoundedCornerBitmap(getResizedBitmap(bitmap, bgheight, bgwidth), 220);
+					
 					bitmapMap.put(point, bitmap);
 
 				}
@@ -122,16 +131,18 @@ public class MarkerWorkerTask extends
 		
 		for(Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
 			
-			polylineOptions.add(new LatLng(mapSet.getKey().getLatitude(),
-					mapSet.getKey().getLongitude()));
+			polylineOptions_top.add(new LatLng(mapSet.getKey().getLatitude(), mapSet.getKey().getLongitude()));
+			polylineOptions_back.add(new LatLng(mapSet.getKey().getLatitude(), mapSet.getKey().getLongitude()));
+			
 			
 			if (mapSet.getKey().getPicturePreview() != null) {
 				
 				
 			Bitmap bitmapSaved =	bitmapMap.get(mapSet.getKey());
 			
-			Bitmap background = BitmapFactory.decodeResource(
-					context.getResources(), R.drawable.custom_marker);
+			Bitmap background = BitmapFactory.decodeResource(context.getResources(), R.drawable.custom_marker);
+			
+			
 
 			Bitmap resizedBitmap_Placeholder = BitmapFactory.decodeResource(
 					context.getResources(),
@@ -153,10 +164,11 @@ public class MarkerWorkerTask extends
 			builder.include(mapSet.getValue().getPosition());
 		
 		}
+
 		
-		Polyline polyline = map.addPolyline(polylineOptions);
-		polyline.setColor(Color.rgb(136, 204,0));
-		
+		Polyline polyline_top = map.addPolyline(polylineOptions_top);
+		Polyline polyline_back = map.addPolyline(polylineOptions_back);
+
 		LatLngBounds bounds = builder.build();
 		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 				bounds, 60);
@@ -240,7 +252,7 @@ public class MarkerWorkerTask extends
 
 		});
 		
-	}
+	} 
 
 	public static Bitmap getResizedBitmap(Bitmap image, int bgheight,
 			int bgwidth) {
@@ -269,20 +281,59 @@ public class MarkerWorkerTask extends
 		Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height,
 				matrix, true);
 
+//		resizedBitmap = getRoundedCornerBitmap(resizedBitmap, 500);
+		
 		return resizedBitmap;
-	}
 
-	public static Bitmap overlay(Bitmap background,
-			Bitmap resizedBitmap_Placeholder, Bitmap resizedBitmap) {
-		Bitmap bmOverlay = Bitmap.createBitmap(background.getWidth(),
-				background.getHeight(), background.getConfig());
-		Bitmap bmOverlay2 = Bitmap.createBitmap(resizedBitmap.getWidth(),
-				resizedBitmap.getHeight(), resizedBitmap.getConfig());
+	}
+	
+	public static Bitmap getRoundedCornerBitmap(Bitmap resizedBitmap, int pixels) {
+        Bitmap roundedBitmap = Bitmap.createBitmap(resizedBitmap.getWidth(), resizedBitmap
+                .getHeight(), Config.ARGB_8888);
+        Canvas canvas = new Canvas(roundedBitmap);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, resizedBitmap.getWidth(), resizedBitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+        canvas.drawBitmap(resizedBitmap, rect, rect, paint);
+
+        return roundedBitmap;
+    }
+	
+	
+	
+	public static Bitmap overlay(Bitmap background,Bitmap resizedBitmap_Placeholder, Bitmap roundedBitmap) {
+		Bitmap bmOverlay = Bitmap.createBitmap(background.getWidth(), background.getHeight(), background.getConfig());
+
 
 		Canvas canvas = new Canvas(bmOverlay);
-		canvas.drawBitmap(resizedBitmap, 7, 7, null);
+		canvas.drawBitmap(roundedBitmap, 0, 10, null);
 		canvas.drawBitmap(background, 0, 0, null);
+
+		
 
 		return bmOverlay;
 	}
+	
+	
+	
+	
+
+	
+	
+
+	
+	
+	
+
+
 }

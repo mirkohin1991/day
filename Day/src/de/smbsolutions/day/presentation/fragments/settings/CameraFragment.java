@@ -3,6 +3,7 @@ package de.smbsolutions.day.presentation.fragments.settings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
@@ -31,8 +31,6 @@ public class CameraFragment extends android.support.v4.app.Fragment {
         
         
         int show_in_gal = Database.getSettingValue(Database.SETTINGS_TRACKING);
-        Toast t1 = Toast.makeText(getActivity(),String.valueOf(show_in_gal), Toast.LENGTH_SHORT);
-        t1.show();
         
         Switch switchShowInGal = (Switch)rootView.findViewById(R.id.switchShowInGal);
         
@@ -40,12 +38,14 @@ public class CameraFragment extends android.support.v4.app.Fragment {
         //Wert (On/Off) aus der Datenbank abrufen
         if (Database.getSettingValue(Database.SETTINGS_SHOW_IN_GAL) == 1){
         	switchShowInGal.setChecked(true);
-
         }
         else {
         	switchShowInGal.setChecked(false);
         	
         }
+        
+        final File path = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MyCameraApp");
 
         //Wenn Wert geaendert wird, diesen in die Datenbank schreiben
         switchShowInGal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -54,22 +54,28 @@ public class CameraFragment extends android.support.v4.app.Fragment {
                 	
                 	Database.changeSettingValue(Database.SETTINGS_SHOW_IN_GAL, 1);
                 	
-                	File path = new File(Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_PICTURES), "MyCameraApp");
-                	File from = new File(path,"nomedia");
-                	File to = new File(path,".nomedia");
-                	from.renameTo(to);
-                	
+//                	Writes a new file to the MyCameraApp directory to hide pictures taken with this app from the standard gallery app
+//                	Images should be hidden
+                	String nomediaFile = path.toString()+"/.nomedia";
+                	File file=new File(nomediaFile);
+                	boolean deleted = file.delete();
 
                 	
                 } else {
-//             
+         
                 	Database.changeSettingValue(Database.SETTINGS_SHOW_IN_GAL, 0);
-                	File path = new File(Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_PICTURES), "MyCameraApp");
-                	File from = new File(path,".nomedia");
-                	File to = new File(path,"nomedia");
-                	from.renameTo(to);
+
+//                	Deletes the file wich indicates the availability in the gallery app.
+//                	Images should be shown
+//                	File path = new File(Environment.getExternalStoragePublicDirectory(
+//                            Environment.DIRECTORY_PICTURES), "MyCameraApp");
+                	try {
+						FileWriter fileWriter = new FileWriter(path + "/.nomedia");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+
                
                 }
             }

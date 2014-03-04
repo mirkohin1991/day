@@ -15,6 +15,7 @@ import android.widget.ListView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.presentation.fragments.settings.CameraFragment;
+import de.smbsolutions.day.presentation.fragments.settings.FacebookFragment;
 import de.smbsolutions.day.presentation.fragments.settings.GPSFragment;
 import de.smbsolutions.day.presentation.listviews.SliderMenuItem;
 import de.smbsolutions.day.presentation.listviews.SliderMenuListAdapter;
@@ -97,12 +98,14 @@ public class SliderMenu {
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 		// GPS
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-//		Kamera
+		// Kamera
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
-		//App Info
+		// Facebook
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
-		
+		//App Info
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
+		
+		navDrawerItems.add(new SliderMenuItem(navMenuTitles[8], navMenuIcons.getResourceId(8, -1)));
 		return navDrawerItems;
 	}
 	
@@ -201,6 +204,7 @@ public class SliderMenu {
 //			MapType: Terrain
 //			Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, 3);
 			break;
+			
 		case 3:
 //			Einstellungen
 			break;
@@ -216,6 +220,11 @@ public class SliderMenu {
 			break;
 			
 		case 6:
+			fragment = new FacebookFragment();
+			break;
+//			
+			
+		case 7:
 			//Info
 			break;
 
