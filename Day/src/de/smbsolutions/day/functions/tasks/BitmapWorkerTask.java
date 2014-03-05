@@ -38,15 +38,11 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private MainCallback mCallback;
 	LinearLayout myGallery;
 
-
-	public BitmapWorkerTask(LinearLayout layout,
-			Context context) {
+	public BitmapWorkerTask(LinearLayout layout, Context context) {
 		// Use a WeakReference to ensure the ImageView can be garbage collected
 		layoutReference = new WeakReference<LinearLayout>(layout);
 		this.context = context;
 		bitmapList = new ArrayList<ImageView>();
-
-
 
 		try {
 			mCallback = (MainCallback) context;
@@ -75,18 +71,26 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 				if (bm != null) {
 					// Bilder sollten automatisch ins Layout passen
 					ImageView imageView = new ImageView(context);
-					imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
 					imageView.setAdjustViewBounds(true);
 
-					imageView
-							.setLayoutParams(new LayoutParams(
-									android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT,
-									android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT));
+					// imageView
+					// .setLayoutParams(new LayoutParams(
+					// android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT,
+					// android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT));
+					double w = bm.getWidth();
+					double h = bm.getHeight();
 
 					if (foreachindex == 0) {
-						imageView.setPadding(0, 0, 0, 0);
-					} else
-						imageView.setPadding(1, 0, 0, 0);
+
+						imageView.setPadding(0, 12, 0, 12);
+
+					} else {
+
+						// photo in portrait
+						imageView.setPadding(5, 12, 0, 12);
+
+					}
 
 					imageView.setImageBitmap(bm);
 
@@ -115,8 +119,6 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					imageContainer.addView(image);
 
-				
-
 					// Handling events for the picture
 					addPictureClickListener(image);
 
@@ -144,7 +146,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 				i = 1;
 
-			} 
+			}
 		});
 
 		image.setOnClickListener(new OnClickListener() {
@@ -159,7 +161,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					if (tsClicked == point.getTimestamp()) {
 
-							route.setZoomSpecificMarker(point);
+						route.setZoomSpecificMarker(point);
 
 					}
 

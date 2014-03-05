@@ -35,8 +35,7 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 		
 		final int timeSec = Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 1000;
 		final int meter = Database.getSettingValue(Database.SETTINGS_TRACKING_METER);
-
-			
+		
 		Switch switchGPSOnOff = (Switch) rootView.findViewById(R.id.switchGPSOnOff);
 		final SeekBar seekBarFrequency = (SeekBar) rootView.findViewById(R.id.seekBarFrequency);
 		final SeekBar seekBarFrequencyMeter = (SeekBar) rootView.findViewById(R.id.SeekBarFrequencyMeter);

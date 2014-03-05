@@ -40,7 +40,7 @@ import de.smbsolutions.day.presentation.listviews.AllRoutesListElement;
 public class MainFragment extends android.support.v4.app.Fragment {
 
 	private GoogleMap map;
-	private SupportMapFragment fragment;
+	private SupportMapFragment mapFragment;
 	private View view;
 	private RouteList routeList;
 	private TextView txtViewPic;
@@ -88,18 +88,18 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		super.onActivityCreated(savedInstanceState);
 		FragmentManager fm = getChildFragmentManager();
 		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+			mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
-			if (fragment == null) {
-				fragment = SupportMapFragment.newInstance();
-				fm.beginTransaction().replace(R.id.map, fragment).commit();
+			if (mapFragment == null) {
+				mapFragment = SupportMapFragment.newInstance();
+				fm.beginTransaction().replace(R.id.map, mapFragment).commit();
 			}
 		} else {
-			fragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+			mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
-			if (fragment == null) {
-				fragment = SupportMapFragment.newInstance();
-				fm.beginTransaction().replace(R.id.map, fragment).commit();
+			if (mapFragment == null) {
+				mapFragment = SupportMapFragment.newInstance();
+				fm.beginTransaction().replace(R.id.map, mapFragment).commit();
 			}
 		}
 	}
@@ -113,7 +113,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
 			if (map == null) {
-				map = fragment.getMap();
+				map = mapFragment.getMap();
 			}
 
 			initializeFragmentLandscape();
@@ -121,7 +121,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		} else {
 
 			if (map == null) {
-				map = fragment.getMap();
+				map = mapFragment.getMap();
 			}
 
 			initializeFragmentPortrait();

@@ -24,7 +24,7 @@
         </ListView>
 
         <Button
-            android:id="@+id/imagebutton1"
+            android:id="@+id/ibCamera"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

@@ -53,7 +53,7 @@
                         android:textSize="@dimen/h1" />
 
                     <Button
-                        android:id="@+id/imagebutton1"
+                        android:id="@+id/ibCamera"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

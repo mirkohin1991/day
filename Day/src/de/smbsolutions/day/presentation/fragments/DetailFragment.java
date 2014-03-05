@@ -18,9 +18,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -34,7 +38,7 @@ import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
-public class DetailFragment extends android.support.v4.app.Fragment  {
+public class DetailFragment extends android.support.v4.app.Fragment {
 
 	private SupportMapFragment fragment;
 	private View view;
@@ -43,7 +47,9 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 	private Bundle data;
 	private Route route;
 	private MainCallback mCallback;
-	private ImageButton imageButton;
+	private ImageButton ibCamera;
+	private ImageButton ibInfoSliderIn;
+	private ImageButton ibInfoSliderOut;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -52,60 +58,53 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 	private static Activity context;
 	private LinearLayout myGallery;
 	private View removedView;
+	private ViewFlipper flipper;
 
-    private ViewGroup container;
-    private  LayoutInflater inflater;
+	private ViewGroup container;
+	private LayoutInflater inflater;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			
-			Bundle savedInstanceState) {
-		
-		//Saved in order to access it in the onActivityResult method later on
+
+	Bundle savedInstanceState) {
+
+		// Saved in order to access it in the onActivityResult method later on
 		this.container = container;
 		this.inflater = inflater;
-		
+
 		config = getResources().getConfiguration();
 
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
-		
-		
-		
+
 		// If a route doesn't have a picture point, the Picture Scrollbar is
 		// disabled
 		if (route.hasPicturePoint() == false) {
-			
-			view = inflater.inflate(R.layout.fragment_detail_nopicture, container, false);
-		}else {
+
+			view = inflater.inflate(R.layout.fragment_detail_nopicture,
+					container, false);
+		} else {
 			view = inflater.inflate(R.layout.fragment_detail, container, false);
-			
+
 			myGallery = (LinearLayout) view
 					.findViewById(R.id.LinearLayoutImage);
-			
-			
-			
+
 			addPhotos2Gallery(myGallery);
 
-//			LinearLayout linlayout = (LinearLayout) view
-//					.findViewById(R.id.LinearLayoutcR);
-//			
-//			//Saving the removed view, to add it later on again, if a picture is taken
-//			removedView = view
-//					.findViewById(R.id.RelativeHorizontalScrollViewLayout);
-//			//linlayout.removeView(removedView);
-//			removedView.setVisibility(View.GONE);
+			// LinearLayout linlayout = (LinearLayout) view
+			// .findViewById(R.id.LinearLayoutcR);
+			//
+			// //Saving the removed view, to add it later on again, if a picture
+			// is taken
+			// removedView = view
+			// .findViewById(R.id.RelativeHorizontalScrollViewLayout);
+			// //linlayout.removeView(removedView);
+			// removedView.setVisibility(View.GONE);
 		}
-		
-		
-		
-		
-	
 
 		return view;
 
 	}
-
-	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -183,17 +182,19 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 	public void initializeFragmentPortrait() {
 
 		map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
-//		map.setPadding(0, 0, 99999, 0); // weg isses :D
+		// map.setPadding(0, 0, 99999, 0); // weg isses :D
 		map.getUiSettings().setZoomControlsEnabled(false);
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
-		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
-
-
-
+		ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
+		ibInfoSliderIn = (ImageButton) view.findViewById(R.id.ibInfoSliderIn);
+		ibInfoSliderOut = (ImageButton) view.findViewById(R.id.ibInfoSliderOut);
+		addButtonClickListenerCamera(ibCamera);
+		addButtonClickListenerSliderIn(ibInfoSliderIn);
+		addButtonClickListenerSliderOut(ibInfoSliderOut);
 		// Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
-			imageButton.setVisibility(View.INVISIBLE);
+			ibCamera.setVisibility(View.INVISIBLE);
 		}
 
 		linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -203,9 +204,10 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 					public void onGlobalLayout() {
 						if (route != null) {
 							if (mapPrepared == false) {
-								map = route.prepareMapDetails(map, getActivity());
+								map = route.prepareMapDetails(map,
+										getActivity());
 								mapPrepared = true;
-								addButtonClickListener(imageButton);
+								
 
 							}
 
@@ -217,8 +219,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
 	}
 
-	public void addPhotos2Gallery( LinearLayout myGallery) {
-		
+	public void addPhotos2Gallery(LinearLayout myGallery) {
 
 		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
 									// einfügen?
@@ -227,7 +228,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
 	}
 
-	public void addButtonClickListener(ImageButton imageButton) {
+	public void addButtonClickListenerCamera(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -245,6 +246,35 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				startActivityForResult(intent,
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
+			}
+		});
+
+	}
+
+	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
+		imageButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				flipper = (ViewFlipper) view.findViewById(R.id.flipper);
+				flipper.setInAnimation(inFromLeftAnimation());
+				flipper.setOutAnimation(outToLeftAnimation());
+				flipper.showNext();
+			}
+		});
+
+	}
+	public void addButtonClickListenerSliderOut(ImageButton imageButton) {
+		imageButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				flipper = (ViewFlipper) view.findViewById(R.id.flipper);
+				flipper.setInAnimation(inFromLeftAnimation());
+				flipper.setOutAnimation(outToLeftAnimation());
+				flipper.showNext();
 			}
 		});
 
@@ -297,55 +327,88 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 										.getLatitude(), gps.getLongitude()));
 
 					}
-		
 
 				}
-            
-				//No Signal is available to detect the current location
+
+				// No Signal is available to detect the current location
 			} else {
-				
 
 				Toast.makeText(getActivity(),
 						"Keine Ortung möglich, bitte erneut versuchen",
 						Toast.LENGTH_LONG);
 			}
-			
-			
-			
-			 // now at least one picture was taken
-			if(route.hasPicturePoint() == true) {
 
-				//If it is the first picture ever taken the layout has to be changed to the one with picture scrollbar
+			// now at least one picture was taken
+			if (route.hasPicturePoint() == true) {
+
+				// If it is the first picture ever taken the layout has to be
+				// changed to the one with picture scrollbar
 				if (myGallery == null) {
-					
-					
-					//Vielleicht gibt es noch eine bessere Lösung.
+
+					// Vielleicht gibt es noch eine bessere Lösung.
 					mCallback.onShowRoute(route);
-					
-//					//Das hier wird nämlich leider nicht refresht
-//					view = inflater.inflate(R.layout.fragment_detail, container, false);
-//
-//					myGallery = (LinearLayout) view
-//							.findViewById(R.id.LinearLayoutImage);
+
+					// //Das hier wird nämlich leider nicht refresht
+					// view = inflater.inflate(R.layout.fragment_detail,
+					// container, false);
+					//
+					// myGallery = (LinearLayout) view
+					// .findViewById(R.id.LinearLayoutImage);
 				} else {
-					//refresh the image view
+					// refresh the image view
 					addPhotos2Gallery(myGallery);
 					route.prepareMapDetails(map, getActivity());
 				}
- 				
-			
-				
-				
-			 } else {
-				 route.prepareMapDetails(map, getActivity());
-			 }
-				
-			
+
+			} else {
+				route.prepareMapDetails(map, getActivity());
+			}
 
 		}
 	}
 
+	private Animation inFromRightAnimation() {
 
+		Animation inFromRight = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, +1.5f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		inFromRight.setDuration(500);
+		inFromRight.setInterpolator(new AccelerateInterpolator());
+		return inFromRight;
+	}
 
+	private Animation outToLeftAnimation() {
+		Animation outtoLeft = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, -1.5f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		outtoLeft.setDuration(500);
+		outtoLeft.setInterpolator(new AccelerateInterpolator());
+		return outtoLeft;
+	}
 
+	private Animation inFromLeftAnimation() {
+		Animation inFromLeft = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, -1.5f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		inFromLeft.setDuration(500);
+		inFromLeft.setInterpolator(new AccelerateInterpolator());
+		return inFromLeft;
+	}
+
+	private Animation outToRightAnimation() {
+		Animation outtoRight = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, +1.5f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
+		outtoRight.setDuration(500);
+		outtoRight.setInterpolator(new AccelerateInterpolator());
+		return outtoRight;
+	}
 }

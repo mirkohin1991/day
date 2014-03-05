@@ -1,6 +1,7 @@
 package de.smbsolutions.day.presentation.activities;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -234,7 +236,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		String mainFragTag = mainFrag.getClass().getName();
 		DetailFragment detailFrag = new DetailFragment();
 		String detailFragTag = detailFrag.getClass().getName();
-		tag = frag.getClass().getName();
+		String slidertag = frag.getClass().getName();
 
 		String name = getSupportFragmentManager().getBackStackEntryAt(
 				getSupportFragmentManager().getBackStackEntryCount() - 1)
@@ -247,15 +249,15 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			getSupportFragmentManager().popBackStack();
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.frame_container, frag, tag)
+					.replace(R.id.frame_container, frag, slidertag)
 					.addToBackStack(tag).commit();
 		} else {
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.frame_container, frag, tag)
+					.replace(R.id.frame_container, frag, slidertag)
 					.addToBackStack(tag).commit();
 		}
-		
-		mainfrag = null; //Speicher wieder freigeben
+
+		mainfrag = null; // Speicher wieder freigeben
 		detailFrag = null;
 
 	}
@@ -354,6 +356,15 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		tag = getSupportFragmentManager().getBackStackEntryAt(
+				getSupportFragmentManager().getBackStackEntryCount() - 1)
+				.getName();
+	}
+
+	@Override
 	public void onShowFullPicture(Route route) {
 		// TODO Was soll hier geschehen?
 
@@ -362,6 +373,28 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onRefreshMap() {
 		Fragment frag = getSupportFragmentManager().findFragmentByTag(tag);
+		if (frag != null) {
+			FragmentManager fm = frag.getChildFragmentManager();
+			SupportMapFragment mapfrag = (SupportMapFragment) fm
+					.findFragmentById(R.id.map);
+
+			if (mapfrag != null) {
+				GoogleMap map = mapfrag.getMap();
+				if (map.getMapType() != Device.getAPP_SETTINGS().getMAP_TYPE()) {
+					map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+				}
+
+			} else {
+				mapfrag = (SupportMapFragment) fm.findFragmentById(R.id.cr_map);
+				if (mapfrag != null) {
+					GoogleMap map = mapfrag.getMap();
+					if (map.getMapType() != Device.getAPP_SETTINGS()
+							.getMAP_TYPE()) {
+						map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+					}
+				}
+			}
+		}
 
 	}
 
