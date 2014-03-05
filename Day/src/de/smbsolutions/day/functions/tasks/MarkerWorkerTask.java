@@ -1,11 +1,18 @@
 package de.smbsolutions.day.functions.tasks;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -19,8 +26,15 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.format.Time;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,6 +53,7 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
+
 public class MarkerWorkerTask extends
 		AsyncTask<ArrayList<RoutePoint>, Void, LinkedHashMap<RoutePoint, Bitmap>> {
 
@@ -49,12 +64,14 @@ public class MarkerWorkerTask extends
 	private List<RoutePoint> routePoints;
 	private Route route;
 	MarkerOptions markerOpt = new MarkerOptions();
+	
 
 	// Necessary to save connect timestamp and marker
 	LinkedHashMap<RoutePoint, Bitmap> bitmapMap = new LinkedHashMap<RoutePoint, Bitmap>();
 	LinkedHashMap<RoutePoint, Marker> markerMap;
 	
 
+	
 	PolylineOptions polylineOptions_back = new PolylineOptions().width(3).color(Color.rgb(136, 204, 0));
 	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(Color.rgb(19, 88, 5));
 
@@ -63,7 +80,8 @@ public class MarkerWorkerTask extends
 		this.context = context;
 		this.map = map;
 		this.route = route;
-		
+
+
 		//Saving the markermap. Necessary, because the route object shall get the changes!
 		this.markerMap = markerMap;
 		
@@ -119,6 +137,8 @@ public class MarkerWorkerTask extends
 
 		return bitmapMap;
 	}
+	
+
 
 	@Override
 	protected void onPostExecute(LinkedHashMap<RoutePoint, Bitmap> result) {
@@ -128,11 +148,61 @@ public class MarkerWorkerTask extends
 		
 		
 		map.clear();
+
+//		Gets the first marker
+		Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet().iterator().next();
+
+//		Gets the Timestamp of the first marker
+		long startDate = firstMarker.getKey().getTimestamp().getTime();	
+
+//		Set the start Lat and Long
+		double startMarkerLat = firstMarker.getKey().getLatitude();
+		double startMarkerLong = firstMarker.getKey().getLongitude();
 		
+		Location locStart = new Location("start");
+		Location locDest = new Location("destination");
+		
+		locStart.setLatitude(startMarkerLat);
+		locStart.setLongitude(startMarkerLong);
+		
+		
+
+	
+		long durationAct = 0;
+
+
 		for(Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
+
+//			Gets the actual lat and long
+			double markerLat = mapSet.getKey().getLatitude();
+			double markerLong = mapSet.getKey().getLongitude();
+
+			locDest.setLatitude(markerLat);
+			locDest.setLongitude(markerLong);
+
+//			Calculates the distance
+			float distanceAct = locStart.distanceTo(locDest);
+			float distanceTotal = distanceAct + locStart.distanceTo(locDest);
+			distanceTotal = distanceTotal * 1000;
 			
-			polylineOptions_top.add(new LatLng(mapSet.getKey().getLatitude(), mapSet.getKey().getLongitude()));
-			polylineOptions_back.add(new LatLng(mapSet.getKey().getLatitude(), mapSet.getKey().getLongitude()));
+//			Calculates the distance from km to meter
+			int distanceMeter = (int)Math.round(distanceTotal);
+			
+//			Sets the "old" lat and long as new start lat and long
+			locStart.setLatitude(markerLat);
+			locStart.setLongitude(markerLong);
+			
+//			Gets the actual timestamp
+			long markerDate = mapSet.getKey().getTimestamp().getTime();
+			
+//			Calculates the duration of the route
+			durationAct = (markerDate - startDate);
+
+			
+			polylineOptions_top.add(new LatLng(markerLat, markerLong));
+			polylineOptions_back.add(new LatLng(markerLat, markerLong));
+			
+			
 			
 			
 			if (mapSet.getKey().getPicturePreview() != null) {
@@ -166,6 +236,12 @@ public class MarkerWorkerTask extends
 		}
 
 		
+//		Formats the Duration from Miliseconds to an readable format
+		Format formatter = new SimpleDateFormat("DD HH:mm:ss");
+		String duration = formatter.format(durationAct);
+		
+		
+		
 		Polyline polyline_top = map.addPolyline(polylineOptions_top);
 		Polyline polyline_back = map.addPolyline(polylineOptions_back);
 
@@ -177,41 +253,6 @@ public class MarkerWorkerTask extends
 		
 		
 		addMarkerClickListener (map);
-		
-		
-		
-		
-//		for (Map.Entry<RoutePoint, Bitmap> mapSet : result.entrySet()) {
-//
-//			polylineOptions.add(new LatLng(mapSet.getKey().getLatitude(),
-//					mapSet.getKey().getLongitude()));
-//			Polyline polyline = map.addPolyline(polylineOptions);
-//			polyline.setColor(Color.rgb(136, 204,0));
-//			Bitmap background = BitmapFactory.decodeResource(
-//					context.getResources(), R.drawable.custom_marker);
-//
-//			Bitmap resizedBitmap_Placeholder = BitmapFactory.decodeResource(
-//					context.getResources(),
-//					R.drawable.resizedbitmap_placeholder);
-//			markerOpt = new MarkerOptions()
-//					.position(
-//							new LatLng(mapSet.getKey().getLatitude(), mapSet
-//									.getKey().getLongitude()))
-//					.icon(BitmapDescriptorFactory.fromBitmap(this.overlay(
-//							background, resizedBitmap_Placeholder,
-//							mapSet.getValue()))).title("Ihr aktueller Standort");
-//
-//			Marker marker = map.addMarker(markerOpt);
-//			marker = map.addMarker(markerOpt);
-//			builder.include(marker.getPosition());
-//			
-//			//Fill the markerMap
-//			markerMap.put(marker, mapSet.getKey().getTimestamp());
-//
-//		}
-		
-		
-
 	}
 
 	private void addMarkerClickListener(GoogleMap map) {
@@ -234,19 +275,6 @@ public class MarkerWorkerTask extends
 			
 		        }
 				}
-				
-				
-			//	Timestamp timestamp = markerMap.get(marker).getTimestamp();
-
-				// timestamp is null when the marker doesn't contain a
-				// picture
-			//	if (timestamp != null) {
-					// Intent intent = new Intent(context,
-					// PictureActivity.class);
-					// intent.putExtra("timestamp", timestamp.toString());
-					// context.startActivity(intent);
-
-			//	}
 				return false;
 			}
 
@@ -272,16 +300,9 @@ public class MarkerWorkerTask extends
 		// resize the bit map
 		matrix.postScale(scaleWidth, scaleHeight);
 
-		// rotate bitmap
-		// if (height > width){
-		// matrix.postRotate(90);
-		// }
-
 		// recreate the new Bitmap
 		Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height,
 				matrix, true);
-
-//		resizedBitmap = getRoundedCornerBitmap(resizedBitmap, 500);
 		
 		return resizedBitmap;
 

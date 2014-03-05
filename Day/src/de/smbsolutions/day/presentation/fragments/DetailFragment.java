@@ -221,8 +221,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
-		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
-									// einfügen?
+		myGallery.removeAllViews(); // bessere lï¿½sung, immer nur das neue bild
+									// einfï¿½gen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
 		task.execute(route);
 
@@ -334,7 +334,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			} else {
 
 				Toast.makeText(getActivity(),
-						"Keine Ortung möglich, bitte erneut versuchen",
+						"Keine Ortung mï¿½glich, bitte erneut versuchen",
 						Toast.LENGTH_LONG);
 			}
 
@@ -345,10 +345,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				// changed to the one with picture scrollbar
 				if (myGallery == null) {
 
-					// Vielleicht gibt es noch eine bessere Lösung.
+					// Vielleicht gibt es noch eine bessere Lï¿½sung.
 					mCallback.onShowRoute(route);
 
-					// //Das hier wird nämlich leider nicht refresht
+					// //Das hier wird nï¿½mlich leider nicht refresht
 					// view = inflater.inflate(R.layout.fragment_detail,
 					// container, false);
 					//
