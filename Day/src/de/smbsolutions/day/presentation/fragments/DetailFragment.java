@@ -23,6 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -60,8 +61,13 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private View removedView;
 	private ViewFlipper flipper;
 
+
+    private ViewGroup container;
+    private  LayoutInflater inflater;
+
 	private ViewGroup container;
 	private LayoutInflater inflater;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,8 +83,6 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
 
-		// If a route doesn't have a picture point, the Picture Scrollbar is
-		// disabled
 		if (route.hasPicturePoint() == false) {
 
 			view = inflater.inflate(R.layout.fragment_detail_nopicture,
@@ -186,13 +190,16 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		map.getUiSettings().setZoomControlsEnabled(false);
 		LinearLayout linleaLayout = (LinearLayout) view
 				.findViewById(R.id.LinearLayoutcR);
+
+		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
+
 		ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
 		ibInfoSliderIn = (ImageButton) view.findViewById(R.id.ibInfoSliderIn);
 		ibInfoSliderOut = (ImageButton) view.findViewById(R.id.ibInfoSliderOut);
 		addButtonClickListenerCamera(ibCamera);
 		addButtonClickListenerSliderIn(ibInfoSliderIn);
 		addButtonClickListenerSliderOut(ibInfoSliderOut);
-		// Closed routes cannot generate a new picture
+
 		if (route.getActive().equals("")) {
 			ibCamera.setVisibility(View.INVISIBLE);
 		}
@@ -345,8 +352,20 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				// changed to the one with picture scrollbar
 				if (myGallery == null) {
 
-					// Vielleicht gibt es noch eine bessere L�sung.
+					
+					
+					//Vielleicht gibt es noch eine bessere L�sung.
+
+
+
 					mCallback.onShowRoute(route);
+
+					
+//					//Das hier wird n�mlich leider nicht refresht
+//					view = inflater.inflate(R.layout.fragment_detail, container, false);
+//
+//					myGallery = (LinearLayout) view
+//							.findViewById(R.id.LinearLayoutImage);
 
 					// //Das hier wird n�mlich leider nicht refresht
 					// view = inflater.inflate(R.layout.fragment_detail,
@@ -354,6 +373,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 					//
 					// myGallery = (LinearLayout) view
 					// .findViewById(R.id.LinearLayoutImage);
+
 				} else {
 					// refresh the image view
 					addPhotos2Gallery(myGallery);
