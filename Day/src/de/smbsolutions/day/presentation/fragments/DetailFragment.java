@@ -27,6 +27,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -63,6 +64,8 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
     private ViewGroup container;
     private  LayoutInflater inflater;
+
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			
@@ -76,6 +79,10 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
+		
+		
+
+		
 		
 		
 		
@@ -197,8 +204,6 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				.findViewById(R.id.LinearLayoutcR);
 		imageButton = (ImageButton) view.findViewById(R.id.imagebutton1);
 
-
-
 		// Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
 			imageButton.setVisibility(View.INVISIBLE);
@@ -228,8 +233,8 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 	public void addPhotos2Gallery( LinearLayout myGallery) {
 		
 
-		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
-									// einfügen?
+		myGallery.removeAllViews(); // bessere lï¿½sung, immer nur das neue bild
+									// einfï¿½gen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
 		task.execute(route);
 
@@ -314,7 +319,7 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				
 
 				Toast.makeText(getActivity(),
-						"Keine Ortung möglich, bitte erneut versuchen",
+						"Keine Ortung mï¿½glich, bitte erneut versuchen",
 						Toast.LENGTH_LONG);
 			}
 			
@@ -327,10 +332,10 @@ public class DetailFragment extends android.support.v4.app.Fragment  {
 				if (myGallery == null) {
 					
 					
-					//Vielleicht gibt es noch eine bessere Lösung.
+					//Vielleicht gibt es noch eine bessere Lï¿½sung.
 					mCallback.onShowRoute(route);
 					
-//					//Das hier wird nämlich leider nicht refresht
+//					//Das hier wird nï¿½mlich leider nicht refresht
 //					view = inflater.inflate(R.layout.fragment_detail, container, false);
 //
 //					myGallery = (LinearLayout) view
