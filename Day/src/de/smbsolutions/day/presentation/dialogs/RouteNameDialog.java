@@ -55,12 +55,12 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 						route.addRoutePointDB(new RoutePoint(route.getId(),
 								new Timestamp(System.currentTimeMillis()),
 								null, null, tracker.getLatitude(), tracker
-										.getLongitude()));
+										.getLongitude(), tracker.getAltitude()));
 						routeList.addRoute(route);
 						
 						mCallback.onNewRouteStarted(route);
 						// neues fragment-->
-						// nicht sicher ob das so die beste Lösung ist
+						// nicht sicher ob das so die beste Lï¿½sung ist
 						// crFragment currenRouteFrag = new crFragment();
 
 					}

@@ -221,8 +221,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
-		myGallery.removeAllViews(); // bessere lösung, immer nur das neue bild
-									// einfügen?
+		myGallery.removeAllViews(); // bessere lÃ¶sung, immer nur das neue bild
+									// einfÃ¼gen?
 		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
 		task.execute(route);
 
@@ -318,13 +318,13 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 						route.addRoutePointDB(new RoutePoint(route.getId(),
 								tsTemp, fileUri.getPath(), small_picture
 										.getPath(), gps.getLatitude(), gps
-										.getLongitude()));
+										.getLongitude(), gps.getAltitude()));
 
 						// If no small picture could be created, NULL is stored
 					} else {
 						route.addRoutePointDB(new RoutePoint(route.getId(),
 								tsTemp, fileUri.getPath(), null, gps
-										.getLatitude(), gps.getLongitude()));
+										.getLatitude(), gps.getLongitude(), gps.getAltitude()));
 
 					}
 
@@ -334,7 +334,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			} else {
 
 				Toast.makeText(getActivity(),
-						"Keine Ortung möglich, bitte erneut versuchen",
+						"Keine Ortung mÃ¶glich, bitte erneut versuchen",
 						Toast.LENGTH_LONG);
 			}
 
@@ -345,10 +345,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				// changed to the one with picture scrollbar
 				if (myGallery == null) {
 
-					// Vielleicht gibt es noch eine bessere Lösung.
+					// Vielleicht gibt es noch eine bessere LÃ¶sung.
 					mCallback.onShowRoute(route);
 
-					// //Das hier wird nämlich leider nicht refresht
+					// //Das hier wird nÃ¤mlich leider nicht refresht
 					// view = inflater.inflate(R.layout.fragment_detail,
 					// container, false);
 					//
