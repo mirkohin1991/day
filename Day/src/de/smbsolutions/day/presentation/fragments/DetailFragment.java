@@ -5,8 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -64,7 +68,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private View removedView;
 	private ViewFlipper flipper;
 	private String duration;
-	private double altitudeTotal;
+	private int distanceMeter;
 	private ViewGroup container;
 	private LayoutInflater inflater;
 
@@ -168,7 +172,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		addButtonClickListenerSliderOut(ibInfoSliderOut);
 		calcAltitude(route);
 		TextView tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-		tvDistance.setText(String.valueOf(altitudeTotal));
+		tvDistance.setText(String.valueOf(distanceMeter));
 		TextView tvDuration = (TextView) view.findViewById(R.id.tvDuration);
 		tvDuration.setText(String.valueOf(duration));
 		// Closed routes cannot generate a new picture
@@ -394,18 +398,14 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 	private void calcAltitude(Route route) {
 		long startDate = 0;
+		long markerDate = 0;
+		double markerLong = 0;
+		double markerLat = 0;
 
 		// Set the start Lat and Long
 		double startMarkerLat = 0;
 		double startMarkerLong = 0;
-		int distanceMeter = 0;
-
-		altitudeTotal = 0;
-		double maxAltitude = 0;
-		double minAltitude = 0;
-		double peakAltitude = 0;
-		double altitudeOld = 0;
-		double altitudeAct = 0;
+		float distanceTotal = 0;
 
 		Location locStart = new Location("start");
 		Location locDest = new Location("destination");
@@ -423,52 +423,35 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			}
 
 			// Gets the actual lat and long
-			double markerLat = point.getLatitude();
-			double markerLong = point.getLongitude();
+			markerLat = point.getLatitude();
+			markerLong = point.getLongitude();
 
 			locDest.setLatitude(markerLat);
 			locDest.setLongitude(markerLong);
 
 			// Calculates the distance
 			float distanceAct = locStart.distanceTo(locDest);
-			float distanceTotal = distanceAct + locStart.distanceTo(locDest);
+			distanceTotal = distanceAct + locStart.distanceTo(locDest);
 			distanceTotal = distanceTotal * 1000;
-
-			// Calculates the distance from km to meter
-			distanceMeter = (int) Math.round(distanceTotal);
 
 			// Sets the "old" lat and long as new start lat and long
 			locStart.setLatitude(markerLat);
 			locStart.setLongitude(markerLong);
 
 			// Gets the actual timestamp
-			long markerDate = point.getTimestamp().getTime();
+			markerDate = point.getTimestamp().getTime();
 
 			// Calculates the duration of the route
 			// ENDGÜLTIGE
 			// ZEIT*************************************************************
 			durationAct = (markerDate - startDate);
 
-			// altitude total
-			altitudeAct = point.getAltitude();
-			altitudeTotal = altitudeAct + altitudeOld;
-
-			// max altitude
-			if (altitudeAct > altitudeOld) {
-				maxAltitude = altitudeAct;
-			}
-
-			// min altitude
-			if (altitudeAct < altitudeOld) {
-				minAltitude = altitudeAct;
-			}
-
-			peakAltitude = maxAltitude - minAltitude;
-
-			altitudeOld = altitudeAct;
-
 			index++;
 		}
+
+		// Calculates the distance from km to meter
+		distanceMeter = (int) Math.round(distanceTotal);
+
 		// Formats the Duration from Miliseconds to an readable format
 		// ENDGÜLTIGE
 		// DAUER*************************************************************
