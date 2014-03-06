@@ -305,7 +305,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
+
 		return true;
 	}
 
@@ -315,26 +315,21 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (slidermenu.getActionBarDrawerToggle().onOptionsItemSelected(item)) {
 			return true;
 		}
-		// Handle action bar actions click
-		switch (item.getItemId()) {
-		case R.id.action_settings:
-			return true;
-		default:
+		
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
+	
 	/* *
 	 * Called when invalidateOptionsMenu() is triggered
 	 */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// if nav drawer is opened, hide the action items
-		boolean drawerOpen = slidermenu.getmDrawerLayout().isDrawerOpen(
-				slidermenu.getmDrawerList());
-		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
-		return super.onPrepareOptionsMenu(menu);
-	}
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		// if nav drawer is opened, hide the action items
+//		boolean drawerOpen = slidermenu.getmDrawerLayout().isDrawerOpen(
+//				slidermenu.getmDrawerList());
+//		menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+//		return super.onPrepareOptionsMenu(menu);
+//	}
 
 	@Override
 	public void onPictureClick(Route route, RoutePoint point) {

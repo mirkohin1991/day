@@ -168,7 +168,6 @@ int id RelativeLayout1 0x7f050012
 int id SeekBarFrequencyMeter 0x7f050031
 int id actMeter 0x7f050032
 int id actSec 0x7f050030
-int id action_settings 0x7f050037
 int id cr_map 0x7f05001d
 int id customMarker 0x7f050010
 int id divider 0x7f050036
@@ -240,7 +239,6 @@ int layout fragment_settings_facebook 0x7f03000d
 int layout fragment_settings_gps 0x7f03000e
 int layout layout_details 0x7f03000f
 int layout slidermenu_list_item 0x7f030010
-int menu main 0x7f0c0000
 int string action_settings 0x7f06001b
 int string app_name 0x7f06001a
 int string auth_client_needs_enabling_title 0x7f060015

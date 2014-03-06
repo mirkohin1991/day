@@ -333,7 +333,6 @@ containing a value of this type.
         public static final int SeekBarFrequencyMeter=0x7f050031;
         public static final int actMeter=0x7f050032;
         public static final int actSec=0x7f050030;
-        public static final int action_settings=0x7f050037;
         public static final int cr_map=0x7f05001d;
         public static final int customMarker=0x7f050010;
         public static final int divider=0x7f050036;
@@ -409,9 +408,6 @@ containing a value of this type.
         public static final int fragment_settings_gps=0x7f03000e;
         public static final int layout_details=0x7f03000f;
         public static final int slidermenu_list_item=0x7f030010;
-    }
-    public static final class menu {
-        public static final int main=0x7f0c0000;
     }
     public static final class string {
         public static final int action_settings=0x7f06001b;
