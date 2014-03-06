@@ -5,11 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -59,7 +63,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private LinearLayout myGallery;
 	private View removedView;
 	private ViewFlipper flipper;
-
+	private String duration;
+	private double altitudeTotal;
 	private ViewGroup container;
 	private LayoutInflater inflater;
 
@@ -192,6 +197,11 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		addButtonClickListenerCamera(ibCamera);
 		addButtonClickListenerSliderIn(ibInfoSliderIn);
 		addButtonClickListenerSliderOut(ibInfoSliderOut);
+		calcAltitude(route);
+		TextView tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+		tvDistance.setText(String.valueOf(altitudeTotal));
+		TextView tvDuration = (TextView) view.findViewById(R.id.tvDuration);
+		tvDuration.setText(String.valueOf(duration));
 		// Closed routes cannot generate a new picture
 		if (route.getActive().equals("")) {
 			ibCamera.setVisibility(View.INVISIBLE);
@@ -207,7 +217,6 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 								map = route.prepareMapDetails(map,
 										getActivity());
 								mapPrepared = true;
-								
 
 							}
 
@@ -265,6 +274,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		});
 
 	}
+
 	public void addButtonClickListenerSliderOut(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
 
@@ -324,7 +334,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 					} else {
 						route.addRoutePointDB(new RoutePoint(route.getId(),
 								tsTemp, fileUri.getPath(), null, gps
-										.getLatitude(), gps.getLongitude(), gps.getAltitude()));
+										.getLatitude(), gps.getLongitude(), gps
+										.getAltitude()));
 
 					}
 
@@ -410,5 +421,90 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		outtoRight.setDuration(500);
 		outtoRight.setInterpolator(new AccelerateInterpolator());
 		return outtoRight;
+	}
+
+	private void calcAltitude(Route route) {
+		long startDate = 0;
+
+		// Set the start Lat and Long
+		double startMarkerLat = 0;
+		double startMarkerLong = 0;
+		int distanceMeter = 0;
+
+		altitudeTotal = 0;
+		double maxAltitude = 0;
+		double minAltitude = 0;
+		double peakAltitude = 0;
+		double altitudeOld = 0;
+		double altitudeAct = 0;
+
+		Location locStart = new Location("start");
+		Location locDest = new Location("destination");
+
+		locStart.setLatitude(startMarkerLat);
+		locStart.setLongitude(startMarkerLong);
+
+		long durationAct = 0;
+		int index = 0;
+		for (RoutePoint point : route.getRoutePoints()) {
+			if (index == 0) {
+				startDate = point.getTimestamp().getTime();
+				startMarkerLat = point.getLatitude();
+				startMarkerLong = point.getLongitude();
+			}
+
+			// Gets the actual lat and long
+			double markerLat = point.getLatitude();
+			double markerLong = point.getLongitude();
+
+			locDest.setLatitude(markerLat);
+			locDest.setLongitude(markerLong);
+
+			// Calculates the distance
+			float distanceAct = locStart.distanceTo(locDest);
+			float distanceTotal = distanceAct + locStart.distanceTo(locDest);
+			distanceTotal = distanceTotal * 1000;
+
+			// Calculates the distance from km to meter
+			distanceMeter = (int) Math.round(distanceTotal);
+
+			// Sets the "old" lat and long as new start lat and long
+			locStart.setLatitude(markerLat);
+			locStart.setLongitude(markerLong);
+
+			// Gets the actual timestamp
+			long markerDate = point.getTimestamp().getTime();
+
+			// Calculates the duration of the route
+			// ENDGÜLTIGE
+			// ZEIT*************************************************************
+			durationAct = (markerDate - startDate);
+
+			// altitude total
+			altitudeAct = point.getAltitude();
+			altitudeTotal = altitudeAct + altitudeOld;
+
+			// max altitude
+			if (altitudeAct > altitudeOld) {
+				maxAltitude = altitudeAct;
+			}
+
+			// min altitude
+			if (altitudeAct < altitudeOld) {
+				minAltitude = altitudeAct;
+			}
+
+			peakAltitude = maxAltitude - minAltitude;
+
+			altitudeOld = altitudeAct;
+
+			index++;
+		}
+		// Formats the Duration from Miliseconds to an readable format
+		// ENDGÜLTIGE
+		// STRECKE*************************************************************
+		Format formatter = new SimpleDateFormat("DD HH:mm:ss");
+		duration = formatter.format(durationAct);
+
 	}
 }

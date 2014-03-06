@@ -241,7 +241,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		String name = getSupportFragmentManager().getBackStackEntryAt(
 				getSupportFragmentManager().getBackStackEntryCount() - 1)
 				.getName();
-		if (!name.equals(detailFragTag) & !name.equals(mainFragTag)) {
+		if (!name.equals(detailFragTag) && !name.equals(mainFragTag)) {
 			Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(
 					name);
 			getSupportFragmentManager().beginTransaction().remove(oldFrag)
@@ -254,7 +254,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		} else {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.frame_container, frag, slidertag)
-					.addToBackStack(tag).commit();
+					.addToBackStack(slidertag).commit();
 		}
 
 		mainfrag = null; // Speicher wieder freigeben
