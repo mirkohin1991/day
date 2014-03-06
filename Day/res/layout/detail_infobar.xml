@@ -21,24 +21,23 @@
         android:textSize="25dp" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tvDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="34dp"
         android:layout_marginTop="26dp"
-        android:text="12.7 km"
         android:textColor="@color/Weiss" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvDuration"
+        android:layout_alignLeft="@+id/tvDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:text="in 1,5 Stunden"
         android:textColor="@color/Weiss" />
 
 </RelativeLayout>

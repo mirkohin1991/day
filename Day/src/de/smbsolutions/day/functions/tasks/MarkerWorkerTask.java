@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.view.LayoutInflater;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -63,12 +64,22 @@ public class MarkerWorkerTask extends
 	private Context context;
 	private List<RoutePoint> routePoints;
 	private Route route;
+	private TextView tvDistance;
+	private TextView tvDuration;
+	private View view;
 	MarkerOptions markerOpt = new MarkerOptions();
 	
 
+	
+	
+	
+	
+	
 	// Necessary to save connect timestamp and marker
 	LinkedHashMap<RoutePoint, Bitmap> bitmapMap = new LinkedHashMap<RoutePoint, Bitmap>();
 	LinkedHashMap<RoutePoint, Marker> markerMap;
+	
+	
 	
 
 	
@@ -81,6 +92,23 @@ public class MarkerWorkerTask extends
 		this.map = map;
 		this.route = route;
 
+		view = View.inflate(context, R.layout.detail_infobar, null);
+		
+		
+	
+		
+		tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+		tvDuration = (TextView) view.findViewById(R.id.tvDuration);
+
+		
+		try {
+			tvDuration.setText("blub");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		tvDistance.setText("blub2");
 
 		//Saving the markermap. Necessary, because the route object shall get the changes!
 		this.markerMap = markerMap;
@@ -152,18 +180,36 @@ public class MarkerWorkerTask extends
 //		Gets the first marker
 		Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet().iterator().next();
 
+		
+		
 //		Gets the Timestamp of the first marker
 		long startDate = firstMarker.getKey().getTimestamp().getTime();	
+		
+		
 
+		
 //		Set the start Lat and Long
 		double startMarkerLat = firstMarker.getKey().getLatitude();
 		double startMarkerLong = firstMarker.getKey().getLongitude();
+		
+		int distanceMeter = 0;
+		
+		
+		double altitudeTotal = 0;
+		double maxAltitude = 0;
+		double minAltitude = 0;
+		double peakAltitude = 0;
+		double altitudeOld = 0;
+		double altitudeAct = 0;
+		
+		
 		
 		Location locStart = new Location("start");
 		Location locDest = new Location("destination");
 		
 		locStart.setLatitude(startMarkerLat);
 		locStart.setLongitude(startMarkerLong);
+		
 		
 		
 
@@ -176,6 +222,8 @@ public class MarkerWorkerTask extends
 //			Gets the actual lat and long
 			double markerLat = mapSet.getKey().getLatitude();
 			double markerLong = mapSet.getKey().getLongitude();
+			
+			
 
 			locDest.setLatitude(markerLat);
 			locDest.setLongitude(markerLong);
@@ -186,7 +234,8 @@ public class MarkerWorkerTask extends
 			distanceTotal = distanceTotal * 1000;
 			
 //			Calculates the distance from km to meter
-			int distanceMeter = (int)Math.round(distanceTotal);
+			distanceMeter = (int)Math.round(distanceTotal);
+			
 			
 //			Sets the "old" lat and long as new start lat and long
 			locStart.setLatitude(markerLat);
@@ -196,9 +245,34 @@ public class MarkerWorkerTask extends
 			long markerDate = mapSet.getKey().getTimestamp().getTime();
 			
 //			Calculates the duration of the route
+//			ENDGÜLTIGE ZEIT*************************************************************
 			durationAct = (markerDate - startDate);
+			
+			
+//			altitude total
+			altitudeAct = mapSet.getKey().getAltitude();
+			altitudeTotal = altitudeAct + altitudeOld;
+			
+//			max altitude
+			if(altitudeAct > altitudeOld)
+				{
+				 maxAltitude = altitudeAct;
+				}
+			
+//			min altitude
+			if(altitudeAct < altitudeOld)
+				{
+				 minAltitude = altitudeAct;
+				}
+			
+			peakAltitude = maxAltitude - minAltitude;
+			
+			altitudeOld = altitudeAct;
+			
 
 			
+			
+
 			polylineOptions_top.add(new LatLng(markerLat, markerLong));
 			polylineOptions_back.add(new LatLng(markerLat, markerLong));
 			
@@ -237,8 +311,12 @@ public class MarkerWorkerTask extends
 
 		
 //		Formats the Duration from Miliseconds to an readable format
+//		ENDGÜLTIGE STRECKE*************************************************************
 		Format formatter = new SimpleDateFormat("DD HH:mm:ss");
 		String duration = formatter.format(durationAct);
+		
+
+		
 		
 		
 		

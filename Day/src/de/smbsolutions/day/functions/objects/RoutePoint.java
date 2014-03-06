@@ -14,12 +14,14 @@ public class RoutePoint implements Parcelable {
 	private String picture_preview;
 	private double latitude;
 	private double longitude;
+	private double altitude;
 
 	public RoutePoint(int id, Timestamp timestamp, String picture, String picture_preview,
-			double latitude, double longitude) {
+			double latitude, double longitude, double altitude) {
 		this.id = id;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.altitude = altitude;
 		this.timestamp = timestamp;
 		this.picture = picture;
 		this.picture_preview = picture_preview;
@@ -45,6 +47,10 @@ public class RoutePoint implements Parcelable {
 	public double getLongitude() {
 		return longitude;
 	}
+	
+	public double getAltitude() {
+		return altitude;
+	}
 
 	
 	public String getPicturePreview() {
@@ -62,4 +68,6 @@ public class RoutePoint implements Parcelable {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 }

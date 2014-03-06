@@ -38,6 +38,7 @@ public class GPSTracker extends Service implements LocationListener {
 	Location location; // location
 	double latitude; // latitude
 	double longitude; // longitude
+	double altitude; //altitude
 
 	// The minimum distance to change Updates in meters
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10 meters
@@ -148,6 +149,7 @@ public class GPSTracker extends Service implements LocationListener {
 				if (location != null) {
 					latitude = location.getLatitude();
 					longitude = location.getLongitude();
+					altitude = location.getAltitude();
 				}
 			}
 
@@ -164,6 +166,7 @@ public class GPSTracker extends Service implements LocationListener {
 				if (location != null) {
 					latitude = location.getLatitude();
 					longitude = location.getLongitude();
+					altitude = location.getAltitude();
 				}
 
 			}
@@ -179,6 +182,7 @@ public class GPSTracker extends Service implements LocationListener {
 				if (location != null) {
 					latitude = location.getLatitude();
 					longitude = location.getLongitude();
+					altitude = location.getAltitude();
 				}
 				
 			}
@@ -228,6 +232,17 @@ public class GPSTracker extends Service implements LocationListener {
 
 		// return longitude
 		return longitude;
+	}
+	
+	public double getAltitude() {
+
+		// If getLocation is null, the method failed to get the latest location
+		if (getLocation() != null) {
+			altitude = location.getAltitude();
+		}
+
+		// return longitude
+		return altitude;
 	}
 
 	/**

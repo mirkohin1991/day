@@ -59,6 +59,7 @@ public class Database implements DatabaseInterface {
 			route_values.put("picture", point.getPicture()); 
 			route_values.put("picture_preview", point.getPicturePreview()); 
 			route_values.put("longitude", point.getLongitude());
+			route_values.put("latitude", point.getLatitude());
 			mDatabase.insert("route_points", null, route_values);
 			mDatabase.close();
 
@@ -275,7 +276,7 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 
 			// Creating a new route point and adding it to the route.
 			RoutePoint route_point = new RoutePoint(cursor_id, cursor_time,
-					cursor_picture, cursor_picture_preview, cursor_latitude, cursor_longitude);
+					cursor_picture, cursor_picture_preview, cursor_latitude, cursor_longitude, cursor_latitude);
 			route.addRoutePoint(route_point);
 
 			// In case of the last entry, the collected route has to be added
@@ -332,7 +333,7 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 																	// the value
 																	// as
 																	// timestamp
-					cursor_picture, cursor_picture_preview, cursor_latitude, cursor_longitude);
+					cursor_picture, cursor_picture_preview, cursor_latitude, cursor_longitude, cursor_latitude);
 
 		}
 
@@ -432,19 +433,19 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 				Route route = new Route("Beispielroute" + String.valueOf(i));
 				route.addRoutePointDB(new RoutePoint(route.getId(),
 						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9983322, 7.8018200));
+						47.9983322, 7.8018200, 5454));
 				route.addRoutePointDB(new RoutePoint(route.getId(),
 						new Timestamp(System.currentTimeMillis()), null, null,
-						47.91913344, 7.8218310));
+						47.91913344, 7.8218310, 5454));
 				route.addRoutePointDB(new RoutePoint(route.getId(),
 						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9313355, 7.8248580));
+						47.9313355, 7.8248580, 5454));
 				route.addRoutePointDB(new RoutePoint(route.getId(),
 						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9513366, 7.8618999));
+						47.9513366, 7.8618999, 5454));
 				route.addRoutePointDB(new RoutePoint(route.getId(),
 						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9983322, 7.8018200));
+						47.9983322, 7.8018200, 5454));
 				if (i < 2) {
 
 					closeRoute(route.getId());
