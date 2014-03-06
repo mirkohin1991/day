@@ -145,42 +145,11 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			map = fragment.getMap();
 		}
 
-		// checking device orientation for layout
-		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			if (map == null) {
-				map = fragment.getMap();
-			}
-
-			initializeFragmentLandscape();
-
-		} else {
-
-			if (map == null) {
-				map = fragment.getMap();
-			}
-
-			initializeFragmentPortrait();
-
+		if (map == null) {
+			map = fragment.getMap();
 		}
 
-	}
-
-	public void initializeFragmentLandscape() {
-
-		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-		// LinearLayout linleaLayout = (LinearLayout) view
-		// .findViewById(R.id.LinearLayoutcR);
-		// linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-		// new OnGlobalLayoutListener() {
-		//
-		// @Override
-		// public void onGlobalLayout() {
-		//
-		// map = routelist.getListRoutes().get(index).prepareMap(map,
-		// getActivity(), false);
-		//
-		// }
-		// });
+		initializeFragmentPortrait();
 
 	}
 
