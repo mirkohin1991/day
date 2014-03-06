@@ -502,8 +502,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		}
 		// Formats the Duration from Miliseconds to an readable format
 		// ENDGÜLTIGE
-		// STRECKE*************************************************************
-		Format formatter = new SimpleDateFormat("DD HH:mm:ss");
+		// DAUER*************************************************************
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
 		duration = formatter.format(durationAct);
 
 	}

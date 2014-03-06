@@ -354,9 +354,15 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
-		tag = getSupportFragmentManager().getBackStackEntryAt(
-				getSupportFragmentManager().getBackStackEntryCount() - 1)
-				.getName();
+		try {
+			tag = getSupportFragmentManager().getBackStackEntryAt(
+					getSupportFragmentManager().getBackStackEntryCount() - 1)
+					.getName();
+		} catch (Exception e) {
+			//nicht die richtige Lösung, wenn onbackpressed beim letzten Fragment ausgelöst wird --> App beenden
+			finish();
+		}
+		
 	}
 
 	@Override
@@ -386,6 +392,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 					if (map.getMapType() != Device.getAPP_SETTINGS()
 							.getMAP_TYPE()) {
 						map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+						
 					}
 				}
 			}
