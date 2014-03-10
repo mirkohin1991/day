@@ -201,7 +201,7 @@ public class SliderMenu {
 		case 0:
 			// MapType: Karte
 			// // MapType: Karte
-			Device.getAPP_SETTINGS().setMAP_TYPE(1);
+			Device.getAPP_SETTINGS().setMapType(1);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			//context.setTitle(navMenuTitles[position]);
@@ -211,7 +211,7 @@ public class SliderMenu {
 		case 1:
 
 			// MapType: Sattelite
-			Device.getAPP_SETTINGS().setMAP_TYPE(2);
+			Device.getAPP_SETTINGS().setMapType(2);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			//context.setTitle(navMenuTitles[position]);
@@ -223,7 +223,7 @@ public class SliderMenu {
 		case 2:
 			// MapType: Terrain
 
-			Device.getAPP_SETTINGS().setMAP_TYPE(3);
+			Device.getAPP_SETTINGS().setMapType(3);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 		//	context.setTitle(navMenuTitles[position]);

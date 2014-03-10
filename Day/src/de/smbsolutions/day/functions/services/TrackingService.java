@@ -10,11 +10,12 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.location.GPSTracker;
+import de.smbsolutions.day.functions.initialization.Device;
+import de.smbsolutions.day.functions.location.LocationTracker;
 
 public class TrackingService extends Service {
 
-	private GPSTracker tracker;
+	private LocationTracker tracker;
 	private ServiceBinder mBinder = new ServiceBinder();
 	private Timer mTimer;
 	private Long mStartzeit;
@@ -31,9 +32,9 @@ public class TrackingService extends Service {
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
 
-				db.addNewRoutePoint(tracker.getLatitude(),
-						tracker.getLongitude(), tsTemp);
-				db.getSettingValue(db.SETTINGS_TRACKING_INTERVAL);
+//				 db.addNewRoutePoint(tracker.getLatitude(),
+//						tracker.getLongitude(), tsTemp);
+				
 
 			}
 
@@ -72,7 +73,7 @@ public class TrackingService extends Service {
 		// TODO Auto-generated method stub
 		super.onCreate();
 
-		tracker = GPSTracker.getInstance(this);
+		tracker = LocationTracker.getInstance(this);
 
 		mTimer = new Timer();
 
@@ -92,7 +93,7 @@ public class TrackingService extends Service {
 
 		// Start timer
 		mTimer.scheduleAtFixedRate(mTimerTask, 0, // Verzögerung
-				db.getSettingValue(db.SETTINGS_TRACKING_INTERVAL)); // Intervall
+				Device.getAPP_SETTINGS().getTrackingFrequency()); // Intervall
 
 		return super.onStartCommand(intent, flags, startId);
 	}

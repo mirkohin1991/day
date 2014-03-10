@@ -36,8 +36,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.location.GPSTracker;
+import de.smbsolutions.day.functions.location.LocationTracker;
+import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE;
 import de.smbsolutions.day.functions.objects.Route;
+import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
 import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
@@ -67,6 +69,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private double altitudeTotal;
 	private ViewGroup container;
 	private LayoutInflater inflater;
+	private LocationTracker gps;
+	private LocationTrackerPLAYSERVICE tracker ;
+	
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,9 +84,14 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		this.inflater = inflater;
 
 		config = getResources().getConfiguration();
-
+        //Get the transfered data
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
+		
+		
+		
+		
+		
 
 		// If a route doesn't have a picture point, the Picture Scrollbar is
 		// disabled
@@ -93,8 +104,12 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 			myGallery = (LinearLayout) view
 					.findViewById(R.id.LinearLayoutImage);
+			
 
 			addPhotos2Gallery(myGallery);
+			
+			
+
 
 			// LinearLayout linlayout = (LinearLayout) view
 			// .findViewById(R.id.LinearLayoutcR);
@@ -134,6 +149,11 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			fragment = SupportMapFragment.newInstance();
 			fm.beginTransaction().add(R.id.cr_map, fragment).commit();
 		}
+		
+		
+		gps = LocationTracker.getInstance(getActivity());
+//		tracker = LocationTrackerPLAYSERVICE.getInstance(getActivity());
+
 	}
 
 	public void onResume() {
@@ -150,12 +170,16 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		}
 
 		initializeFragmentPortrait();
+		
+		
+		
+	
 
 	}
 
 	public void initializeFragmentPortrait() {
 
-		map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+		map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		// map.setPadding(0, 0, 99999, 0); // weg isses :D
 		map.getUiSettings().setZoomControlsEnabled(false);
 		LinearLayout linleaLayout = (LinearLayout) view
@@ -172,7 +196,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		TextView tvDuration = (TextView) view.findViewById(R.id.tvDuration);
 		tvDuration.setText(String.valueOf(duration));
 		// Closed routes cannot generate a new picture
-		if (route.getActive().equals("")) {
+		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
 		}
 
@@ -263,8 +287,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			GPSTracker gps = GPSTracker.getInstance(getActivity());
-			if (gps.canGetLocation()) {
+		
 
 				// Getting the current timestamp
 				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
@@ -293,11 +316,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-
-						route.addRoutePointDB(new RoutePoint(route.getId(),
-								tsTemp, fileUri.getPath(), small_picture
-										.getPath(), gps.getLatitude(), gps
-										.getLongitude(), gps.getAltitude()));
+						
+						mCallback.onPictureTaken(route, fileUri, small_picture);
+						
 
 						// If no small picture could be created, NULL is stored
 					} else {
@@ -310,13 +331,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 				}
 
-				// No Signal is available to detect the current location
-			} else {
 
-				Toast.makeText(getActivity(),
-						"Keine Ortung möglich, bitte erneut versuchen",
-						Toast.LENGTH_LONG);
-			}
 
 			// now at least one picture was taken
 			if (route.hasPicturePoint() == true) {
@@ -327,13 +342,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 					// Vielleicht gibt es noch eine bessere Lösung.
 					mCallback.onShowRoute(route);
-
-					// //Das hier wird nämlich leider nicht refresht
-					// view = inflater.inflate(R.layout.fragment_detail,
-					// container, false);
-					//
-					// myGallery = (LinearLayout) view
-					// .findViewById(R.id.LinearLayoutImage);
+					
+					
 				} else {
 					// refresh the image view
 					addPhotos2Gallery(myGallery);

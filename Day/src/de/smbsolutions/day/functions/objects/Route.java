@@ -40,7 +40,7 @@ public class Route implements Parcelable {
 	private String routeName;
 	private String date;
 	private GoogleMap map;
-	private String active;
+	private boolean active;
 	private int id;
 
 	private Context context;
@@ -68,11 +68,11 @@ public class Route implements Parcelable {
 		// Get the last route id and 1 to get the new id
 		id = Database.getlastRouteID() + 1;
 		date = today;
-		active = "X";
+		active = true;
 
 		// If the Database insert fails, the active flag is deleted
 		if (Database.createNewRoute(this) != true) {
-			this.active = "";
+			this.active = false;
 
 			// Was soll noch passieren?
 			// Z.B. hat die Klasse dann die neue ID, die es in der DB
@@ -84,14 +84,14 @@ public class Route implements Parcelable {
 	public void closeRoute() {
 
 		if (Database.closeRoute(id) == true) {
-			active = "";
+			active = false;
 		}
 
 	}
 
 	public void addRoutePointDB(RoutePoint point) {
 
-		if (active.equals("X")) {
+		if (active == true) {
 
 			if (Database.addNewRoutePoint(point) == true) {
 
@@ -323,14 +323,7 @@ public class Route implements Parcelable {
 		this.routeName = routeName;
 	}
 
-	public String getActive() {
-		return active;
-	}
 
-	public void setActive(String active) {
-		this.active = active;
-
-	}
 
 	@Override
 	public int describeContents() {
@@ -359,6 +352,14 @@ public class Route implements Parcelable {
 			
 //		}
 		
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 //	public LinkedHashMap<RoutePoint, Marker> getMarkerMap() {

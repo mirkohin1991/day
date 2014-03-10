@@ -1,6 +1,7 @@
 package de.smbsolutions.day.presentation.fragments;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -139,20 +140,31 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			// view
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
 
-			map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setPadding(0, 70, 0, 0);
 			// get views from fragment
 			meineListView = (ListView) view.findViewById(R.id.listView1);
 			List<AllRoutesListElement> meineListe = new ArrayList<AllRoutesListElement>();
+			
+			
+	
+			
+			
+			
 			for (Route route : routeList.getListRoutes()) {
 				// Only completed routes shall appear in the "recent routes"
 				// list
-				if (route.getActive().equals("")) {
+				if (route.isActive() == false) {
 					meineListe.add(new AllRoutesListElement(route));
+					
 				}
 			}
+			
+			
+			Collections.reverse(meineListe);
+			
 			// Set the list view adapter
 			meineListView.setAdapter(new AllRoutesListAdapter(getActivity(),
 					R.id.listView1, meineListe, mCallback));
@@ -205,7 +217,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 							if (vfNewOrCurrent.getDisplayedChild() == 1) {
 
 								addButtonClickListenerContinue(btnContinueRoute);
-								// addButtonClickListenerStop(btnStopRoute);
+
 
 								// Getting the whole line (including the two
 								// buttons)
@@ -388,8 +400,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				map = sel_Route.prepareMapPreview(map, getActivity());
 
-				changeDisplayedRouteDesc(routeList.getListRoutes()
-						.get(position));
+				changeDisplayedRouteDesc(sel_Route);
 			}
 		});
 
@@ -397,8 +408,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int index, long arg3) {
+			
+				
+				
 				// Call Interface to handle the deletion of the route
-				mCallback.onLongItemSelected(routeList, index);
+				mCallback.onLongItemSelected(routeList, meineListView.getCount() - ( index + 1 ));
 				return false;
 
 			}

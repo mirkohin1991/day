@@ -20,7 +20,7 @@
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 			bundle = this.getArguments();
-			routeList = (RouteList) bundle.getSerializable("routeList");
+			routeList = (RouteList) bundle.getParcelable("routeList");
 		
 
 			return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")

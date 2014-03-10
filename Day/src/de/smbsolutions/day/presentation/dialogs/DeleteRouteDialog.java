@@ -21,7 +21,7 @@ public class DeleteRouteDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		bundle = this.getArguments();
-		routeList = (RouteList) bundle.getSerializable("routeList");
+		routeList = (RouteList) bundle.getParcelable("routeList");
 		index = bundle.getInt("routeIndex");
 
 		return new AlertDialog.Builder(getActivity()).setTitle("Route löschen")
