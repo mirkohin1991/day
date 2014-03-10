@@ -1,14 +1,12 @@
 package de.smbsolutions.day.presentation.fragments;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,10 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +25,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
@@ -47,11 +41,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private TextView txtViewPic;
 	private TextView txtViewDate;
 	private ListView meineListView;
-	
+
 	private Button btnContinueRoute;
 	private Button btnCreateRoute;
 	private ViewFlipper vfNewOrCurrent;
-//	private ViewFlipper vfPauseOrRun;
+	// private ViewFlipper vfPauseOrRun;
 	private Route sel_Route;
 	private int index = 0;
 	private MainCallback mCallback;
@@ -121,7 +115,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
 
-			map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setPadding(0, 70, 0, 0);
 
@@ -131,11 +125,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			for (Route route : routeList.getListRoutes()) {
 				// Only completed routes shall appear in the "recent routes"
 				// list
-				if (route.getActive().equals("")) {
+				if (route.isActive() == false) {
 					meineListe.add(new AllRoutesListElement(route));
 				}
 			}
-
+			Collections.reverse(meineListe);
 			// Set the list view adapter
 			meineListView.setAdapter(new AllRoutesListAdapter(getActivity(),
 					R.id.listView1, meineListe, mCallback));
@@ -173,16 +167,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
 						@Override
 						public void onGlobalLayout() {
 
-							// if (flag_first == true) {
-
 							map = routeList.getlastRoute().prepareMapPreview(
 									map);
 
-							flag_first = false;
-							// }
-
 							addListitemListender(meineListView);
-							
 
 							// Child == 1 --> the "active route item" layout is
 							// displayed
@@ -333,8 +321,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				map = sel_Route.prepareMapPreview(map);
 
-				changeDisplayedRouteDesc(routeList.getListRoutes()
-						.get(position));
+				changeDisplayedRouteDesc(sel_Route);
 			}
 		});
 
@@ -343,7 +330,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int index, long arg3) {
 				// Call Interface to handle the deletion of the route
-				mCallback.onLongItemSelected(routeList, index);
+				mCallback.onLongItemSelected(routeList,
+						meineListView.getCount() - (index + 1));
 				return false;
 
 			}

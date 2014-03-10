@@ -1,13 +1,20 @@
 package de.smbsolutions.day.presentation.activities;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -26,13 +34,15 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
+import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE;
+import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE.LocalBinder;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.objects.SliderMenu;
+import de.smbsolutions.day.presentation.dialogs.CreateRouteDialog;
 import de.smbsolutions.day.presentation.dialogs.DeletePictureDialog;
 import de.smbsolutions.day.presentation.dialogs.DeleteRouteDialog;
-import de.smbsolutions.day.presentation.dialogs.RouteNameDialog;
 import de.smbsolutions.day.presentation.dialogs.StopRouteDialog;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
@@ -60,7 +70,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 	private SliderMenu slidermenu;
-
+	private LocationTrackerPLAYSERVICE mService = null;
+	// wird in onStart() und onStop() verwendet
+	private ServiceConnection mConnection;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -71,6 +83,19 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// Get Singetons
 		Database.getInstance(this);
 		Device.getInstance(this);
+		// Service
+		mConnection = new ServiceConnection() {
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service) {
+				LocalBinder binder = (LocalBinder) service;
+				mService = binder.getService();
+			}
+
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+				mService = null;
+			}
+		};
 
 		mTitle = mDrawerTitle = getTitle();
 		// load slide menu items
@@ -100,7 +125,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onNewRouteStarted(Route route) {
-	
+
 		DetailFragment crFrag = new DetailFragment();
 		Bundle bundle = new Bundle();
 		// Übergabe Routenliste
@@ -141,12 +166,18 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onOpenDialogNewRoute(RouteList routeList) {
-
-		RouteNameDialog dialog = new RouteNameDialog();
+		CreateRouteDialog dialog = new CreateRouteDialog();
 		Bundle bundle = new Bundle();
 
-		bundle.putSerializable("routeList", routeList);
+		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
+
+		// AUS PERFORMANCEGRÜNDEN SERVICE SCHONMAL STARTEN
+
+		// WENN BENUTZER DEN DIALOG VERNEINT MUSS ER WIEDER BEENDET WERDEN
+		Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
 		// to identify the dialog
@@ -160,7 +191,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		DeleteRouteDialog dialog = new DeleteRouteDialog();
 		Bundle bundle = new Bundle();
 		bundle.putInt("routeIndex", index);
-		bundle.putSerializable("routeList", routeList);
+		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -174,7 +205,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		StopRouteDialog dialog = new StopRouteDialog();
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("routeList", routeList);
+		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -235,6 +266,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onStopRoute() {
 		MainFragment mainfrag = new MainFragment();
+
+		// Stop service
+		if (mService != null) {
+			unbindService(mConnection);
+			mService = null;
+		}
 
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
@@ -380,8 +417,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			if (mapfrag != null) {
 				GoogleMap map = mapfrag.getMap();
-				if (map.getMapType() != Device.getAPP_SETTINGS().getMAP_TYPE()) {
-					map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+				if (map.getMapType() != Device.getAPP_SETTINGS().getMapType()) {
+					map.setMapType(Device.getAPP_SETTINGS().getMapType());
 				}
 
 			} else {
@@ -389,8 +426,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				if (mapfrag != null) {
 					GoogleMap map = mapfrag.getMap();
 					if (map.getMapType() != Device.getAPP_SETTINGS()
-							.getMAP_TYPE()) {
-						map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+							.getMapType()) {
+						map.setMapType(Device.getAPP_SETTINGS().getMapType());
 
 					}
 				}
@@ -412,6 +449,45 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 		ft.commit();
+
+	}
+
+	@Override
+	public void onStartTrackingService(RouteList routeList, Route route) {
+
+		if (mService != null) {
+			mService.saveActivity(this);
+			mService.startLocationTrackingAndSaveFirst(routeList, route);
+
+		} else {
+			Toast.makeText(this, "Service wurde nicht gestartet",
+					Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
+	@Override
+	public void onPictureTaken(Route route, Uri fileUri, File small_picture) {
+		if (mService != null) {
+
+			mService.addPictureLocation(route, fileUri, small_picture);
+
+		} else {
+			Toast.makeText(this, "Service wurde nicht gestartet",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public void onDialogCreateCanceled() {
+
+		// Stop service, because it has been startet when the user pressed the
+		// create route button
+		// -> But now he decided to cancel to process
+		if (mService != null) {
+			unbindService(mConnection);
+			mService = null;
+		}
 
 	}
 

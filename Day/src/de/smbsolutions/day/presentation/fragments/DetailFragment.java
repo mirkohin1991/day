@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,10 +24,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -37,11 +34,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.location.GPSTracker;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
-import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
 public class DetailFragment extends android.support.v4.app.Fragment {
 
@@ -94,7 +89,10 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		myGallery.removeAllViews();
+		if (myGallery != null) {
+			myGallery.removeAllViews();
+		}
+
 		unbindDrawables(view);
 
 		if (map != null) {
@@ -136,7 +134,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		super.onResume();
 		if (map == null) {
 			map = mapFragment.getMap();
-			map.setMapType(Device.getAPP_SETTINGS().getMAP_TYPE());
+			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 			// padding muss noch je nach gerätetyp gesetzt werden
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setMyLocationEnabled(true);
@@ -176,7 +174,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		}
 
 		// Closed routes cannot generate a new picture
-		if (route.getActive().equals("")) {
+		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
 		}
 
@@ -267,59 +265,46 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			GPSTracker gps = GPSTracker.getInstance(getActivity());
-			if (gps.canGetLocation()) {
 
-				// Getting the current timestamp
-				Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
-				if (resultCode == -1) {
+			// Getting the current timestamp
+			Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+			if (resultCode == -1) {
 
-					File small_picture = BitmapManager
-							.savePreviewBitmapToStorage(fileUri);
+				File small_picture = BitmapManager
+						.savePreviewBitmapToStorage(fileUri);
 
-					if (small_picture != null) {
+				if (small_picture != null) {
 
-						Bitmap bitmap = BitmapManager
-								.decodeSampledBitmapFromUri(fileUri.getPath(),
-										250, 250);
+					Bitmap bitmap = BitmapManager.decodeSampledBitmapFromUri(
+							fileUri.getPath(), 250, 250);
 
-						FileOutputStream fOut = null;
-						try {
-							fOut = new FileOutputStream(small_picture);
-							bitmap.compress(Bitmap.CompressFormat.PNG, 100,
-									fOut);
-							fOut.flush();
-							fOut.close();
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						bitmap.recycle();
-						route.addRoutePointDB(new RoutePoint(route.getId(),
-								tsTemp, fileUri.getPath(), small_picture
-										.getPath(), gps.getLatitude(), gps
-										.getLongitude(), gps.getAltitude()));
-
-						// If no small picture could be created, NULL is stored
-					} else {
-						route.addRoutePointDB(new RoutePoint(route.getId(),
-								tsTemp, fileUri.getPath(), null, gps
-										.getLatitude(), gps.getLongitude(), gps
-										.getAltitude()));
-
+					FileOutputStream fOut = null;
+					try {
+						fOut = new FileOutputStream(small_picture);
+						bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+						fOut.flush();
+						fOut.close();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+					bitmap.recycle();
+					weakCallBack.get().onPictureTaken(route, fileUri,
+							small_picture);
+
+					// If no small picture could be created, NULL is stored
+				} else {
+					// SOll hier noch was passieren???
+					// route.addRoutePointDB(new RoutePoint(route.getId(),
+					// tsTemp,
+					// fileUri.getPath(), null, gps.getLatitude(), gps
+					// .getLongitude(), gps.getAltitude()));
 
 				}
 
-				// No Signal is available to detect the current location
-			} else {
-
-				Toast.makeText(getActivity(),
-						"Keine Ortung möglich, bitte erneut versuchen",
-						Toast.LENGTH_LONG).show();
 			}
 
 			// now at least one picture was taken

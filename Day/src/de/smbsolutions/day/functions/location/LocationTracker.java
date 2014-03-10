@@ -2,6 +2,8 @@ package de.smbsolutions.day.functions.location;
 
 import java.util.List;
 
+import de.smbsolutions.day.functions.initialization.Device;
+
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -17,12 +19,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-public class GPSTracker extends Service implements LocationListener {
+public class LocationTracker extends Service implements LocationListener {
 
 	private final Context mContext;
 
 	// Singleton
-	private static GPSTracker tracker = null;
+	private static LocationTracker tracker = null;
 
 	private String bestProvider;
 
@@ -38,18 +40,18 @@ public class GPSTracker extends Service implements LocationListener {
 	Location location; // location
 	double latitude; // latitude
 	double longitude; // longitude
-	double altitude; //altitude
+	double altitude; // altitude
 
 	// The minimum distance to change Updates in meters
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10 meters
 
 	// The minimum time between updates in milliseconds
-	private static final long MIN_TIME_BW_UPDATES = 10000; // 10 seconds
+	private static final long MIN_TIME_BW_UPDATES = 1; // 10 seconds
 
 	// Declaring a Location Manager
 	protected LocationManager locationManager;
 
-	private GPSTracker(Context context) {
+	private LocationTracker(Context context) {
 		this.mContext = context;
 
 		locationManager = (LocationManager) mContext
@@ -57,9 +59,9 @@ public class GPSTracker extends Service implements LocationListener {
 
 	}
 
-	public static GPSTracker getInstance(Context context) {
+	public static LocationTracker getInstance(Context context) {
 		if (tracker == null)
-			tracker = new GPSTracker(context);
+			tracker = new LocationTracker(context);
 		return tracker;
 	}
 
@@ -78,7 +80,7 @@ public class GPSTracker extends Service implements LocationListener {
 		}
 
 	}
-	
+
 	private String getBestProvider() {
 
 		// Getting the
@@ -89,28 +91,29 @@ public class GPSTracker extends Service implements LocationListener {
 		return locationManager.getBestProvider(criteria, true);
 	}
 
-
 	public boolean enoughDistance() {
 		double distance = 0;
 		Location newLocation;
 		newLocation = getLocation();
-		
+
 		if (location == null) {
 			return true;
 		}
 
 		if (newLocation != null && location != null) {
-			 distance = location.distanceTo(newLocation);
+			distance = location.distanceTo(newLocation);
 		}
 
-			if (distance > 20) {
-				return true;
-			} else {
-				return false;
-			}
+		if (distance > Device.getAPP_SETTINGS().getTrackingMeter()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public Location getLocation() {
+		
+		boolean gps_failed = false;
 		try {
 
 			if (isProviderAvailable() == false) {
@@ -119,46 +122,86 @@ public class GPSTracker extends Service implements LocationListener {
 			}
 
 			String newProvider = getBestProvider();
-			// Check if a different provider is the best one now
+		
+			if (bestProvider == null) {
+			// Save the new provider globally
+			bestProvider = newProvider;	
+//			// Start another listener with the new Provider
+			locationManager.requestLocationUpdates(newProvider,
+					MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
+				this);
 
-			// Auch wenn bestProvder noch nie gesetzt wurde, springt er hier
-			// rein
-			if (bestProvider == null ) {
-				// Save the new provider globally
-				bestProvider = newProvider;	
+			
 			}
-				
-				if (bestProvider.equals(newProvider)) {
-				// Save the new provider globally
-				bestProvider = newProvider;
-
-				// Remove the old updateListener
-				// locationManager.removeUpdates(GPSTracker.this);
-
+			
+			if(!(bestProvider.equals(newProvider))) {
+				bestProvider = newProvider;	
 //				// Start another listener with the new Provider
+				locationManager.requestLocationUpdates(newProvider,
+						MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
+					this);
+
+				
+			}
+			
+			
+			
+//			
+//			 //Logik muss zweimal durchlaufen werden:
+//			 // 1. wenn zum ersten Mal der requestLocationUpdates gestartet wird.
+//			if (bestProvider == null ) {
+//				// Save the new provider globally
+//				bestProvider = newProvider;	
+//				
+//				// Remove the old updateListener
+//				locationManager.removeUpdates(LocationTracker.this);
+//
+////				// Start another listener with the new Provider
 //				locationManager.requestLocationUpdates(newProvider,
 //						MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
-//						this);
-				}
+//					this);
+//				stopUsingGPS();
+//			}
+//				
+//			
+//			
+//			 // 2. Jedes mal wenn der Provider wechselt
+//				if (!(bestProvider.equals(newProvider))) {
+//				// Save the new provider globally
+//				bestProvider = newProvider;
+//
+//				// Remove the old updateListener
+//				locationManager.removeUpdates(LocationTracker.this);
+//
+////				// Start another listener with the new Provider
+//				locationManager.requestLocationUpdates(newProvider,
+//						MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,
+//					this);
+//				stopUsingGPS();
+//				}
+			
 
 			if (bestProvider.equals(LocationManager.GPS_PROVIDER)) {
 
 				location = locationManager
 						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				
+
 				if (location != null) {
 					latitude = location.getLatitude();
 					longitude = location.getLongitude();
 					altitude = location.getAltitude();
+				} else {
+					gps_failed = true;
 				}
 			}
 
 			if (bestProvider.equals(LocationManager.NETWORK_PROVIDER)
-					| (location == null && locationManager
-							.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) 
-	// Could be that the GPS was selected as the best provider, but failed to get the location
-	// Then the Networkprovider is used, if available 
-						
+					| (gps_failed == true  && locationManager
+							.isProviderEnabled(LocationManager.GPS_PROVIDER))
+			// Could be that the GPS was selected as the best provider, but
+			// failed to get the location
+			// Then the Networkprovider is used, if available
+
 			) {
 				location = locationManager
 						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -166,16 +209,15 @@ public class GPSTracker extends Service implements LocationListener {
 				if (location != null) {
 					latitude = location.getLatitude();
 					longitude = location.getLongitude();
-					altitude = location.getAltitude();
+					latitude = location.getAltitude();
 				}
 
 			}
-			
-			
-			
-			if (bestProvider.equals(LocationManager.PASSIVE_PROVIDER)| (location == null && locationManager
-					.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))) {
-				
+
+			if (bestProvider.equals(LocationManager.PASSIVE_PROVIDER)
+					| (gps_failed == true  && locationManager
+							.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))) {
+
 				location = locationManager
 						.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
@@ -184,12 +226,12 @@ public class GPSTracker extends Service implements LocationListener {
 					longitude = location.getLongitude();
 					altitude = location.getAltitude();
 				}
-				
+
 			}
 
 		} catch (Exception e) {
-			
-			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT );
+
+			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT);
 		}
 
 		// if no provider was available, the old location will be returned
@@ -202,7 +244,7 @@ public class GPSTracker extends Service implements LocationListener {
 	 * */
 	public void stopUsingGPS() {
 		if (locationManager != null) {
-			locationManager.removeUpdates(GPSTracker.this);
+			locationManager.removeUpdates(LocationTracker.this);
 		}
 	}
 
@@ -233,7 +275,7 @@ public class GPSTracker extends Service implements LocationListener {
 		// return longitude
 		return longitude;
 	}
-	
+
 	public double getAltitude() {
 
 		// If getLocation is null, the method failed to get the latest location
@@ -251,10 +293,10 @@ public class GPSTracker extends Service implements LocationListener {
 	 * @return boolean
 	 * */
 	public boolean canGetLocation() {
-		if(isProviderAvailable()) {
-		return true;
+		if (isProviderAvailable()) {
+			return true;
 		} else {
-			
+
 			return false;
 		}
 	}
@@ -297,7 +339,7 @@ public class GPSTracker extends Service implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		Log.i("test", "onLocationChanged");
+		this.location = location;
 	}
 
 	@Override

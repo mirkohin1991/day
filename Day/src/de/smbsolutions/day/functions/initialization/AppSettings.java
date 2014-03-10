@@ -4,58 +4,70 @@ import de.smbsolutions.day.functions.database.Database;
 
 public class AppSettings {
 
-	private int MAP_TYPE;
-	private int GPS;
-	private int GPS_FREQUENCY;
-	private int CAMERA_SAVEINGALLERY;
+	private int mapType;
+	private int trackingStatus;
+	private int trackingFrequency;
+	private int trackingMeter;
+	private int cameraShowInGallery;
 
 	public AppSettings() {
 		//get settings data from database
-		MAP_TYPE = Database.getSettingValue(Database.SETTINGS_MAP_TYPE);
-		GPS = Database.getSettingValue(Database.SETTINGS_TRACKING);
-		GPS_FREQUENCY = Database
+		mapType = Database.getSettingValue(Database.SETTINGS_MAP_TYPE);
+		trackingStatus = Database.getSettingValue(Database.SETTINGS_TRACKING);
+		trackingFrequency = Database
 				.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
-		CAMERA_SAVEINGALLERY = Database
+		trackingMeter = Database.getSettingValue(Database.SETTINGS_TRACKING_METER);
+		cameraShowInGallery = Database
 				.getSettingValue(Database.SETTINGS_SHOW_IN_GAL);
 	}
 
-	public  int getMAP_TYPE() {
-		return MAP_TYPE;
+	public  int getMapType() {
+		return mapType;
 	}
 
-	public void setMAP_TYPE(int map_type) {
-		Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, map_type);
-		MAP_TYPE = map_type;
+	public void setMapType(int mapType) {
+		Database.changeSettingValue(Database.SETTINGS_MAP_TYPE, mapType);
+		this.mapType = mapType;
 	}
 
-	public  int getGPS() {
+	public  int getTrackingStatus() {
 
-		return GPS;
+		return trackingStatus;
 	}
 
-	public void setGPS(int gps) {
-		Database.changeSettingValue(Database.SETTINGS_TRACKING, gps);
-		GPS = gps;
+	public void setTrackingStatus(int trackingStatus) {
+		Database.changeSettingValue(Database.SETTINGS_TRACKING, trackingStatus);
+		this.trackingStatus = trackingStatus;
 	}
 
-	public int getGPS_FREQUENCY() {
-		return GPS_FREQUENCY;
+	public int getTrackingFrequency() {
+		return trackingFrequency;
 	}
 
-	public void setGPS_FREQUENCY(int gps_frequency) {
+	public void setTrackingFrequency(int trackingFrequency) {
 		Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,
-				gps_frequency);
-		GPS_FREQUENCY = gps_frequency;
+				trackingFrequency);
+		this.trackingFrequency = trackingFrequency;
 	}
 
-	public int getCAMERA_SAVEINGALLERY() {
-		return CAMERA_SAVEINGALLERY;
+	public int getCameraShowInGallery() {
+		return cameraShowInGallery;
 	}
 
-	public void setCAMERA_SAVEINGALLERY(int camera_saveingallery) {
+	public void setCameraShowInGallery(int cameraShowInGallery) {
 		Database.changeSettingValue(Database.SETTINGS_SHOW_IN_GAL,
-				camera_saveingallery);
-		CAMERA_SAVEINGALLERY = camera_saveingallery;
+				cameraShowInGallery);
+		this.cameraShowInGallery = cameraShowInGallery;
+	}
+
+	public int getTrackingMeter() {
+		return trackingMeter;
+	}
+
+	public void setTrackingMeter(int trackingMeter) {
+		Database.changeSettingValue(Database.SETTINGS_TRACKING_METER,
+				trackingMeter);
+		this.trackingMeter = trackingMeter;
 	}
 
 }

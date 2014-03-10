@@ -86,7 +86,7 @@
                             android:id="@+id/flipper"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_weight="1" >
+                           >
 
                             <include
                                 android:id="@+id/first"
@@ -100,14 +100,14 @@
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_weight="2.5"
+                           
                             android:paddingBottom="11dp" >
 
                             <ImageButton
                                 android:id="@+id/ibCamera"
                                 android:layout_width="fill_parent"
                                 android:layout_height="match_parent"
-                                android:layout_weight="3"
+                                
                                 android:background="#00000000"
                                 android:scaleType="fitEnd"
                                 android:src="@drawable/slr"

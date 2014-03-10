@@ -20,6 +20,7 @@ public class Database implements DatabaseInterface {
 	private static SQLiteDatabase mDatabase;
 	private static int lastRouteID = 0;
 	private static String currentRouteName;
+
 	private static Database db_data = null;
 
 	// In welchem Kontext???
@@ -87,7 +88,12 @@ public class Database implements DatabaseInterface {
 	}
 	
 public static boolean deletePicturePath (RoutePoint routePoint) {
-
+	
+	
+	
+	
+	
+		
 		try {
 			mDatabase = mHelper.getWritableDatabase();
 
@@ -115,7 +121,7 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 			route_info.put("_id", String.valueOf(route.getId()));
 			route_info.put("name", route.getRouteName());
 			route_info.put("date", route.getDate());
-			route_info.put("active", "X");
+			route_info.put("active", "1");
 			mDatabase.insert("route_info", null, route_info);
 
 			lastRouteID = route.getId();
@@ -137,7 +143,7 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 
 			mDatabase = mHelper.getWritableDatabase();
 			ContentValues route_value = new ContentValues();
-			route_value.put("active", "");
+			route_value.put("active", 0);
 
 			mDatabase.update("route_info", route_value, "_id=?",
 					new String[] { String.valueOf(id) }); // Which columns
@@ -358,11 +364,22 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 			route.setRouteName(db_cursor.getString(db_cursor
 					.getColumnIndex("name")));
 			route.setDate(db_cursor.getString(db_cursor.getColumnIndex("date")));
-			route.setActive(db_cursor.getString(db_cursor
-					.getColumnIndex("active")));
+			
+			
+			//SQLite doesn't feature a boolean type 
+			switch (db_cursor.getInt(db_cursor
+					.getColumnIndex("active"))) {
+			case 1:
+				route.setActive(true);
+				break;
+		
+			case 0:
+				route.setActive(false);
+				break;
 
-			// route_point = new RoutePoint(cursor_id, cursor_name, cursor_date,
-			// cursor_active);
+			default:
+				break;
+			}
 
 		}
 
@@ -453,80 +470,5 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 
 		}
 	}
-
-
-	public static void addNewRoutePoint(double latitude, double longitude,
-			Timestamp timestamp) {
-
-		mDatabase = mHelper.getWritableDatabase();
-
-		ContentValues route_values = new ContentValues();
-
-		// Zum Testen erstmal alle dem gleichen Record
-		route_values.put("_id", lastRouteID);
-		route_values.put("timestamp", timestamp.toString()); // inserting an int
-		route_values.put("latitude", latitude); // inserting a string
-		route_values.put("longitude", longitude);
-
-		// CurrentRoute greater than the latest one in the DB
-		// --> Completely new route!
-		if (lastRouteID > selectIDlastRoute()) {
-
-			mDatabase.insert("route_points", null, route_values);
-
-			// For a completely new route, also the general information, like
-			// the name has to be stored
-			ContentValues route_info = new ContentValues();
-			route_info.put("_id", lastRouteID);
-			route_info.put("name", currentRouteName);
-			route_info.put("date", timestamp.getDate());
-			route_info.put("active", "X");
-			mDatabase.insert("route_info", null, route_info);
-
-		} else {
-
-			mDatabase.insert("route_points", null, route_values);
-
-		}
-
-	}
-
-	public static void addNewRoutePoint(String picture, double latitude,
-			double longitude, Timestamp timestamp) {
-
-		mDatabase = mHelper.getWritableDatabase();
-
-		ContentValues route_values = new ContentValues();
-
-		// Zum Testen erstmal alle dem gleichen Record
-		route_values.put("_id", lastRouteID);
-		route_values.put("timestamp", timestamp.toString()); // inserting an int
-		route_values.put("picture", picture); // inserting an int
-		route_values.put("latitude", latitude); // inserting a string
-		route_values.put("longitude", longitude);
-
-		// CurrentRoute greater than the latest one in the DB
-		// --> Completely new route!
-		if (lastRouteID > selectIDlastRoute()) {
-
-			mDatabase.insert("route_points", null, route_values);
-
-			// For a completely new route, also the general information, like
-			// the name has to be stored
-			ContentValues route_info = new ContentValues();
-			route_info.put("_id", lastRouteID);
-			route_info.put("name", currentRouteName);
-			route_info.put("date", timestamp.getDate());
-			route_info.put("active", "X");
-			mDatabase.insert("route_info", null, route_info);
-
-		} else {
-
-			mDatabase.insert("route_points", null, route_values);
-
-		}
-
-	}
-
 
 }

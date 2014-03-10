@@ -3,9 +3,12 @@ package de.smbsolutions.day.functions.objects;
 import java.io.Serializable;
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import de.smbsolutions.day.functions.database.Database;
 
-public class RouteList implements Serializable {
+public class RouteList implements Parcelable {
 	//RouteList object, that contains all Route objects
 	private static final long serialVersionUID = 1L;
 	private int count;
@@ -47,7 +50,7 @@ public class RouteList implements Serializable {
 
 		// It's enough to check the last route because the routes are sorted
 		// chronologically
-		if (getlastRoute().getActive().equals("X")) {
+		if (getlastRoute().isActive()) {
 
 			return true;
 
@@ -70,6 +73,18 @@ public class RouteList implements Serializable {
 
 		}
 
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
