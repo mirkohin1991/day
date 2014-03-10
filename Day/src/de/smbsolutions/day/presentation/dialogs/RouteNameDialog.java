@@ -26,6 +26,7 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 	private Bundle bundle;
 	private MainCallback mCallback;
 	private int index = 0;
+
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -35,7 +36,8 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
-		final View nameView = inflater.inflate(R.layout.dialog_createroute, null);
+		final View nameView = inflater.inflate(R.layout.dialog_createroute,
+				null);
 		// Adding the customized popup layout
 		builder.setView(nameView);
 
@@ -43,9 +45,9 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 
-						
 						tracker = GPSTracker.getInstance(getActivity());
-						routeList = (RouteList) bundle.getSerializable("routeList");
+						routeList = (RouteList) bundle
+								.getSerializable("routeList");
 						// New Route shall be craeted
 						EditText nameText = (EditText) getDialog()
 								.findViewById(R.id.routename);
@@ -57,11 +59,12 @@ public class RouteNameDialog extends android.support.v4.app.DialogFragment {
 								null, null, tracker.getLatitude(), tracker
 										.getLongitude(), tracker.getAltitude()));
 						routeList.addRoute(route);
-						
+						dismiss();
 						mCallback.onNewRouteStarted(route);
 						// neues fragment-->
 						// nicht sicher ob das so die beste L�sung ist
 						// crFragment currenRouteFrag = new crFragment();
+			
 
 					}
 				}).setNegativeButton("Cancel",

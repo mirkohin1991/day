@@ -12,10 +12,6 @@ public class AllRoutesListElement {
 	private String textName;
 	private String textDate;
 	private Route route;
-
-	
-
-	
 	private BaseAdapter adapter;
 	
 	

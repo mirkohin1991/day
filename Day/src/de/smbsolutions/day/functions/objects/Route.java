@@ -32,9 +32,6 @@ import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 
 public class Route implements Parcelable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<RoutePoint> routePoints = new ArrayList<RoutePoint>();
 	private String routeName;
@@ -43,13 +40,12 @@ public class Route implements Parcelable {
 	private String active;
 	private int id;
 
-	private Context context;
-	
-	
-	PolylineOptions polylineOptions = new PolylineOptions();
-	PolylineOptions polylineOptions_back = new PolylineOptions().width(3).color(Color.rgb(136, 204, 0));
-	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(Color.rgb(19, 88, 5));
-	
+	private PolylineOptions polylineOptions = new PolylineOptions();
+	private PolylineOptions polylineOptions_back = new PolylineOptions().width(
+			3).color(Color.rgb(136, 204, 0));
+	private PolylineOptions polylineOptions_top = new PolylineOptions()
+			.width(8).color(Color.rgb(19, 88, 5));
+
 	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
 	// Constructor for routes that have already been created
@@ -80,7 +76,7 @@ public class Route implements Parcelable {
 		}
 
 	}
-	
+
 	public void closeRoute() {
 
 		if (Database.closeRoute(id) == true) {
@@ -106,177 +102,140 @@ public class Route implements Parcelable {
 	public void addRoutePoint(RoutePoint point) {
 		routePoints.add(point);
 	}
-	
 
-	public GoogleMap prepareMapPreview(final GoogleMap mapImport, final Context context
-			) {
-		
-		//saving the map
+	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
+
+		// saving the map
 		this.map = mapImport;
 
-		// Intern speichern, damit der Action Listener unten anspringen kann
-		this.context = context;
-
 		Bitmap bitmap = null;
-
+		map.clear();
 		// Necessary to save in order to connect timestamp and marker
 		markerMap = new LinkedHashMap<RoutePoint, Marker>();
 
-		
+		for (RoutePoint point : this.routePoints) {
+			polylineOptions_back.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			polylineOptions_top.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			MarkerOptions markerOpt = new MarkerOptions().position(
+					new LatLng(point.getLatitude(), point.getLongitude()))
+					.title(getRouteName());
 
-			for (RoutePoint point : this.routePoints) {
-				polylineOptions_back.add(new LatLng(point.getLatitude(), point.getLongitude()));
-				polylineOptions_top.add(new LatLng(point.getLatitude(), point.getLongitude()));
-				MarkerOptions markerOpt = new MarkerOptions().position(new LatLng(point.getLatitude(), point.getLongitude()))
-				.title(getRouteName());
+			Marker marker = map.addMarker(markerOpt);
+			markerMap.put(point, marker);
 
-				Marker marker = map.addMarker(markerOpt);
-				markerMap.put(point, marker);
-				
-			}
+		}
 
-	
-			Polyline polyline_top = map.addPolyline(polylineOptions_top);
-			Polyline polyline_back = map.addPolyline(polylineOptions_back);
-			
-			
-						
-			//Setting the zoom
-			setZoomAllMarkers();
+		Polyline polyline_top = map.addPolyline(polylineOptions_top);
+		Polyline polyline_back = map.addPolyline(polylineOptions_back);
 
-
+		// Setting the zoom
+		setZoomAllMarkers();
 		return map;
-		
 
 	}
 
 	@SuppressWarnings("unchecked")
-	public GoogleMap prepareMapDetails(final GoogleMap mapImport, final Context context
-			) {
-		
-		
-		//saving the map
+	public GoogleMap prepareMapDetails(final GoogleMap mapImport) {
+
+		// saving the map
 		this.map = mapImport;
-
+		map.clear();
 		// Intern speichern, damit der Action Listener unten anspringen kann
-		this.context = context;
-
 
 		// Necessary to save connect timestamp and marker
-		if (markerMap != null)  {
-		markerMap.clear();
-		}else {
+		if (markerMap != null) {
+			markerMap.clear();
+		} else {
 			markerMap = new LinkedHashMap<RoutePoint, Marker>();
 		}
 
 		PolylineOptions polylineOptions = new PolylineOptions();
-		
 
-//				
-				
-				// add markers to map
-				if (hasPicturePoint()) {
-				
-					for (RoutePoint point : this.routePoints) {
-						
-						
-						MarkerOptions markerOpt = new MarkerOptions().position(
-								new LatLng(point.getLatitude(), point.getLongitude()))
+		// add markers to map
+		if (hasPicturePoint()) {
+			map.clear();
+			for (RoutePoint point : this.routePoints) {
+
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
 						.title(getRouteName());
 
-						Marker marker = map.addMarker(markerOpt);
-						markerMap.put(point, marker);
-					
-					
-					}
-				
-				MarkerWorkerTask task = new MarkerWorkerTask(context, map, markerMap, this);
-				task.execute(this.routePoints);
-				
-					
-				} else {
-					
-					LatLngBounds.Builder builder = new LatLngBounds.Builder();
-					for (RoutePoint point : this.routePoints) {
-						
-						polylineOptions_back.add(new LatLng(point.getLatitude(), point.getLongitude()));
-						polylineOptions_top.add(new LatLng(point.getLatitude(), point.getLongitude()));
-						polylineOptions.add(new LatLng(point.getLatitude(), point.getLongitude()));
-						
-						MarkerOptions markerOpt = new MarkerOptions().position(
-								new LatLng(point.getLatitude(), point.getLongitude()))
+				Marker marker = map.addMarker(markerOpt);
+				markerMap.put(point, marker);
+
+			}
+
+//			MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap, this);
+//			task.execute(this.routePoints);
+
+		} else {
+
+			for (RoutePoint point : this.routePoints) {
+
+				polylineOptions_back.add(new LatLng(point.getLatitude(), point
+						.getLongitude()));
+				polylineOptions_top.add(new LatLng(point.getLatitude(), point
+						.getLongitude()));
+				polylineOptions.add(new LatLng(point.getLatitude(), point
+						.getLongitude()));
+
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
 						.title(getRouteName());
 
-						Marker marker = map.addMarker(markerOpt);
-						markerMap.put(point, marker);
+				Marker marker = map.addMarker(markerOpt);
+				markerMap.put(point, marker);
 
-					}
-					Polyline polyline_top = map.addPolyline(polylineOptions_top);
-					Polyline polyline_back = map.addPolyline(polylineOptions_back);
-//					LatLngBounds bounds = builder.build();
-//					CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-//							bounds, 60);
-//					map.animateCamera(camUpdate)
-					
-					//Setting the zoom
- 				setZoomAllMarkers();
-					
-				}
+			}
+			map.addPolyline(polylineOptions_top);
+			map.addPolyline(polylineOptions_back);
+			setZoomAllMarkers();
 
-		
-			
-
-	
+		}
 		return map;
 
 	}
 
-	
-	//PERPARE MAP HAS TO BE CALLED BEFORE!
+	// PERPARE MAP HAS TO BE CALLED BEFORE!
 	private void setZoomAllMarkers() {
 		// zoompoint
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		for (Map.Entry<RoutePoint,Marker> mapSet : markerMap.entrySet()) {
+		for (Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
 
 			builder.include(mapSet.getValue().getPosition());
 
 		}
 
 		LatLngBounds bounds = builder.build();
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-				bounds, 60);
+		CameraUpdate camUpdate = CameraUpdateFactory
+				.newLatLngBounds(bounds, 60);
+
 		map.animateCamera(camUpdate);
 	}
-	
-	
-	
-	// Method to set the zoom of the map to a certain point
-	public void setZoomSpecificMarker (RoutePoint point) {
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		
-		//Getting the marker for the routepoint
-	    // There is no way to access the KEY via VALUE directly
-		
-		LatLng latlng = markerMap.get(point).getPosition();
-		
-		if ( latlng != null){
-		
-		builder.include(latlng);
 
-		LatLngBounds bounds = builder.build();
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
-				bounds, 60);
-		map.animateCamera(camUpdate);
-		
+	// Method to set the zoom of the map to a certain point
+	public void setZoomSpecificMarker(RoutePoint point) {
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+		// Getting the marker for the routepoint
+		// There is no way to access the KEY via VALUE directly
+
+		LatLng latlng = markerMap.get(point).getPosition();
+
+		if (latlng != null) {
+
+			builder.include(latlng);
+
+			LatLngBounds bounds = builder.build();
+			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+					bounds, 60);
+			map.moveCamera(camUpdate);
+
 		}
 
-
-	
-		
-	
-		
-		
 	}
 
 	public boolean hasPicturePoint() {
@@ -343,26 +302,13 @@ public class Route implements Parcelable {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public void deletePictureDB (RoutePoint deletePoint) {
-		
-//		for (RoutePoint routePoint : routePoints) {
-//			
-//			if (routePoint.getTimestamp() == deletePoint.getTimestamp() ) {
-				
-				
-				if(Database.deletePicturePath(deletePoint) == true){
-				routePoints.remove(deletePoint);
-				}
-				
-//			}
-			
-//		}
-		
-	}
 
-//	public LinkedHashMap<RoutePoint, Marker> getMarkerMap() {
-//		return markerMap;
-//	}
+	public void deletePictureDB(RoutePoint deletePoint) {
+
+		if (Database.deletePicturePath(deletePoint) == true) {
+			routePoints.remove(deletePoint);
+		}
+
+	}
 
 }

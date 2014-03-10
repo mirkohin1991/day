@@ -14,12 +14,11 @@ import android.os.Environment;
 import android.util.Log;
 
 public class BitmapManager {
-	
+
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private static String timeStamp;
 
-	
 	public static Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
 			int reqHeight) {
 		Bitmap bm = null;
@@ -58,36 +57,35 @@ public class BitmapManager {
 
 		return inSampleSize;
 	}
-	
-	
 
-	
-	public static File savePreviewBitmapToStorage (Uri big_image_file) {
-		
+	public static File savePreviewBitmapToStorage(Uri big_image_file) {
+
 		File small_picutre_file = getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
-		
-		Bitmap bitmap  = BitmapManager.decodeSampledBitmapFromUri(big_image_file.getPath(), 220, 220);
-	   
-	        FileOutputStream fOut = null;
-			try {
-				fOut = new FileOutputStream(small_picutre_file);
-				 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fOut);
-				 fOut.flush();
-			     fOut.close();
-			     return  small_picutre_file;
-			} catch (FileNotFoundException e) {
-				
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return null;
-			}
-		
+
+		Bitmap bitmap = BitmapManager.decodeSampledBitmapFromUri(
+				big_image_file.getPath(), 220, 220);
+
+		FileOutputStream fOut = null;
+		try {
+			fOut = new FileOutputStream(small_picutre_file);
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fOut);
+			fOut.flush();
+			fOut.close();
+			bitmap.recycle();
+			return small_picutre_file;
+		} catch (FileNotFoundException e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
 	}
-	
+
 	public static Uri getOutputMediaFileUri(int type, boolean small) {
 		return Uri.fromFile(getOutputMediaFile(type, small));
 	}
@@ -100,7 +98,7 @@ public class BitmapManager {
 		File mediaStorageDir = new File(
 				Environment
 						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"MyCameraApp");
+				"Hike App");
 		// This location works best if you want the created images to be shared
 		// between applications and persist after your app has been uninstalled.
 
@@ -125,9 +123,8 @@ public class BitmapManager {
 		} else {
 			return null;
 		}
-		
-
 
 		return mediaFile;
 	}
+	
 }

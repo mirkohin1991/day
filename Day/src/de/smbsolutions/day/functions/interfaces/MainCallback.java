@@ -6,9 +6,6 @@ import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public interface MainCallback {
-	// Item in MainFragment is selected
-	public void onItemSelected(int position);
-
 	// Dialog for opening a new route
 	public void onOpenDialogNewRoute(RouteList routeList);
 

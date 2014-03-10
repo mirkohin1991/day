@@ -20,7 +20,6 @@ public class Database implements DatabaseInterface {
 	private static SQLiteDatabase mDatabase;
 	private static int lastRouteID = 0;
 	private static String currentRouteName;
-
 	private static Database db_data = null;
 
 	// In welchem Kontext???
@@ -88,12 +87,7 @@ public class Database implements DatabaseInterface {
 	}
 	
 public static boolean deletePicturePath (RoutePoint routePoint) {
-	
-	
-	
-	
-	
-		
+
 		try {
 			mDatabase = mHelper.getWritableDatabase();
 
@@ -460,125 +454,6 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 		}
 	}
 
-//	// BRAUCHEN WIR EIGENTLICH NICHT!
-//	// NOCH DRIN WEIL WIR SIE IN DER MAPACTIVITY ZUM TESTEN NUTZEN
-//	// "1 - n routpoints can be selected"
-//	// Select needs the values as string and not int
-//	public static List<RoutePoint> getSpecificRoute(String[] ids) {
-//
-//		List<RoutePoint> allRoutes = new ArrayList<RoutePoint>();
-//		Cursor db_cursor;
-//
-//		mDatabase = mHelper.getWritableDatabase();
-//
-//		db_cursor = mDatabase.query("route_points", // table
-//				null, // which column
-//				"_id = ?", // select options
-//				ids, // Using ? in the select options can be replaced here as an
-//						// array
-//				null, // Group by ID --> Only the whole routes
-//				null, // Having
-//				null);// order by
-//
-//		while (db_cursor.moveToNext()) {
-//
-//			// Getting each field
-//			int cursor_id = db_cursor.getInt(db_cursor.getColumnIndex("_id"));
-//			String cursor_picture = db_cursor.getString(db_cursor
-//					.getColumnIndex("picture"));
-//			double cursor_longitude = db_cursor.getDouble(db_cursor
-//					.getColumnIndex("longitude"));
-//			double cursor_latitude = db_cursor.getDouble(db_cursor
-//					.getColumnIndex("latitude"));
-//			Timestamp cursor_time = Timestamp.valueOf(db_cursor
-//					.getString(db_cursor.getColumnIndex("timestamp")));
-//
-//			RoutePoint route_point = new RoutePoint(cursor_id, cursor_time, // Timestamp
-//																			// class
-//																			// helps
-//																			// us
-//																			// to
-//																			// get
-//																			// the
-//																			// value
-//																			// as
-//																			// timestamp
-//					cursor_picture, cursor_latitude, cursor_longitude);
-//
-//			allRoutes.add(route_point);
-//
-//		}
-//
-//		db_cursor.close();
-//		return allRoutes;
-//
-//	}
-
-	// public static boolean isOpenRoute() {
-	//
-	// Cursor db_cursor;
-	//
-	// mDatabase = mHelper.getWritableDatabase();
-	//
-	// db_cursor = mDatabase.query("route_info", // table
-	// null, // which column
-	// "active = X", // select options
-	// null, // Using ? in the select options can be replaced here as
-	// // an array
-	// null, // Group by ID --> Only the whole routes
-	// null, // Having
-	// null);// order by
-	//
-	// if (db_cursor.getCount() == 0) {
-	// db_cursor.close();
-	// return false;
-	//
-	// } else {
-	//
-	// return true;
-	//
-	// }
-	//
-	// }
-	//
-
-	// public static RoutePoint getOpenRouteInfo() {
-	//
-	// RoutePoint route_point = null;
-	//
-	// Cursor db_cursor;
-	//
-	// mDatabase = mHelper.getWritableDatabase();
-	//
-	// db_cursor = mDatabase.query("route_points", // table
-	// null, // which column
-	// "active = X", // select options
-	// null, // Using ? in the select options can be replaced here as
-	// // an array
-	// null, // Group by ID --> Only the whole routes
-	// null, // Having
-	// null);// order by
-	//
-	// while (db_cursor.moveToNext()) {
-	//
-	// // Getting each field
-	// int cursor_id = db_cursor.getInt(db_cursor.getColumnIndex("_id"));
-	// String cursor_name = db_cursor.getString(db_cursor
-	// .getColumnIndex("name"));
-	// String cursor_date = db_cursor.getString(db_cursor
-	// .getColumnIndex("date"));
-	// String cursor_active = db_cursor.getString(db_cursor
-	// .getColumnIndex("active"));
-	//
-	// // route_point = new RoutePoint(cursor_id, cursor_name, cursor_date,
-	// // cursor_active);
-	//
-	// }
-	//
-	// db_cursor.close();
-	//
-	// return route_point;
-	// }
 
 	public static void addNewRoutePoint(double latitude, double longitude,
 			Timestamp timestamp) {
@@ -653,21 +528,5 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 
 	}
 
-	// // EVERY TIME A NEW ROUTE IS STARTET THIS METHOD HAS TO BE CALLED
-	// public static void registerNewRoute(String name) {
-	//
-	// // -1 means first route ever tracked
-	// if (selectIDlastRoute() != -1) {
-	// lastRouteID = selectIDlastRoute() + 1;
-	// currentRouteName = name;
-	//
-	// } else {
-	//
-	// lastRouteID = 1;
-	// currentRouteName = name;
-	//
-	// }
-	//
-	// }
 
 }

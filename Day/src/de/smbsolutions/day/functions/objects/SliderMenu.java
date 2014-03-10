@@ -160,7 +160,7 @@ public class SliderMenu {
 
 		if (savedInstanceState == null) {
 			// on first time display view for first nav item
-//			displayView(0);
+			// displayView(0);
 		}
 
 		return mDrawerToggle;
@@ -204,7 +204,6 @@ public class SliderMenu {
 			Device.getAPP_SETTINGS().setMAP_TYPE(1);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-			//context.setTitle(navMenuTitles[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			mCallback.onRefreshMap();
 			break;
@@ -214,10 +213,8 @@ public class SliderMenu {
 			Device.getAPP_SETTINGS().setMAP_TYPE(2);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-			//context.setTitle(navMenuTitles[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			mCallback.onRefreshMap();
-
 
 			break;
 		case 2:
@@ -226,7 +223,6 @@ public class SliderMenu {
 			Device.getAPP_SETTINGS().setMAP_TYPE(3);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-		//	context.setTitle(navMenuTitles[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			mCallback.onRefreshMap();
 			break;
@@ -262,7 +258,7 @@ public class SliderMenu {
 			mCallback.onSliderClick(fragment);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-		//	context.setTitle(navMenuTitles[position]);
+			// context.setTitle(navMenuTitles[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			// error in creating fragment

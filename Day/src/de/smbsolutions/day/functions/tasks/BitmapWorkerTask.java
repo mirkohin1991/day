@@ -1,34 +1,28 @@
 package de.smbsolutions.day.functions.tasks;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.URI;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
-	private final WeakReference<LinearLayout> layoutReference;
+	private WeakReference<LinearLayout> layoutReference;
 	private Route route;
 	private File bitmapFile;
 	private List<ImageView> bitmapList;
@@ -38,11 +32,19 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	private MainCallback mCallback;
 	LinearLayout myGallery;
 
+	@Override
+	protected void onProgressUpdate(Void... values) {
+		// TODO Auto-generated method stub
+		super.onProgressUpdate(values);
+	}
+
 	public BitmapWorkerTask(LinearLayout layout, Context context) {
 		// Use a WeakReference to ensure the ImageView can be garbage collected
 		layoutReference = new WeakReference<LinearLayout>(layout);
 		this.context = context;
 		bitmapList = new ArrayList<ImageView>();
+		imageContainer = new LinearLayout(context);
+		imageContainer.setGravity(Gravity.CENTER);
 
 		try {
 			mCallback = (MainCallback) context;
@@ -58,28 +60,27 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 	protected List<ImageView> doInBackground(Route... params) {
 
 		route = params[0];
-		imageContainer = new LinearLayout(context);
-		imageContainer.setGravity(Gravity.CENTER);
+
 		int foreachindex = 0;
+		Bitmap bm = null;
 		for (RoutePoint point : route.getRoutePoints()) {
 			if (point.getPicture() != null) {
+				if (bm != null) {
+					// Memoryusage????
+					bm.recycle();
+				
+				}
 
 				bitmapFile = new File(point.getPicturePreview());
-				Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-						bitmapFile.getPath(), 220, 220);// richtige gr��e?
+
+				bm = BitmapManager.decodeSampledBitmapFromUri(
+						bitmapFile.getPath(), 220, 220);// richtige größe?
 
 				if (bm != null) {
 					// Bilder sollten automatisch ins Layout passen
 					ImageView imageView = new ImageView(context);
 
 					imageView.setAdjustViewBounds(true);
-
-					// imageView
-					// .setLayoutParams(new LayoutParams(
-					// android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT,
-					// android.support.v4.view.ViewPager.LayoutParams.MATCH_PARENT));
-					double w = bm.getWidth();
-					double h = bm.getHeight();
 
 					if (foreachindex == 0) {
 
@@ -93,7 +94,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 					}
 
 					imageView.setImageBitmap(bm);
-
+					bm = null;
 					// Saving the timestamp to identify the picture later on
 					imageView.setTag(point.getTimestamp());
 
@@ -104,6 +105,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 				}
 
 			}
+
 		}
 		return bitmapList;
 
@@ -128,7 +130,8 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 			}
 
 		}
-
+		bitmapList.clear();
+	
 	}
 
 	public boolean isImageAvailable() {

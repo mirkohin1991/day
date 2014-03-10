@@ -1,6 +1,7 @@
 package de.smbsolutions.day.functions.tasks;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 import android.app.ListActivity;
@@ -26,6 +28,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +37,7 @@ import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.LayoutInflater;
 
@@ -58,7 +62,6 @@ public class MarkerWorkerTask
 		extends
 		AsyncTask<ArrayList<RoutePoint>, Void, LinkedHashMap<RoutePoint, Bitmap>> {
 
-	List<Marker> markers = new ArrayList<Marker>();
 	private MainCallback mCallback;
 	private GoogleMap map;
 	private Context context;
@@ -68,7 +71,8 @@ public class MarkerWorkerTask
 	private TextView tvDuration;
 	private View view;
 	MarkerOptions markerOpt = new MarkerOptions();
-
+	private final WeakReference<LinkedHashMap<RoutePoint, Marker>> hashMapRef;
+	private WeakReference<Bitmap> weakBM;
 	// Necessary to save connect timestamp and marker
 	LinkedHashMap<RoutePoint, Bitmap> bitmapMap = new LinkedHashMap<RoutePoint, Bitmap>();
 	LinkedHashMap<RoutePoint, Marker> markerMap;
@@ -78,10 +82,12 @@ public class MarkerWorkerTask
 	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(
 			Color.rgb(19, 88, 5));
 
-	public MarkerWorkerTask(Context context, GoogleMap map,
+	public MarkerWorkerTask(GoogleMap map,
 			LinkedHashMap<RoutePoint, Marker> markerMap, Route route) {
-		markers = new ArrayList<Marker>();
-		this.context = context;
+
+		hashMapRef = new WeakReference<LinkedHashMap<RoutePoint, Marker>>(
+				markerMap);
+		
 		this.map = map;
 		this.route = route;
 
@@ -115,32 +121,35 @@ public class MarkerWorkerTask
 	protected LinkedHashMap<RoutePoint, Bitmap> doInBackground(
 
 	ArrayList<RoutePoint>... params) {
-		List<Bitmap> bitmaps = new ArrayList<Bitmap>();
+
 		Bitmap bitmap = null;
+
 		routePoints = params[0];
 
 		for (RoutePoint point : routePoints) {
 			if (point.getPicturePreview() != null) {
+
 				File pic = new File(point.getPicturePreview());
 				Uri uri = Uri.fromFile(pic);
-				Bitmap resizedBitmap_Placeholder = BitmapFactory
-						.decodeResource(context.getResources(),
-								R.drawable.resizedbitmap_placeholder);
 
-				int bgwidth = resizedBitmap_Placeholder.getWidth();
-				int bgheight = resizedBitmap_Placeholder.getHeight();
+				Drawable d = context.getResources().getDrawable(
+						R.drawable.resizedbitmap_placeholder);
+				int bgwidth = d.getIntrinsicHeight();
+				int bgheight = d.getIntrinsicWidth();
 
 				bitmap = BitmapManager.decodeSampledBitmapFromUri(
 						uri.getPath(), bgwidth, bgheight);
 
 				if (bitmap != null) {
-					// bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
+					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
 
 					bitmap = getRoundedCornerBitmap(
 							getResizedBitmap(bitmap, bgheight, bgwidth), 220);
+					weakBM = new WeakReference<Bitmap>(bitmap);
 
-					bitmapMap.put(point, bitmap);
-
+					bitmapMap.put(point, weakBM.get());
+					weakBM.clear();
+					
 				}
 
 			}
@@ -154,130 +163,144 @@ public class MarkerWorkerTask
 	protected void onPostExecute(LinkedHashMap<RoutePoint, Bitmap> result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		if (hashMapRef != null) {
 
-		map.clear();
+			markerMap = hashMapRef.get();
+			LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		// Gets the first marker
-		Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet()
-				.iterator().next();
+			map.clear();
 
-		// Gets the Timestamp of the first marker
-		long startDate = firstMarker.getKey().getTimestamp().getTime();
+			// Gets the first marker
+			Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet()
+					.iterator().next();
 
-		// Set the start Lat and Long
-		double startMarkerLat = firstMarker.getKey().getLatitude();
-		double startMarkerLong = firstMarker.getKey().getLongitude();
+			// Gets the Timestamp of the first marker
+			long startDate = firstMarker.getKey().getTimestamp().getTime();
 
-		int distanceMeter = 0;
+			// Set the start Lat and Long
+			double startMarkerLat = firstMarker.getKey().getLatitude();
+			double startMarkerLong = firstMarker.getKey().getLongitude();
 
-		double altitudeTotal = 0;
-		double maxAltitude = 0;
-		double minAltitude = 0;
-		double peakAltitude = 0;
-		double altitudeOld = 0;
-		double altitudeAct = 0;
+			int distanceMeter = 0;
 
-		Location locStart = new Location("start");
-		Location locDest = new Location("destination");
+			double altitudeTotal = 0;
+			double maxAltitude = 0;
+			double minAltitude = 0;
+			double peakAltitude = 0;
+			double altitudeOld = 0;
+			double altitudeAct = 0;
 
-		locStart.setLatitude(startMarkerLat);
-		locStart.setLongitude(startMarkerLong);
+			Location locStart = new Location("start");
+			Location locDest = new Location("destination");
 
-		long durationAct = 0;
+			locStart.setLatitude(startMarkerLat);
+			locStart.setLongitude(startMarkerLong);
 
-		for (Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
+			long durationAct = 0;
 
-			// Gets the actual lat and long
-			double markerLat = mapSet.getKey().getLatitude();
-			double markerLong = mapSet.getKey().getLongitude();
+			for (Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
 
-			locDest.setLatitude(markerLat);
-			locDest.setLongitude(markerLong);
+				// Gets the actual lat and long
+				double markerLat = mapSet.getKey().getLatitude();
+				double markerLong = mapSet.getKey().getLongitude();
 
-			// Calculates the distance
-			float distanceAct = locStart.distanceTo(locDest);
-			float distanceTotal = distanceAct + locStart.distanceTo(locDest);
-			distanceTotal = distanceTotal * 1000;
+				locDest.setLatitude(markerLat);
+				locDest.setLongitude(markerLong);
 
-			// Calculates the distance from km to meter
-			distanceMeter = (int) Math.round(distanceTotal);
+				// Calculates the distance
+				float distanceAct = locStart.distanceTo(locDest);
+				float distanceTotal = distanceAct
+						+ locStart.distanceTo(locDest);
+				distanceTotal = distanceTotal * 1000;
 
-			// Sets the "old" lat and long as new start lat and long
-			locStart.setLatitude(markerLat);
-			locStart.setLongitude(markerLong);
+				// Calculates the distance from km to meter
+				distanceMeter = (int) Math.round(distanceTotal);
 
-			// Gets the actual timestamp
-			long markerDate = mapSet.getKey().getTimestamp().getTime();
+				// Sets the "old" lat and long as new start lat and long
+				locStart.setLatitude(markerLat);
+				locStart.setLongitude(markerLong);
 
-			// Calculates the duration of the route
+				// Gets the actual timestamp
+				long markerDate = mapSet.getKey().getTimestamp().getTime();
+
+				// Calculates the duration of the route
+				// ENDGÜLTIGE
+				// ZEIT*************************************************************
+				durationAct = (markerDate - startDate);
+
+				// altitude total
+				altitudeAct = mapSet.getKey().getAltitude();
+				altitudeTotal = altitudeAct + altitudeOld;
+
+				// max altitude
+				if (altitudeAct > altitudeOld) {
+					maxAltitude = altitudeAct;
+				}
+
+				// min altitude
+				if (altitudeAct < altitudeOld) {
+					minAltitude = altitudeAct;
+				}
+
+				peakAltitude = maxAltitude - minAltitude;
+
+				altitudeOld = altitudeAct;
+
+				polylineOptions_top.add(new LatLng(markerLat, markerLong));
+				polylineOptions_back.add(new LatLng(markerLat, markerLong));
+
+				if (mapSet.getKey().getPicturePreview() != null) {
+
+					Bitmap bitmapSaved = bitmapMap.get(mapSet.getKey());
+
+					Bitmap background = BitmapFactory.decodeResource(
+							context.getResources(), R.drawable.custom_marker);
+
+					Bitmap resizedBitmap_Placeholder = BitmapFactory
+							.decodeResource(context.getResources(),
+									R.drawable.resizedbitmap_placeholder);
+
+					markerOpt = new MarkerOptions()
+							.position(
+									new LatLng(mapSet.getKey().getLatitude(),
+											mapSet.getKey().getLongitude()))
+							.icon(BitmapDescriptorFactory.fromBitmap(this
+									.overlay(background,
+											resizedBitmap_Placeholder,
+											bitmapSaved)))
+							.title("Ihr aktueller Standort");
+
+					mapSet.setValue(map.addMarker(markerOpt));
+
+					bitmapSaved.recycle();
+					background.recycle();
+					resizedBitmap_Placeholder.recycle();
+
+				}
+
+				builder.include(mapSet.getValue().getPosition());
+
+			}
+
+			// Formats the Duration from Miliseconds to an readable format
 			// ENDGÜLTIGE
-			// ZEIT*************************************************************
-			durationAct = (markerDate - startDate);
+			// STRECKE*************************************************************
+			Format formatter = new SimpleDateFormat("DD HH:mm:ss");
+			String duration = formatter.format(durationAct);
 
-			// altitude total
-			altitudeAct = mapSet.getKey().getAltitude();
-			altitudeTotal = altitudeAct + altitudeOld;
+			Polyline polyline_top = map.addPolyline(polylineOptions_top);
+			Polyline polyline_back = map.addPolyline(polylineOptions_back);
 
-			// max altitude
-			if (altitudeAct > altitudeOld) {
-				maxAltitude = altitudeAct;
-			}
-
-			// min altitude
-			if (altitudeAct < altitudeOld) {
-				minAltitude = altitudeAct;
-			}
-
-			peakAltitude = maxAltitude - minAltitude;
-
-			altitudeOld = altitudeAct;
-
-			polylineOptions_top.add(new LatLng(markerLat, markerLong));
-			polylineOptions_back.add(new LatLng(markerLat, markerLong));
-
-			if (mapSet.getKey().getPicturePreview() != null) {
-
-				Bitmap bitmapSaved = bitmapMap.get(mapSet.getKey());
-
-				Bitmap background = BitmapFactory.decodeResource(
-						context.getResources(), R.drawable.custom_marker);
-
-				Bitmap resizedBitmap_Placeholder = BitmapFactory
-						.decodeResource(context.getResources(),
-								R.drawable.resizedbitmap_placeholder);
-
-				markerOpt = new MarkerOptions()
-						.position(
-								new LatLng(mapSet.getKey().getLatitude(),
-										mapSet.getKey().getLongitude()))
-						.icon(BitmapDescriptorFactory.fromBitmap(this.overlay(
-								background, resizedBitmap_Placeholder,
-								bitmapSaved))).title("Ihr aktueller Standort");
-
-				mapSet.setValue(map.addMarker(markerOpt));
-
-			}
-
-			builder.include(mapSet.getValue().getPosition());
-
+			LatLngBounds bounds = builder.build();
+			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
+					bounds, 60);
+			map.moveCamera(camUpdate);
+			addMarkerClickListener(map);
 		}
+		hashMapRef.clear();
+		markerMap.clear();
+		bitmapMap.clear();
 
-		// Formats the Duration from Miliseconds to an readable format
-		// ENDGÜLTIGE
-		// STRECKE*************************************************************
-		Format formatter = new SimpleDateFormat("DD HH:mm:ss");
-		String duration = formatter.format(durationAct);
-
-		Polyline polyline_top = map.addPolyline(polylineOptions_top);
-		Polyline polyline_back = map.addPolyline(polylineOptions_back);
-
-		LatLngBounds bounds = builder.build();
-		CameraUpdate camUpdate = CameraUpdateFactory
-				.newLatLngBounds(bounds, 60);
-		map.animateCamera(camUpdate);
-
-		addMarkerClickListener(map);
 	}
 
 	private void addMarkerClickListener(GoogleMap map) {
@@ -297,7 +320,9 @@ public class MarkerWorkerTask
 						mCallback.onPictureClick(route, mapSet.getKey());
 
 					}
+
 				}
+
 				return false;
 			}
 
@@ -324,10 +349,8 @@ public class MarkerWorkerTask
 		matrix.postScale(scaleWidth, scaleHeight);
 
 		// recreate the new Bitmap
-		Bitmap resizedBitmap = Bitmap.createBitmap(image, 0, 0, width, height,
-				matrix, true);
 
-		return resizedBitmap;
+		return Bitmap.createBitmap(image, 0, 0, width, height, matrix, true);
 
 	}
 
