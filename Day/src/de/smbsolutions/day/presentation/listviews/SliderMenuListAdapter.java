@@ -87,10 +87,21 @@ public class SliderMenuListAdapter extends BaseAdapter {
 		
 		
 
-		//initally set all elements white
-		txtTitle.setTextColor(Color.WHITE);
-		imgIcon.setImageResource(R.drawable.map_normal);
-		
+	//initally set all elements white
+		if (position == 0) {
+			txtTitle.setTextColor(Color.WHITE);
+			imgIcon.setImageResource(R.drawable.map_normal);
+		} else if ( position == 1) {
+			txtTitle.setTextColor(Color.WHITE);
+			imgIcon.setImageResource(R.drawable.map_satelite);
+			
+		} else if (position == 2) {
+			txtTitle.setTextColor(Color.WHITE);
+			imgIcon.setImageResource(R.drawable.map_terrain);
+			
+       }
+			
+
 		
 		boolean selected = false;
 		String tag = (String) convertView.getTag();

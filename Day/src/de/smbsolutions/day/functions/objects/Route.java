@@ -143,7 +143,7 @@ public class Route implements Parcelable {
 
 		// Necessary to save connect timestamp and marker
 		if (markerMap != null) {
-			markerMap.clear();
+			 markerMap.clear();
 		} else {
 			markerMap = new LinkedHashMap<RoutePoint, Marker>();
 		}
