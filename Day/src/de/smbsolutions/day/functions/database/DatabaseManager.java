@@ -17,7 +17,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			+ "  ('tracking', 1 ), "
 			+ "  ('tracking_interval', 10000),"
 			+ "  ('tracking_meter', 10),"
-			+ "  ('map_type', 2 )," 
+			+ "  ('map_type', 2 ),"
 			+ "  ('show_in_gal', 1 )";
 
 	private static final String CLASS_DROP = "DROP TABLE IF EXISTS routes";
