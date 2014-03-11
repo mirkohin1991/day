@@ -37,6 +37,7 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
+import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
 
 public class DetailFragment extends android.support.v4.app.Fragment {
 
@@ -91,16 +92,23 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		// TODO Auto-generated method stub
 		if (myGallery != null) {
 			myGallery.removeAllViews();
+			myGallery = null;
 		}
 
 		unbindDrawables(view);
 
 		if (map != null) {
 			map.clear();
+			map = null;
+			mapFragment = null;
 
 		}
+		flipper = null;
+		view = null;
+		route = null;
 
 		super.onDestroy();
+
 	}
 
 	@Override
@@ -139,6 +147,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setMyLocationEnabled(true);
 			map.setBuildingsEnabled(true);
+			
 		}
 
 		initializeFragmentPortrait();
@@ -187,7 +196,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 							if (mapPrepared == false) {
 								// if point added, only edit polyline and add
 								// new marker!!! TODO
-								map = route.prepareMapPreview(map);
+								map = route.prepareMapDetails(map, getActivity());
 								mapPrepared = true;
 
 							}
@@ -204,9 +213,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 		myGallery.removeAllViews();
 
-		// BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
-		// getActivity());
-		// task.execute(route);
+		final BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
+				getActivity());
+		task.execute(route);
 
 	}
 
@@ -321,11 +330,11 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				} else {
 					// refresh the image view
 					addPhotos2Gallery(myGallery);
-					route.prepareMapPreview(map);
+					route.prepareMapDetails(map, getActivity());
 				}
 
 			} else {
-				route.prepareMapPreview(map);
+				route.prepareMapDetails(map, getActivity());
 			}
 
 		}

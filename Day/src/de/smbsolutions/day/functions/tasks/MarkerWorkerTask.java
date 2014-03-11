@@ -83,11 +83,11 @@ public class MarkerWorkerTask
 			Color.rgb(19, 88, 5));
 
 	public MarkerWorkerTask(GoogleMap map,
-			LinkedHashMap<RoutePoint, Marker> markerMap, Route route) {
+			LinkedHashMap<RoutePoint, Marker> markerMap, Route route, Context context) {
 
 		hashMapRef = new WeakReference<LinkedHashMap<RoutePoint, Marker>>(
 				markerMap);
-		
+		this.context = context;
 		this.map = map;
 		this.route = route;
 
@@ -300,6 +300,9 @@ public class MarkerWorkerTask
 		hashMapRef.clear();
 		markerMap.clear();
 		bitmapMap.clear();
+		context = null;
+		view = null;
+		route = null;
 
 	}
 

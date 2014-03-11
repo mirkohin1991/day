@@ -137,7 +137,7 @@ active = true;
 	}
 
 	@SuppressWarnings("unchecked")
-	public GoogleMap prepareMapDetails(final GoogleMap mapImport) {
+	public GoogleMap prepareMapDetails(final GoogleMap mapImport, Context context) {
 
 		// saving the map
 		this.map = mapImport;
@@ -167,8 +167,8 @@ active = true;
 
 			}
 
-//			MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap, this);
-//			task.execute(this.routePoints);
+			final MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap, this, context);
+			task.execute(this.routePoints);
 
 		} else {
 

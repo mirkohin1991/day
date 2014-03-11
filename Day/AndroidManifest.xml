@@ -59,7 +59,7 @@
         <activity android:name="de.smbsolutions.day.presentation.activities.PictureActivity" >
         </activity>
 
-        <service android:name=".functions.services.TrackingService" >
+        <service android:name=".functions.location.LocationTrackerPLAYSERVICE" >
         </service>
 
         <activity android:name=".presentation.activities.currentRouteActivity" >
