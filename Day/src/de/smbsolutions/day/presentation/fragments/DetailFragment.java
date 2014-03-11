@@ -188,7 +188,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 							if (mapPrepared == false) {
 								// if point added, only edit polyline and add
 								// new marker!!! TODO
-								map = route.prepareMapDetails(map);
+										map = route.prepareMapDetails(map, getActivity());
 								mapPrepared = true;
 							}
 
@@ -321,7 +321,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				} else {
 					// refresh the image view
 					addPhotos2Gallery(myGallery);
-					route.prepareMapDetails(map);
+					route.prepareMapDetails(map, getActivity());
 				}
 
 			} else {

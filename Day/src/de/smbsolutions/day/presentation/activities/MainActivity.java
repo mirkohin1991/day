@@ -51,9 +51,9 @@ import de.smbsolutions.day.presentation.fragments.PictureFragment;
 public class MainActivity extends FragmentActivity implements MainCallback {
 
 	private List<WeakReference<Fragment>> refFragments = new ArrayList<WeakReference<Fragment>>();
-	private final static String TAG_DETAILFRAGMENT = "DETAIL";
-	private final static String TAG_MAINFRAGMENT = "MAIN";
-	private final static String TAG_PICTUREFRAGMENT = "PICTURE";
+	private final String TAG_DETAILFRAGMENT = "DETAIL";
+	private final String TAG_MAINFRAGMENT = "MAIN";
+	private final String TAG_PICTUREFRAGMENT = "PICTURE";
 	private static String CURRENT_FRAGMENT = null;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -89,6 +89,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				LocalBinder binder = (LocalBinder) service;
 				mService = binder.getService();
+				Toast.makeText(getApplicationContext(), "Service angebunden",
+						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -386,16 +388,22 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onAttachFragment(Fragment fragment) {
-		backstackcount = getSupportFragmentManager().getBackStackEntryCount();
-		Log.wtf("Backstackcount:", String.valueOf(backstackcount));
+
 		refFragments.add(new WeakReference<Fragment>(fragment));
+
 		super.onAttachFragment(fragment);
 	}
 
 	@Override
 	public void onBackPressed() {
 		recycleFragments();
-		super.onBackPressed();
+
+		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+			finish();
+		} else {
+			CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+			super.onBackPressed();
+		}
 
 	}
 
@@ -457,6 +465,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		if (mService != null) {
 			mService.saveActivity(this);
+			// Warum liste und route übergeben??
 			mService.startLocationTrackingAndSaveFirst(routeList, route);
 
 		} else {
@@ -473,8 +482,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService.addPictureLocation(route, fileUri, small_picture);
 
 		} else {
-			Toast.makeText(this, "Service wurde nicht gestartet",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();
 		}
 	}
 

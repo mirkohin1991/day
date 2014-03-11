@@ -79,11 +79,6 @@ public class SliderMenuListAdapter extends BaseAdapter {
 			convertView.setEnabled(false);
 			txtTitle.setTypeface(null, Typeface.BOLD);
 			
-			// REMOVE ICON
-//			RelativeLayout slider_item_layout = (RelativeLayout) convertView
-//					.findViewById(R.id.layout_slidermenu_item);		
-//			slider_item_layout.removeView(imgIcon);
-
 		}
 		
 		if (txtTitle.getText().equals("Infos zur App")) {
@@ -163,40 +158,7 @@ public class SliderMenuListAdapter extends BaseAdapter {
 			break;
 		}
 		
-		
 
-		
-		
-//		convertView.setOnClickListener(new View.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				
-//
-//				ImageView imgIcon = (ImageView) v.findViewById(R.id.icon);
-//				TextView txtTitle = (TextView) v.findViewById(R.id.title);
-//				
-//				
-//				//Restore position
-//				int position = (Integer) v.getTag();
-//				
-//				if (position == 0) {
-//					imgIcon.setImageResource(R.drawable.map_normal);
-//					 txtTitle.setTextColor(Color.WHITE);
-//					
-//				} else if (position == 1){
-//					imgIcon.setImageResource(R.drawable.map_satelite);
-//					txtTitle.setTextColor(Color.WHITE);
-//				}else if (position == 2) {
-//					imgIcon.setImageResource(R.drawable.map_terrain);
-//					txtTitle.setTextColor(Color.WHITE);
-//				}
-//					
-//				
-//				
-//			}
-//		});
-//		
 
 		return convertView;
 	}

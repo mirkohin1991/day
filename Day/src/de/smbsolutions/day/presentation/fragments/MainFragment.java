@@ -50,7 +50,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private int index = 0;
 	private MainCallback mCallback;
 	private List<AllRoutesListElement> meineListe;
-	private boolean flag_first = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -348,6 +347,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	@Override
 	public void onPause() {
+		map.clear();
 
 		super.onPause();
 	}
