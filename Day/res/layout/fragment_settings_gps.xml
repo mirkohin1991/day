@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/android:list"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/settings_background"
+    android:fadeScrollbars="false"
     android:orientation="vertical"
+    android:padding="10dp"
     android:showDividers="beginning|middle|end" >
 
     <LinearLayout
@@ -13,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            
             android:text="GPS"
             android:textColor="@color/settings_text"
             android:textSize="20sp" />
@@ -52,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="10dp"
+
             android:paddingBottom="20dp"
             android:textColor="@color/settings_text"
             android:textSize="20sp" />
@@ -69,7 +77,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:padding="10dp"
+
             android:paddingTop="20dp"
             android:text="Minimale Entfernung in Metern"
             android:textColor="@color/settings_text"
@@ -90,9 +98,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="10dp"
+android:paddingBottom="20dp"
             android:textColor="@color/settings_text"
             android:textSize="20sp" />
     </LinearLayout>
+    
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="3dip"
+            android:src="@drawable/menu_divider" />
+
+    <TextView
+        android:paddingTop="10dp"
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gps_settings_note"
+        android:textColor="@color/settings_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
+</ScrollView>

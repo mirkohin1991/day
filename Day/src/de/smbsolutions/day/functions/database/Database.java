@@ -89,10 +89,6 @@ public class Database implements DatabaseInterface {
 	
 public static boolean deletePicturePath (RoutePoint routePoint) {
 	
-	
-	
-	
-	
 		
 		try {
 			mDatabase = mHelper.getWritableDatabase();

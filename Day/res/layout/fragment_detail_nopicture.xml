@@ -73,12 +73,11 @@
 
                             <ImageButton
                                 android:id="@+id/ibCamera"
-                                android:layout_width="fill_parent"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="#00000000"
                                 android:scaleType="fitEnd"
                                 android:src="@drawable/slr"
-                                android:text="Button"
                                 android:textColor="@color/white" />
                         </LinearLayout>
                     </LinearLayout>

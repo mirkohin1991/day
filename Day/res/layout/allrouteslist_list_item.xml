@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="test2"
-            android:textColor="#80669900"
+            android:textColor="@color/lightgreen"
             android:textSize="18dp" />
 
             <Button

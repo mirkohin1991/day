@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private ImageButton ibInfoSliderOut;
 	private TextView tvDistance;
 	private TextView tvDuration;
+	private TextView tvAveSpeed;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -60,6 +62,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private ViewFlipper flipper;
 	private String duration;
 	private int distanceMeter;
+	private double distanceKm;
+	private double aveSpeed;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,16 +168,29 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			addButtonClickListenerSliderOut(ibInfoSliderOut);
 		}
 
-		calcAltitude(route);
+		calcRouteFacts(route);
 		if (tvDistance == null) {
 			tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-			tvDistance.setText(String.valueOf(distanceMeter));
+			tvDistance.setText(String.valueOf("Strecke: ca. " + distanceKm
+					+ " km"));
+		} else {
+			tvDistance.setText(String.valueOf("Strecke: ca. " + distanceKm
+					+ " km"));
 		}
-		if (tvDistance == null) {
+		if (tvDuration == null) {
 			tvDuration = (TextView) view.findViewById(R.id.tvDuration);
-			tvDuration.setText(String.valueOf(duration));
+			tvDuration.setText(String.valueOf("Dauer: " + duration));
+		} else {
+			tvDuration.setText(String.valueOf("Dauer: " + duration));
 		}
-
+		if (tvAveSpeed == null) {
+			tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
+			tvAveSpeed.setText(String.valueOf("Durch. Gesch.: " + aveSpeed
+					+ " km/h"));
+		} else {
+			tvAveSpeed.setText(String.valueOf("Durch. Gesch.: " + aveSpeed
+					+ " km/h"));
+		}
 		// Closed routes cannot generate a new picture
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
@@ -188,7 +205,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 							if (mapPrepared == false) {
 								// if point added, only edit polyline and add
 								// new marker!!! TODO
-										map = route.prepareMapDetails(map, getActivity());
+								map = route.prepareMapDetails(map,
+										getActivity());
 								mapPrepared = true;
 							}
 
@@ -204,9 +222,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 		myGallery.removeAllViews();
 
-		 BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
-		 getActivity());
-		 task.execute(route);
+		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
+		task.execute(route);
+	
 
 	}
 
@@ -353,12 +371,17 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		return inFromLeft;
 	}
 
-	private void calcAltitude(Route route) {
+	private void calcRouteFacts(Route route) {
 		long startDate = 0;
 		long markerDate = 0;
 		double markerLong = 0;
 		double markerLat = 0;
-
+		float distanceAct = 0;
+		float distanceOld = 0;
+		long durationAct = 0;
+		long routeDuration = 0;
+		long index = 0;
+		
 		// Set the start Lat and Long
 		double startMarkerLat = 0;
 		double startMarkerLong = 0;
@@ -370,13 +393,20 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		locStart.setLatitude(startMarkerLat);
 		locStart.setLongitude(startMarkerLong);
 
-		long durationAct = 0;
-		int index = 0;
 		for (RoutePoint point : route.getRoutePoints()) {
+
 			if (index == 0) {
 				startDate = point.getTimestamp().getTime();
 				startMarkerLat = point.getLatitude();
 				startMarkerLong = point.getLongitude();
+				locStart.setLatitude(startMarkerLat);
+				locStart.setLongitude(startMarkerLong);
+			} else {
+				// Gets the actual timestamp
+				markerDate = point.getTimestamp().getTime();
+				durationAct = markerDate - startDate;
+				routeDuration += durationAct;
+				startDate = point.getTimestamp().getTime();
 			}
 
 			// Gets the actual lat and long
@@ -387,34 +417,54 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			locDest.setLongitude(markerLong);
 
 			// Calculates the distance
-			float distanceAct = locStart.distanceTo(locDest);
-			distanceTotal = distanceAct + locStart.distanceTo(locDest);
-			distanceTotal = distanceTotal * 1000;
+			distanceAct = distanceOld + locStart.distanceTo(locDest);
+			distanceOld = distanceAct;
+			distanceTotal = distanceAct / 1000;
 
 			// Sets the "old" lat and long as new start lat and long
 			locStart.setLatitude(markerLat);
 			locStart.setLongitude(markerLong);
 
-			// Gets the actual timestamp
-			markerDate = point.getTimestamp().getTime();
-
-			// Calculates the duration of the route
-			// ENDGÜLTIGE
-			// ZEIT*************************************************************
-			durationAct = (markerDate - startDate);
-
 			index++;
 		}
 
 		// Calculates the distance from km to meter
-		distanceMeter = (int) Math.round(distanceTotal);
-
-		// Formats the Duration from Miliseconds to an readable format
-		// ENDGÜLTIGE
-		// DAUER*************************************************************
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
-		duration = formatter.format(durationAct);
-
+		distanceKm = (double) Math.round(distanceTotal * 100.0) / 100.0;
+		aveSpeed = distanceKm / (durationAct / (1000 * 60 * 60)) % 24;
+		duration = getDuration(routeDuration);
+		// SimpleDateFormat dateFormat = new SimpleDateFormat(
+		// "yyyy/MM/dd HH:mm:ss");
+		// Date date = new Date(test);
+		// duration = dateFormat.format(date);
+		// long second = (durationAct / 1000) % 60;
+		// long minute = (durationAct / (1000 * 60)) % 60;
+		// long hour = (durationAct / (1000 * 60 * 60)) % 24;
+		// long day = (durationAct / (1000 * 60 * 60 * 24)) % 7;
+		//
+		// String seconds = String.format("%02d", second);
+		// String minutes = String.format("%02d", minute);
+		// String hours = String.format("%02d", hour);
+		// String days = String.format("%02d", day);
+		//
+		// if (minute >= 1) {
+		// if (hour >= 1) {
+		// if (day >= 1) {
+		// if (day == 1) {
+		// duration = days + " Tag, " + hours + ":" + minutes
+		// + " Stunden";
+		// } else {
+		// duration = days + " Tage, " + hours + ":" + minutes
+		// + " Stunden";
+		// }
+		//
+		// duration = hours + ":" + minutes + " Stunden";
+		// }
+		// } else {
+		// duration = minutes + ":" + seconds + " Minuten";
+		// }
+		// } else {
+		// duration = seconds + " Sekunden";
+		// }
 	}
 
 	private void unbindDrawables(View view) {
@@ -428,6 +478,18 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			}
 			((ViewGroup) view).removeAllViews();
 		}
+	}
+
+	public String getDuration(long timeseconds) {
+		long duration = timeseconds;
+		String format = String.format("%%0%dd", 2);
+		duration = duration / 1000;
+		String seconds = String.format(format, duration % 60);
+		String minutes = String.format(format, (duration % 3600) / 60);
+		String hours = String.format(format, duration / 3600);
+		String days = String.format(format, (duration /3600 / 24));
+		String time = days + ":" + hours + ":" + minutes + ":" + seconds;
+		return time;
 	}
 
 }

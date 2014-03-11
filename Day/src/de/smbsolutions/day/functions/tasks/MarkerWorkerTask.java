@@ -67,8 +67,8 @@ public class MarkerWorkerTask
 	private Context context;
 	private List<RoutePoint> routePoints;
 	private Route route;
-	private TextView tvDistance;
-	private TextView tvDuration;
+
+
 	private View view;
 	MarkerOptions markerOpt = new MarkerOptions();
 	private final WeakReference<LinkedHashMap<RoutePoint, Marker>> hashMapRef;
@@ -78,9 +78,9 @@ public class MarkerWorkerTask
 	LinkedHashMap<RoutePoint, Marker> markerMap;
 
 	PolylineOptions polylineOptions_back = new PolylineOptions().width(3)
-			.color(Color.rgb(136, 204, 0));
-	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(
-			Color.rgb(19, 88, 5));
+			.color(Color.rgb(123, 207, 168));
+	PolylineOptions polylineOptions_top = new PolylineOptions().width(8)
+			.color(Color.rgb(19, 88, 5));
 
 	public MarkerWorkerTask(GoogleMap map,
 			LinkedHashMap<RoutePoint, Marker> markerMap, Route route, Context context) {
@@ -93,17 +93,7 @@ public class MarkerWorkerTask
 
 		view = View.inflate(context, R.layout.detail_infobar, null);
 
-		tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-		tvDuration = (TextView) view.findViewById(R.id.tvDuration);
-
-		try {
-			tvDuration.setText("blub");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		tvDistance.setText("blub2");
-
+		
 		// Saving the markermap. Necessary, because the route object shall get
 		// the changes!
 		this.markerMap = markerMap;
@@ -131,7 +121,7 @@ public class MarkerWorkerTask
 
 				File pic = new File(point.getPicturePreview());
 				Uri uri = Uri.fromFile(pic);
-
+					//vielleicht eierverursacher!!!
 				Drawable d = context.getResources().getDrawable(
 						R.drawable.resizedbitmap_placeholder);
 				int bgwidth = d.getIntrinsicHeight();
@@ -174,29 +164,7 @@ public class MarkerWorkerTask
 			Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet()
 					.iterator().next();
 
-			// Gets the Timestamp of the first marker
-			long startDate = firstMarker.getKey().getTimestamp().getTime();
-
-			// Set the start Lat and Long
-			double startMarkerLat = firstMarker.getKey().getLatitude();
-			double startMarkerLong = firstMarker.getKey().getLongitude();
-
-			int distanceMeter = 0;
-
-			double altitudeTotal = 0;
-			double maxAltitude = 0;
-			double minAltitude = 0;
-			double peakAltitude = 0;
-			double altitudeOld = 0;
-			double altitudeAct = 0;
-
-			Location locStart = new Location("start");
-			Location locDest = new Location("destination");
-
-			locStart.setLatitude(startMarkerLat);
-			locStart.setLongitude(startMarkerLong);
-
-			long durationAct = 0;
+			
 
 			for (Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
 
@@ -204,47 +172,7 @@ public class MarkerWorkerTask
 				double markerLat = mapSet.getKey().getLatitude();
 				double markerLong = mapSet.getKey().getLongitude();
 
-				locDest.setLatitude(markerLat);
-				locDest.setLongitude(markerLong);
-
-				// Calculates the distance
-				float distanceAct = locStart.distanceTo(locDest);
-				float distanceTotal = distanceAct
-						+ locStart.distanceTo(locDest);
-				distanceTotal = distanceTotal * 1000;
-
-				// Calculates the distance from km to meter
-				distanceMeter = (int) Math.round(distanceTotal);
-
-				// Sets the "old" lat and long as new start lat and long
-				locStart.setLatitude(markerLat);
-				locStart.setLongitude(markerLong);
-
-				// Gets the actual timestamp
-				long markerDate = mapSet.getKey().getTimestamp().getTime();
-
-				// Calculates the duration of the route
-				// ENDGÜLTIGE
-				// ZEIT*************************************************************
-				durationAct = (markerDate - startDate);
-
-				// altitude total
-				altitudeAct = mapSet.getKey().getAltitude();
-				altitudeTotal = altitudeAct + altitudeOld;
-
-				// max altitude
-				if (altitudeAct > altitudeOld) {
-					maxAltitude = altitudeAct;
-				}
-
-				// min altitude
-				if (altitudeAct < altitudeOld) {
-					minAltitude = altitudeAct;
-				}
-
-				peakAltitude = maxAltitude - minAltitude;
-
-				altitudeOld = altitudeAct;
+			
 
 				polylineOptions_top.add(new LatLng(markerLat, markerLong));
 				polylineOptions_back.add(new LatLng(markerLat, markerLong));
@@ -282,12 +210,7 @@ public class MarkerWorkerTask
 
 			}
 
-			// Formats the Duration from Miliseconds to an readable format
-			// ENDGÜLTIGE
-			// STRECKE*************************************************************
-			Format formatter = new SimpleDateFormat("DD HH:mm:ss");
-			String duration = formatter.format(durationAct);
-
+		
 			Polyline polyline_top = map.addPolyline(polylineOptions_top);
 			Polyline polyline_back = map.addPolyline(polylineOptions_back);
 
