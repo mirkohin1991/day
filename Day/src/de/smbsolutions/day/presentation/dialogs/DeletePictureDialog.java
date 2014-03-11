@@ -59,7 +59,7 @@ public class DeletePictureDialog extends DialogFragment {
 								route.deletePictureDB(point);
 
 							}
-
+							dismiss();
 							mCallback.onDeletePicture(route);
 
 						} catch (Exception e) {

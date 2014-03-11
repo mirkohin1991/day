@@ -5,14 +5,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:background="@color/lightgreen"
-        android:orientation="vertical"
-       >
+        android:orientation="vertical" >
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -28,7 +26,7 @@
                 android:layout_weight="1" >
             </FrameLayout>
 
-       <FrameLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1" >
@@ -77,7 +75,6 @@
                                 android:id="@+id/ibCamera"
                                 android:layout_width="fill_parent"
                                 android:layout_height="match_parent"
-                               
                                 android:background="#00000000"
                                 android:scaleType="fitEnd"
                                 android:src="@drawable/slr"

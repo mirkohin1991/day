@@ -36,7 +36,7 @@
 						public void onClick(DialogInterface dialog, int which) {
 							// The last route is always the active one
 							routeList.getlastRoute().closeRoute();
-							
+							dismiss();
 							//Call the communication interface to start the follow-on fragment
 							mCallback.onStopRoute();
 						}

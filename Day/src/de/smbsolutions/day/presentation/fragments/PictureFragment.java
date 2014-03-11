@@ -24,23 +24,20 @@ import de.smbsolutions.day.functions.tasks.BitmapManager;
 
 public class PictureFragment extends android.support.v4.app.Fragment {
 
-
 	private Bundle data;
 	private View view;
 	private Configuration config;
-	private static Activity context;
+
 	private MainCallback mCallback;
-	
+
 	private Route route;
 	private RoutePoint routePoint;
 	private ImageView pictureView;
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		config = getResources().getConfiguration();
-		
+
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
 		routePoint = (RoutePoint) data.getParcelable("point");
@@ -51,8 +48,6 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		return view;
 
 	}
-
-	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -67,78 +62,33 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 	}
 
-
-
 	public void onResume() {
 		super.onResume();
 
-		context = getActivity();
+		initializeFragmentPortrait();
+
+	}
 
 
-		// checking device orientation for layout
-		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			
 
-			initializeFragmentLandscape();
+	public void initializeFragmentPortrait() {
+		File targetDirector;
 
-		} else {
+		targetDirector = new File(routePoint.getPicturePreview());
+		Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
+				targetDirector.getPath(), 220, 220);// richtige größe?
 
-			
-
-			initializeFragmentPortrait();
-
+		if (bm != null) {
+			pictureView.setImageBitmap(bm);
 		}
 
 	}
 
-	public void initializeFragmentLandscape() {
-
-		// map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-		// LinearLayout linleaLayout = (LinearLayout) view
-		// .findViewById(R.id.LinearLayoutcR);
-		// linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-		// new OnGlobalLayoutListener() {
-		//
-		// @Override
-		// public void onGlobalLayout() {
-		//
-		// map = routelist.getListRoutes().get(index).prepareMap(map,
-		// getActivity(), false);
-		//
-		// }
-		// });
-
-	}
-
-	public void initializeFragmentPortrait() {
-		File targetDirector;
-		
-		
-		
-		targetDirector = new File(routePoint.getPicturePreview
-				());
-		Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-				targetDirector.getPath(),220, 220);// richtige größe?
-		
-	    if(bm != null) {
-		pictureView.setImageBitmap(bm);
-	    }
-
-		
-	
-	}
-
-		
-
-	
-    //BRAUCHEN WIR DAS?
+	// BRAUCHEN WIR DAS?
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
 	}
-
-
-
 
 }

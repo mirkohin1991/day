@@ -10,9 +10,6 @@ import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public interface MainCallback {
-	// Item in MainFragment is selected
-	public void onItemSelected(int position);
-
 	// Dialog for opening a new route
 	public void onOpenDialogNewRoute(RouteList routeList);
 
@@ -49,17 +46,15 @@ public interface MainCallback {
 	public void onSliderClick(Fragment fragment);
 
 	public void onRefreshMap();
-	
-	
-	
-	//SERVICE START / STOP
-	
-	public void onStartTrackingService (RouteList routeList, Route route);
-	
+
+	// SERVICE START / STOP
+
+	public void onStartTrackingService(RouteList routeList, Route route);
+
 	// SERVICE HAS TO STORE PICTURE
-	public void onPictureTaken (Route route, Uri fileUri, File small_picture );
-	
-	//SERVICE HAS TO BE STOPPED AGAIN WHEN NO ROUTE WAS CREATED
+	public void onPictureTaken(Route route, Uri fileUri, File small_picture);
+
+	// SERVICE HAS TO BE STOPPED AGAIN WHEN NO ROUTE WAS CREATED
 	public void onDialogCreateCanceled();
 
 }

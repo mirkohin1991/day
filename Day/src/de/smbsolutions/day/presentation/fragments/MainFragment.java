@@ -5,10 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,10 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +25,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
@@ -47,26 +41,24 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private TextView txtViewPic;
 	private TextView txtViewDate;
 	private ListView meineListView;
-	private Button startButton;
-	// private Button btnStopRoute;
+
 	private Button btnContinueRoute;
 	private Button btnCreateRoute;
 	private ViewFlipper vfNewOrCurrent;
-	private ViewFlipper vfPauseOrRun;
-	private Configuration config;
+	// private ViewFlipper vfPauseOrRun;
 	private Route sel_Route;
 	private int index = 0;
 	private MainCallback mCallback;
-
+	private List<AllRoutesListElement> meineListe;
 	private boolean flag_first = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Database.getInstance(getActivity());
+
 		routeList = new RouteList();
 		// Configuration for device orientation and shit
-		config = getResources().getConfiguration();
+
 		view = inflater.inflate(R.layout.fragment_main, container, false);
 		return view;
 	}
@@ -88,20 +80,14 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		FragmentManager fm = getChildFragmentManager();
-		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
+		if (mapFragment == null) {
+			mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 			if (mapFragment == null) {
 				mapFragment = SupportMapFragment.newInstance();
 				fm.beginTransaction().replace(R.id.map, mapFragment).commit();
 			}
-		} else {
-			mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
-			if (mapFragment == null) {
-				mapFragment = SupportMapFragment.newInstance();
-				fm.beginTransaction().replace(R.id.map, mapFragment).commit();
-			}
 		}
 	}
 
@@ -110,24 +96,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		// TODO Auto-generated method stub
 		super.onResume();
 
-		// checking device orientation for layout
-		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-			if (map == null) {
-				map = mapFragment.getMap();
-			}
-
-			initializeFragmentLandscape();
-
-		} else {
-
-			if (map == null) {
-				map = mapFragment.getMap();
-			}
-
-			initializeFragmentPortrait();
+		if (map == null) {
+			map = mapFragment.getMap();
 
 		}
+
+		initializeFragmentPortrait();
 
 	}
 
@@ -138,38 +112,32 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			// viewflipper are used to change views at the same position
 			// --> Flipper to change between current route view and create route
 			// view
+
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
 
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
-
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setPadding(0, 70, 0, 0);
-			// get views from fragment
+
 			meineListView = (ListView) view.findViewById(R.id.listView1);
-			List<AllRoutesListElement> meineListe = new ArrayList<AllRoutesListElement>();
-			
-			
-	
-			
-			
-			
+
+			meineListe = new ArrayList<AllRoutesListElement>();
 			for (Route route : routeList.getListRoutes()) {
 				// Only completed routes shall appear in the "recent routes"
 				// list
 				if (route.isActive() == false) {
 					meineListe.add(new AllRoutesListElement(route));
-					
 				}
 			}
-			
-			
 			Collections.reverse(meineListe);
-			
 			// Set the list view adapter
 			meineListView.setAdapter(new AllRoutesListAdapter(getActivity(),
 					R.id.listView1, meineListe, mCallback));
 
 			meineListView.setItemChecked(index, true);
+
+			// get views from fragment
+
 			sel_Route = routeList.getListRoutes().get(index);
 
 			changeDisplayedRouteDesc(routeList.getlastRoute());
@@ -193,31 +161,23 @@ public class MainFragment extends android.support.v4.app.Fragment {
 						.findViewById(R.id.imagebuttonCreate);
 			}
 
-			LinearLayout linleaLayout = (LinearLayout) view
-					.findViewById(R.id.LinearLayout1);
-			linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+			view.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
 
 						@Override
 						public void onGlobalLayout() {
 
-							if (flag_first == true) {
-
-								map = routeList.getlastRoute()
-										.prepareMapPreview(map, getActivity());
-
-								flag_first = false;
-							}
+							map = routeList.getlastRoute().prepareMapPreview(
+									map);
 
 							addListitemListender(meineListView);
-							// addButtonClickListener(startButton);
 
 							// Child == 1 --> the "active route item" layout is
 							// displayed
 							if (vfNewOrCurrent.getDisplayedChild() == 1) {
 
 								addButtonClickListenerContinue(btnContinueRoute);
-
+								// addButtonClickListenerStop(btnStopRoute);
 
 								// Getting the whole line (including the two
 								// buttons)
@@ -243,45 +203,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			Toast.makeText(getActivity(),
 					"Fehler Initialisierung Fragment: " + e.getMessage(),
 					Toast.LENGTH_LONG).show();
-		}
-
-	}
-
-	public void initializeFragmentLandscape() {
-		// portrait
-		try {
-			// landscape
-			// get views from fragment
-			final ListView meineListView = (ListView) view
-					.findViewById(R.id.listView1);
-			List<String> meineListe = new ArrayList<String>();
-			for (Route route : routeList.getListRoutes()) {
-				meineListe.add(route.getRouteName());
-			}
-
-			changeDisplayedRouteDesc(routeList.getlastRoute());
-			ListAdapter listenAdapter = new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_1, meineListe);
-			meineListView.setAdapter(listenAdapter);
-			map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-			LinearLayout linleaLayout = (LinearLayout) view
-					.findViewById(R.id.linlayoutland);
-			linleaLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
-
-						@Override
-						public void onGlobalLayout() {
-
-							map = routeList.getlastRoute().prepareMapPreview(
-									map, getActivity());
-							addListitemListender(meineListView);
-							// LandscapeButtonCLick
-						}
-					});
-
-		} catch (Exception e) {
-			Log.wtf("mf_land", e.getMessage());
 		}
 
 	}
@@ -355,7 +276,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				}
 
-				map = sel_Route.prepareMapPreview(map, getActivity());
+				map = sel_Route.prepareMapPreview(map);
 
 				changeDisplayedRouteDesc(sel_Route);
 
@@ -398,7 +319,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 				}
 
-				map = sel_Route.prepareMapPreview(map, getActivity());
+				map = sel_Route.prepareMapPreview(map);
 
 				changeDisplayedRouteDesc(sel_Route);
 			}
@@ -408,11 +329,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int index, long arg3) {
-			
-				
-				
 				// Call Interface to handle the deletion of the route
-				mCallback.onLongItemSelected(routeList, meineListView.getCount() - ( index + 1 ));
+				mCallback.onLongItemSelected(routeList,
+						meineListView.getCount() - (index + 1));
 				return false;
 
 			}
@@ -422,52 +341,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	public void changeDisplayedRouteDesc(Route route) {
 		txtViewPic = (TextView) view.findViewById(R.id.txtViewPic);
 		txtViewPic.setText(route.getRouteName());
-
 		txtViewDate = (TextView) view.findViewById(R.id.txtViewDatePreview);
 		txtViewDate.setText(route.getDate());
 
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-	}
-
-	@Override
-	public void onDestroyView() {
-		// TODO Auto-generated method stub
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onDetach() {
-		// TODO Auto-generated method stub
-		super.onDetach();
-	}
-
-	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
+
 		super.onPause();
-	}
-
-	@Override
-	public void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
 	}
 
 }
