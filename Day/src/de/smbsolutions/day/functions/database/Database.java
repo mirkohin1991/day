@@ -28,6 +28,8 @@ public class Database implements DatabaseInterface {
 	private Database(Context context) {
 
 		mHelper = new DatabaseManager(context);
+		
+		Database.createDefaultSettings();
 
 		// saving the current routeID
 		lastRouteID = selectIDlastRoute();
@@ -166,7 +168,7 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 		String[] db_columns = { "_ID" };
 		int lastRecord;
 
-		mDatabase = mHelper.getReadableDatabase();
+		mDatabase = mHelper.getWritableDatabase();
 
 		// Check if an entry exists. Ordered descending to get the latest route
 		db_cursor = mDatabase.query("route_points", // table
@@ -431,6 +433,48 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 		
 		mDatabase.close();
 
+	}
+	
+	
+	public static void createDefaultSettings() {
+//		private static final String INITIALSETTINGS_INSERT = " INSERT INTO settings (name, value) VALUES "
+//		+ "  ('tracking', 1 ), "
+//		+ "  ('tracking_interval', 10000),"
+//		+ "  ('tracking_meter', 10),"
+//		+ "  ('map_type', 2 )," 
+//		+ "  ('show_in_gal', 1 )";
+		
+		mDatabase = mHelper.getWritableDatabase();
+		
+		ContentValues setting_values = new ContentValues();
+		// Zum Testen erstmal alle dem gleichen Record
+		
+		setting_values.put("name", "tracking");
+		setting_values.put("value", 1);
+		mDatabase.insert("settings", null, setting_values);
+		setting_values.clear();
+		
+		setting_values.put("name", "tracking_interval");
+		setting_values.put("value", 10000);
+		mDatabase.insert("settings", null, setting_values);
+		setting_values.clear();
+		
+		setting_values.put("name", "tracking_meter");
+		setting_values.put("value", 10);
+		mDatabase.insert("settings", null, setting_values);
+		setting_values.clear();
+		
+		setting_values.put("name", "map_type");
+		setting_values.put("value", 2);
+		mDatabase.insert("settings", null, setting_values);
+		setting_values.clear();
+		
+		setting_values.put("name", "show_in_gal");
+		setting_values.put("value", 1);
+		mDatabase.insert("settings", null, setting_values);
+		
+		
+		mDatabase.close();
 	}
 
 	public static void createDefaultRoutes() {

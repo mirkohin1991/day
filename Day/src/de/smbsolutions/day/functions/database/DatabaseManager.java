@@ -13,12 +13,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	private static final String ROUTE_INFO_CREATE = "CREATE TABLE route_info ( _id INTEGER NOT NULL, name TEXT NOT NULL, date TEXT NOT NULL, active INTEGER, PRIMARY KEY (_id) ) ";
 	private static final String SETTINGS_CREATE = "CREATE TABLE settings (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, value INTEGER NOT NULL ) ";
 
-	private static final String INITIALSETTINGS_INSERT = " INSERT INTO settings (name, value) VALUES "
-			+ "  ('tracking', 1 ), "
-			+ "  ('tracking_interval', 10000),"
-			+ "  ('tracking_meter', 10),"
-			+ "  ('map_type', 2 )," 
-			+ "  ('show_in_gal', 1 )";
+//	private static final String INITIALSETTINGS_INSERT = " INSERT INTO settings (name, value) VALUES "
+//			+ "  ('tracking', 1 ), "
+//			+ "  ('tracking_interval', 10000),"
+//			+ "  ('tracking_meter', 10),"
+//			+ "  ('map_type', 2 )," 
+//			+ "  ('show_in_gal', 1 )";
 
 	private static final String CLASS_DROP = "DROP TABLE IF EXISTS routes";
 
@@ -35,7 +35,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		db.execSQL(ROUTES_CREATE);
 		db.execSQL(ROUTE_INFO_CREATE);
 		db.execSQL(SETTINGS_CREATE);
-		db.execSQL(INITIALSETTINGS_INSERT);
+	//	db.execSQL(INITIALSETTINGS_INSERT);
+//		db.rawQuery(INITIALSETTINGS_INSERT, null);
 
 	}
 

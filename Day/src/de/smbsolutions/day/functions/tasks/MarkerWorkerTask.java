@@ -298,11 +298,11 @@ public class MarkerWorkerTask
 			addMarkerClickListener(map);
 		}
 		hashMapRef.clear();
-		markerMap.clear();
-		bitmapMap.clear();
+		//markerMap.clear();
+		//bitmapMap.clear();
 		context = null;
 		view = null;
-		route = null;
+		// route = null;
 
 	}
 
