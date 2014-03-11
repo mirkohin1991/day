@@ -36,11 +36,10 @@ public class Route implements Parcelable {
 	private boolean active;
 	private int id;
 
-	private PolylineOptions polylineOptions = new PolylineOptions();
-	private PolylineOptions polylineOptions_back = new PolylineOptions().width(
-			3).color(Color.rgb(136, 204, 0));
-	private PolylineOptions polylineOptions_top = new PolylineOptions()
-			.width(8).color(Color.rgb(19, 88, 5));
+	PolylineOptions polylineOptions_back = new PolylineOptions().width(3)
+			.color(Color.rgb(123, 207, 168));
+	PolylineOptions polylineOptions_top = new PolylineOptions().width(8)
+			.color(Color.rgb(19, 88, 5));
 
 	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
