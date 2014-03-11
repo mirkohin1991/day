@@ -64,7 +64,7 @@ public class Route implements Parcelable {
 		// Get the last route id and 1 to get the new id
 		id = Database.getlastRouteID() + 1;
 		date = today;
-active = true;
+		active = true;
 
 		// If the Database insert fails, the active flag is deleted
 		if (Database.createNewRoute(this) != true) {
@@ -80,7 +80,7 @@ active = true;
 	public void closeRoute() {
 
 		if (Database.closeRoute(id) == true) {
-				active = false;
+			active = false;
 		}
 
 	}
@@ -137,7 +137,8 @@ active = true;
 	}
 
 	@SuppressWarnings("unchecked")
-	public GoogleMap prepareMapDetails(final GoogleMap mapImport, Context context) {
+	public GoogleMap prepareMapDetails(final GoogleMap mapImport,
+			Context context) {
 
 		// saving the map
 		this.map = mapImport;
@@ -167,8 +168,8 @@ active = true;
 
 			}
 
-
-			final MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap, this, context);
+			final MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap,
+					this, context);
 
 			task.execute(this.routePoints);
 
