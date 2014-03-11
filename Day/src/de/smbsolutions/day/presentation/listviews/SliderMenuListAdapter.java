@@ -1,5 +1,6 @@
 package de.smbsolutions.day.presentation.listviews;
 
+
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.initialization.Device;
 
 public class SliderMenuListAdapter extends BaseAdapter {
 
@@ -51,6 +53,9 @@ public class SliderMenuListAdapter extends BaseAdapter {
 
 			convertView = mInflater.inflate(R.layout.slidermenu_list_item, null);
 		}
+		
+		
+		
 
 		ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
 		TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
@@ -65,29 +70,95 @@ public class SliderMenuListAdapter extends BaseAdapter {
 
 		} else {
 			divider.setBackgroundColor(Color.WHITE);
-//			
-//
-//		RelativeLayout.LayoutParams layout_description = new RelativeLayout.LayoutParams(
-//					10, 5);
-//		slider_item_layout.setLayoutParams(layout_description);
 		}
+		
+		
 
 		if (txtTitle.getText().equals("Einstellungen")) {
 
 			convertView.setEnabled(false);
 			txtTitle.setTypeface(null, Typeface.BOLD);
 			
-			// REMOVE ICON
-//			RelativeLayout slider_item_layout = (RelativeLayout) convertView
-//					.findViewById(R.id.layout_slidermenu_item);		
-//			slider_item_layout.removeView(imgIcon);
-
 		}
 		
 		if (txtTitle.getText().equals("Infos zur App")) {
 			txtTitle.setTypeface(null, Typeface.BOLD);
 		}
 		
+		
+
+		//initally set all elements white
+		txtTitle.setTextColor(Color.WHITE);
+		imgIcon.setImageResource(R.drawable.map_normal);
+		
+		
+		boolean selected = false;
+		String tag = (String) convertView.getTag();
+		if (tag != null) {
+			if (tag.contains("selected")) {
+			
+			selected = true;
+		}
+		} 
+			
+	   
+		switch (Device.getAPP_SETTINGS().getMapType()) {
+		case 1:
+		 if (position == 0)
+		 {   
+			 
+			 if ( selected == true) {
+			txtTitle.setTextColor(Color.WHITE);
+			imgIcon.setImageResource(R.drawable.map_normal);
+			 convertView.setTag(null);
+			 } else {
+				 
+			 imgIcon.setImageResource(R.drawable.green_map_normal);
+			 txtTitle.setTextColor(Color.parseColor("#7bcfa8"));
+			
+			 
+			 }
+		 }
+			break;
+			
+		case 2:
+			if (position == 1)
+			 {
+				 
+			 if ( selected == true) {
+				txtTitle.setTextColor(Color.WHITE);
+				imgIcon.setImageResource(R.drawable.map_satelite);
+				 convertView.setTag(null);
+				 } else {
+			imgIcon.setImageResource(R.drawable.green_map_satelite);
+			txtTitle.setTextColor(Color.parseColor("#7bcfa8"));
+			convertView.setTag(null);
+			 }
+			 }
+			break;
+			
+			
+		case 3:
+			if (position == 2)
+			 {
+				 
+				 if ( selected == true) {
+						txtTitle.setTextColor(Color.WHITE);
+						 imgIcon.setImageResource(R.drawable.map_terrain);
+						 convertView.setTag(null);
+				 } else {
+			imgIcon.setImageResource(R.drawable.green_map_terrain);
+			txtTitle.setTextColor(Color.parseColor("#7bcfa8"));
+			convertView.setTag(null);
+			 }
+			 }
+	break;
+
+		default:
+			break;
+		}
+		
+
 
 		return convertView;
 	}

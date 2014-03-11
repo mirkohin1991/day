@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
@@ -183,6 +187,24 @@ public class SliderMenu {
 			// display view for selected nav drawer item
 
 			displayView(position);
+			
+			view.setTag("selected");
+			ImageView imgIcon = (ImageView) view.findViewById(R.id.icon);
+			TextView txtTitle = (TextView) view.findViewById(R.id.title);
+			
+			
+//			if (position == 0) {
+//				imgIcon.setImageResource(R.drawable.map_normal);
+//				 txtTitle.setTextColor(Color.WHITE);
+//				
+//			} else if (position == 1){
+//				imgIcon.setImageResource(R.drawable.map_satelite);
+//				txtTitle.setTextColor(Color.WHITE);
+//			}else if (position == 2) {
+//				imgIcon.setImageResource(R.drawable.map_terrain);
+//				txtTitle.setTextColor(Color.WHITE);
+//			}
+				
 		}
 	}
 
@@ -213,7 +235,7 @@ public class SliderMenu {
 			Device.getAPP_SETTINGS().setMapType(2);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			mDrawerLayout.closeDrawer(mDrawerList);			
 			mCallback.onRefreshMap();
 
 			break;

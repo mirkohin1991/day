@@ -92,23 +92,16 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		// TODO Auto-generated method stub
 		if (myGallery != null) {
 			myGallery.removeAllViews();
-			myGallery = null;
 		}
 
 		unbindDrawables(view);
 
 		if (map != null) {
 			map.clear();
-			map = null;
-			mapFragment = null;
 
 		}
-		flipper = null;
-		view = null;
-		route = null;
 
 		super.onDestroy();
-
 	}
 
 	@Override
@@ -147,7 +140,6 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setMyLocationEnabled(true);
 			map.setBuildingsEnabled(true);
-			
 		}
 
 		initializeFragmentPortrait();
@@ -196,9 +188,8 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 							if (mapPrepared == false) {
 								// if point added, only edit polyline and add
 								// new marker!!! TODO
-								map = route.prepareMapDetails(map, getActivity());
+										map = route.prepareMapDetails(map, getActivity());
 								mapPrepared = true;
-
 							}
 
 						}
@@ -213,9 +204,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 
 		myGallery.removeAllViews();
 
-		final BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
-				getActivity());
-		task.execute(route);
+		 BitmapWorkerTask task = new BitmapWorkerTask(myGallery,
+		 getActivity());
+		 task.execute(route);
 
 	}
 
@@ -334,7 +325,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 				}
 
 			} else {
-				route.prepareMapDetails(map, getActivity());
+				route.prepareMapPreview(map);
 			}
 
 		}

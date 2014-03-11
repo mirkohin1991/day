@@ -76,27 +76,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	private boolean flag_first = false;
 
-	// MUSS FÜR SERVICE WOHL LEER SEIN!
-	// private LocationTrackerPLAYSERVICE(Activity activity) {
-	//
-	// this.activity = activity;
-	// mCallback = (MainCallback) activity;
-	//
-	// // // Create the LocationRequest object
-	// // mLocationRequest = LocationRequest.create();
-	// // // Use high accuracy
-	// // mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-	// // // Set the update interval to 5 seconds
-	// // mLocationRequest.setInterval(UPDATE_INTERVAL);
-	// // // Set the fastest update interval to 1 second
-	// // mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-	// //
-	// // /*
-	// // * Create a new location client, using the enclosing class to handle
-	// // * callbacks.
-	// // */
-	// // mLocationClient = new LocationClient(activity, this, this);
-	// }
+
 
 	public void saveActivity(Activity activity) {
 		this.activity = activity;
@@ -107,14 +87,6 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	public void setRoute(Route route) {
 		this.route = route;
 	}
-
-	// BRAUCHEN WIR BEI SERVICE EVENTUELL NICHT
-	// public static LocationTrackerPLAYSERVICE getInstance(Activity activity) {
-	//
-	// if (tracker == null)
-	// tracker = new LocationTrackerPLAYSERVICE(actty);
-	// return tracker;
-	// }
 
 	private void startLocationTracking() {
 

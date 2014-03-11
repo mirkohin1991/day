@@ -170,6 +170,7 @@ public class Route implements Parcelable {
 
 			final MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap,
 					this, context);
+
 			task.execute(this.routePoints);
 
 		} else {
