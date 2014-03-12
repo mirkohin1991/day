@@ -433,9 +433,10 @@ containing a value of this type.
         public static final int slidermenu_list_item=0x7f030011;
     }
     public static final class string {
-        public static final int aboutTheApp_description=0x7f060028;
+        public static final int aboutTheApp_description=0x7f060029;
         public static final int aboutTheApp_developer=0x7f060027;
         public static final int action_settings=0x7f06001b;
+        public static final int app_id=0x7f060028;
         public static final int app_name=0x7f06001a;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
@@ -536,7 +537,7 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f060013;
         /**  Content Description 
          */
-        public static final int desc_list_item_icon=0x7f060029;
+        public static final int desc_list_item_icon=0x7f06002a;
         public static final int gps_settings_note=0x7f060023;
         public static final int hello_world=0x7f06001c;
         public static final int kamera_oeffnen=0x7f06001f;

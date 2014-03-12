@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,12 +12,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
@@ -37,6 +40,8 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	private ImageView pictureView;
 	private ImageButton btn_sharePicture;
 	private ImageButton btn_deletePicture;
+	
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,8 +67,17 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-		
+				
+
+				
+				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+				File bitmapFile;
+				bitmapFile = new File(routePoint.getPicture());
+				Uri screenshotUri = Uri.fromFile(bitmapFile);
+				sharingIntent.setType("image/*");
+				sharingIntent.putExtra(Intent.EXTRA_TEXT, "Aufgenommen mit 'Hike', der interaktiven Wander-App!");
+				sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+				startActivity(Intent.createChooser(sharingIntent, "Bild teilen mit"));
 			}
 		});
 		
@@ -92,14 +106,15 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		}
 
 	}
-
+ 
+	@Override
 	public void onResume() {
 		super.onResume();
-
+		 
 		initializeFragmentPortrait();
 
 	}
-
+	
 
 
 	public void initializeFragmentPortrait() {
@@ -115,11 +130,15 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	// BRAUCHEN WIR DAS?
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	    super.onActivityResult(requestCode, resultCode, data);
 
+	 
 	}
+
+
+	
 
 }
