@@ -103,6 +103,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		}
 
 		initializeFragmentPortrait();
+		
+		
+		if (routeList.isOpenRoute())
+		{
+		mCallback.onActiveRouteNoService(routeList.getlastRoute());
+		}
 
 	}
 
