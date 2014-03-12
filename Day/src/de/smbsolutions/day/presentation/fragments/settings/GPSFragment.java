@@ -34,8 +34,11 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 		actSec = (TextView) rootView.findViewById(R.id.actSec);
 		actMeter = (TextView) rootView.findViewById(R.id.actMeter);
 		
-		final int timeSec = Device.getAPP_SETTINGS().getTrackingFrequency() / 1000;
-		final int meter = Device.getAPP_SETTINGS().getTrackingMeter();
+//		final int timeSec = Device.getAPP_SETTINGS().getTrackingFrequency() / 1000;
+//		final int meter = Device.getAPP_SETTINGS().getTrackingMeter();
+		
+		final int timeSec = Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 1000;
+		final int meter = Database.getSettingValue(Database.SETTINGS_TRACKING_METER);
 		
 		Switch switchGPSOnOff = (Switch) rootView.findViewById(R.id.switchGPSOnOff);
 		final SeekBar seekBarFrequency = (SeekBar) rootView.findViewById(R.id.seekBarFrequency);
@@ -43,14 +46,14 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 
 
 		// Wert (On/Off) aus der Datenbank abrufen
-		if (Device.getAPP_SETTINGS().getTrackingStatus() == 1) {
+//		if (Device.getAPP_SETTINGS().getTrackingStatus() == 1) {
+		if(Database.getSettingValue(Database.SETTINGS_TRACKING) == 1){
 
 			switchGPSOnOff.setChecked(true);
 			seekBarFrequency.setEnabled(true);
 			seekBarFrequencyMeter.setEnabled(true);
 			
 			actMeter.setText("Aktuell: " + meter + " Meter");
-			seekBarFrequencyMeter.setProgress(meter);
 
 			if (timeSec >= 60) {
 				int i = timeSec / 60;
@@ -76,10 +79,14 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						if (isChecked) {
-							Device.getAPP_SETTINGS().setTrackingStatus(1);
+//							Device.getAPP_SETTINGS().setTrackingStatus(1);
+							Database.changeSettingValue(Database.SETTINGS_TRACKING, 1);
 							
-							final int timeSec = Device.getAPP_SETTINGS().getTrackingFrequency() / 1000;
-							final int meter = Device.getAPP_SETTINGS().getTrackingMeter();
+//							final int timeSec = Device.getAPP_SETTINGS().getTrackingFrequency() / 1000;
+//							final int meter = Device.getAPP_SETTINGS().getTrackingMeter();
+							
+							final int timeSec = Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 1000;
+							final int meter = Database.getSettingValue(Database.SETTINGS_TRACKING_METER);
 							
 							seekBarFrequency.setEnabled(true);
 							seekBarFrequencyMeter.setEnabled(true);
@@ -103,7 +110,8 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 
 							}
 						} else {
-							Device.getAPP_SETTINGS().setTrackingStatus(0);
+//							Device.getAPP_SETTINGS().setTrackingStatus(0);
+							Database.changeSettingValue(Database.SETTINGS_TRACKING, 0);
 							seekBarFrequency.setEnabled(false);
 							seekBarFrequencyMeter.setEnabled(false);
 							actSec.setText("Aktuell: GPS ausgeschaltet");
@@ -114,7 +122,7 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 				});
 		
 		
-		seekBarFrequencyMeter.setProgress(meter - 5);
+		seekBarFrequencyMeter.setProgress(meter - 10);
 		
 		if (timeSec >= 60) {
 			int i = timeSec / 60;
@@ -161,18 +169,18 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 							if(i == 0)
 							{
 								i = i + 60000;
-								Device.getAPP_SETTINGS().setTrackingFrequency(i);
-								//Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,(i));
+//								Device.getAPP_SETTINGS().setTrackingFrequency(i);
+								Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,(i));
 							}
 							else{
-								Device.getAPP_SETTINGS().setTrackingFrequency(i);
-								//Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,(i));
+//								Device.getAPP_SETTINGS().setTrackingFrequency(i);
+								Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,(i));
 						
 							}
 						} else
-							Device.getAPP_SETTINGS().setTrackingFrequency(frequency * 1000);
+//							Device.getAPP_SETTINGS().setTrackingFrequency(frequency * 1000);
 
-							//Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,f);
+							Database.changeSettingValue(Database.SETTINGS_TRACKING_INTERVAL,frequency * 1000);
 					}
 
 				});
@@ -185,7 +193,7 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 			public void onProgressChanged(SeekBar seekBarMeter,
 					int progress, boolean fromUser) {
 				
-				frequencyMeter = progress + 5;
+				frequencyMeter = progress + 10;
 
 				actMeter.setText("Aktuell: " + frequencyMeter + " Meter");
 
@@ -197,8 +205,8 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 
 			public void onStopTrackingTouch(SeekBar seekBarMeter) {
 				
-				//Database.changeSettingValue(Database.SETTINGS_TRACKING_METER, frequencyMeter);
-				Device.getAPP_SETTINGS().setTrackingFrequency(frequencyMeter);
+				Database.changeSettingValue(Database.SETTINGS_TRACKING_METER, frequencyMeter);
+//				Device.getAPP_SETTINGS().setTrackingFrequency(frequencyMeter);
 				
 			}
 

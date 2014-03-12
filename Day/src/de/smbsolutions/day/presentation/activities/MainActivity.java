@@ -50,7 +50,6 @@ import de.smbsolutions.day.presentation.fragments.PictureFragment;
 
 public class MainActivity extends FragmentActivity implements MainCallback {
 
-	private List<WeakReference<Fragment>> refFragments = new ArrayList<WeakReference<Fragment>>();
 	private final String TAG_DETAILFRAGMENT = "DETAIL";
 	private final String TAG_MAINFRAGMENT = "MAIN";
 	private final String TAG_PICTUREFRAGMENT = "PICTURE";
@@ -79,6 +78,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		// Get Singetons
 		Database.getInstance(this);
@@ -110,8 +110,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		slidermenu.getNavDrawerItems();
 		slidermenu.getAdapter();
 		slidermenu.getActionBarDrawerToggle();
-
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		if (savedInstanceState == null) {
 			MainFragment main_frag = new MainFragment();
@@ -381,7 +379,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		pictureFrag.setArguments(bundle);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
+		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT).addToBackStack(TAG_PICTUREFRAGMENT)
 				.commit();
 		CURRENT_FRAGMENT = TAG_PICTUREFRAGMENT;
 	}
@@ -389,15 +387,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onAttachFragment(Fragment fragment) {
 
-		refFragments.add(new WeakReference<Fragment>(fragment));
-
 		super.onAttachFragment(fragment);
 	}
 
 	@Override
 	public void onBackPressed() {
-		recycleFragments();
-
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 		} else {
@@ -441,22 +435,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				}
 			}
 		}
-
-	}
-
-	private void recycleFragments() {
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-		for (WeakReference<Fragment> ref : refFragments) {
-			Fragment fragment = ref.get();
-			if (fragment != null && !(fragment instanceof MainFragment)) {
-
-				ft.remove(fragment);
-			}
-		}
-
-		ft.commit();
 
 	}
 

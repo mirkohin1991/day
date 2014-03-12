@@ -24,7 +24,7 @@
             
             android:text="GPS"
             android:textColor="@color/settings_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/h1" />
 
         <Switch
             android:id="@+id/switchGPSOnOff"
@@ -45,7 +45,16 @@
         android:orientation="vertical"
         android:visibility="visible" >
 
-        <TextView android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1" android:padding="10dp" android:text="GPS Wiederholungsrate" android:textColor="@color/settings_text" android:textSize="20sp" /><SeekBar
+        <TextView 
+            android:layout_width="wrap_content" 
+            android:layout_height="0dp" 
+            android:layout_weight="1" 
+
+            android:text="GPS Wiederholungsrate" 
+            android:textColor="@color/settings_text" 
+            android:textSize="@dimen/h2" />
+        
+        <SeekBar
             android:id="@+id/seekBarFrequency"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -63,7 +72,7 @@
 
             android:paddingBottom="20dp"
             android:textColor="@color/settings_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/h2" />
 
         <ImageView
             android:layout_width="fill_parent"
@@ -81,7 +90,7 @@
             android:paddingTop="20dp"
             android:text="Minimale Entfernung in Metern"
             android:textColor="@color/settings_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/h2" />
 
         <SeekBar
             android:id="@+id/SeekBarFrequencyMeter"
@@ -98,9 +107,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-android:paddingBottom="20dp"
+			android:paddingBottom="20dp"
             android:textColor="@color/settings_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/h2" />
     </LinearLayout>
     
     <ImageView
@@ -115,7 +124,8 @@ android:paddingBottom="20dp"
         android:layout_height="wrap_content"
         android:text="@string/gps_settings_note"
         android:textColor="@color/settings_text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text"/>
 
 </LinearLayout>
 </ScrollView>

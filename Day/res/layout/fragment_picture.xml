@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
-    <ImageView
-        android:id="@+id/imageViewFullPicture"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </ImageView>
 
+    
+    
+    <ImageView 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:id="@+id/imageViewFullPicture">
+   
+
+</ImageView>
+
+ 
 </FrameLayout>

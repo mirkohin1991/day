@@ -80,7 +80,7 @@
                         android:layout_gravity="left"
                         android:layout_weight="1.5"
                         android:orientation="horizontal"
-                        android:paddingBottom="20dp" >
+                        android:paddingBottom="30dp" >
 
                         <ViewFlipper
                             android:id="@+id/flipper"
@@ -107,13 +107,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="fill_parent"
                                 android:layout_weight="20"
-                                android:paddingBottom="10dp" >
+ 								android:paddingBottom="11dp" >
                             </LinearLayout>
 
                             <ImageButton
                                 android:id="@+id/ibCamera"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:background="#00000000"
                                 android:scaleType="fitEnd"
