@@ -31,7 +31,6 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 	private Bundle data;
 	private View view;
-	private Configuration config;
 
 	private MainCallback mCallback;
 
@@ -40,7 +39,7 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	private ImageView pictureView;
 	private ImageButton btn_sharePicture;
 	private ImageButton btn_deletePicture;
-	
+	private File pictureFile;
 
 
 	@Override
@@ -68,15 +67,11 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 				
-
-				
+				// Opening dialog to share the picture
 				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-				File bitmapFile;
-				bitmapFile = new File(routePoint.getPicture());
-				Uri screenshotUri = Uri.fromFile(bitmapFile);
 				sharingIntent.setType("image/*");
 				sharingIntent.putExtra(Intent.EXTRA_TEXT, "Aufgenommen mit 'Hike', der interaktiven Wander-App!");
-				sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+				sharingIntent.putExtra(Intent.EXTRA_STREAM,  Uri.fromFile(pictureFile));
 				startActivity(Intent.createChooser(sharingIntent, "Bild teilen mit"));
 			}
 		});
@@ -85,8 +80,7 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+			
 				mCallback.onDeletePictureClick(route, routePoint);
 			}
 		});
@@ -118,11 +112,11 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 
 	public void initializeFragmentPortrait() {
-		File targetDirector;
+		
 
-		targetDirector = new File(routePoint.getPicturePreview());
+		pictureFile = new File(routePoint.getPicturePreview());
 		Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-				targetDirector.getPath(), 220, 220);// richtige größe?
+				pictureFile.getPath(), 220, 220);// richtige größe?
 
 		if (bm != null) {
 			pictureView.setImageBitmap(bm);
@@ -137,6 +131,27 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 	 
 	}
+
+	@Override
+	public void onDestroy() {
+	
+		super.onDestroy();
+		
+		
+		data = null;
+		 view = null;
+		mCallback = null;
+		 route = null;
+		routePoint = null;
+		 pictureView = null;
+		btn_sharePicture = null;
+		btn_deletePicture = null;
+		 pictureFile = null;
+		
+		
+	}
+	
+	
 
 
 	

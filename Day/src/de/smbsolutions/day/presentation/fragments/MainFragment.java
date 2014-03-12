@@ -237,7 +237,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	// The "create new item" listener ist registered to the complete view (Text
+	// The "create new item" listener is registered to the complete view (Text
 	// and Icon togehter)
 	public void addButtonClickListenerCreate(View view) {
 		view.setOnClickListener(new OnClickListener() {
