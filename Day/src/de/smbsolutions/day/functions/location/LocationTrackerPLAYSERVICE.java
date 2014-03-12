@@ -402,4 +402,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			alertDialog.show();
 		}
 
+		public boolean isServiceInProgress() {
+			return mInProgress;
+		}
+
 }

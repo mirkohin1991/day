@@ -149,7 +149,23 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// fragment not in back
 		// stack, create it.
 //		
-//		if (route.isActive() && mService.getco)
+  	if (route.isActive()) {
+  		
+  		//Active route should always have an active service
+  		//--> If not, the app was closed meanwhile,
+  		if (mService == null) {
+  			//Start service again
+  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+  			
+  		//Service has been created, but is not active any longer
+  		//Some error occured -> try it again
+  		} else if (mService.isServiceInProgress() == false ) {
+  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+  		}
+	
+}
 
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
