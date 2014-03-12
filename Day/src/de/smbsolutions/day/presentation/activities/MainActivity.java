@@ -450,10 +450,13 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			} else {
 				if (list.get(list.size() - 1) instanceof DetailFragment) {
-
 					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
-				} else {
+					
+				} else if(list.get(list.size() - 1) instanceof MainFragment){
 					CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+					
+				} else {
+					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 				}
 			}
 
