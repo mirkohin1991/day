@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-      <dimen name="h1">25dp</dimen>
+      <dimen name="h1">20dp</dimen>
+      <dimen name="text">15dp</dimen>
+      <dimen name="h2">18dp</dimen>
 </resources>

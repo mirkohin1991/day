@@ -2,24 +2,15 @@ package de.smbsolutions.day.functions.tasks;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.TimeUnit;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -29,17 +20,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.text.format.Time;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.view.LayoutInflater;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -121,12 +104,14 @@ public class MarkerWorkerTask
 
 				File pic = new File(point.getPicturePreview());
 				Uri uri = Uri.fromFile(pic);
+				
 					//vielleicht eierverursacher!!!
-				Drawable d = context.getResources().getDrawable(
-						R.drawable.resizedbitmap_placeholder);
-				int bgwidth = d.getIntrinsicHeight();
-				int bgheight = d.getIntrinsicWidth();
+				Bitmap resizedBitmap_Placeholder = BitmapFactory
+						.decodeResource(context.getResources(),
+								R.drawable.resizedbitmap_placeholder);
 
+				int bgwidth = resizedBitmap_Placeholder.getWidth();
+				int bgheight = resizedBitmap_Placeholder.getHeight();
 				bitmap = BitmapManager.decodeSampledBitmapFromUri(
 						uri.getPath(), bgwidth, bgheight);
 

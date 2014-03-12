@@ -6,7 +6,7 @@
 
     <ImageButton
         android:id="@+id/ibInfoSliderIn"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="2.5"
         android:background="#00000000"

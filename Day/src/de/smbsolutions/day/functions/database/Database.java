@@ -29,7 +29,10 @@ public class Database implements DatabaseInterface {
 
 		mHelper = new DatabaseManager(context);
 		
-		Database.createDefaultSettings();
+		if (hasSettingValues() == false) {
+			Database.createDefaultSettings();	
+		}
+
 
 		// saving the current routeID
 		lastRouteID = selectIDlastRoute();
@@ -429,6 +432,46 @@ public static boolean deletePicturePath (RoutePoint routePoint) {
 		
 		mDatabase.close();
 
+	}
+	
+	public static boolean hasSettingValues () {
+		
+		Cursor db_cursor;
+
+		mDatabase = mHelper.getReadableDatabase();
+		
+		db_cursor = mDatabase.query("settings", // table
+				null, // which column
+				"name = ?", // select options
+				new String[] { "tracking" }, // Using ? in the select options can be
+										// replaced here as an array
+				null, // Group by ID --> Only the whole routes
+				null, // Having
+				null);// order by
+
+		db_cursor.moveToFirst();
+
+
+		
+		if (db_cursor.getCount() == 0) {
+			
+			db_cursor.close();
+			mDatabase.close();
+
+			return false;
+			
+		} else {
+			db_cursor.close();
+			mDatabase.close();
+
+			return true;
+		}
+
+
+
+		
+	
+		
 	}
 	
 	

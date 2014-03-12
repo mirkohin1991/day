@@ -6,8 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,28 +25,36 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
+import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
-import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
+import de.smbsolutions.day.functions.tasks.BmTask;
 
-public class DetailFragment extends android.support.v4.app.Fragment {
+public class DetailFragment extends android.support.v4.app.Fragment implements
+		FragmentCallback {
 
 	private SupportMapFragment mapFragment;
 	private View view;
 	private GoogleMap map;
 	private Route route;
 	private WeakReference<MainCallback> weakCallBack;
+	private LinkedHashMap<Bitmap, Timestamp> listBitmaps;
 	private ImageButton ibCamera;
 	private ImageButton ibInfoSliderIn;
 	private ImageButton ibInfoSliderOut;
@@ -64,6 +72,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	private int distanceMeter;
 	private double distanceKm;
 	private double aveSpeed;
+	private BmTask task;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,15 +105,25 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		// TODO Auto-generated method stub
 		if (myGallery != null) {
 			myGallery.removeAllViews();
+			myGallery = null;
 		}
-
-		unbindDrawables(view);
 
 		if (map != null) {
 			map.clear();
-
+			map = null;
 		}
-
+		if (listBitmaps != null) {
+			for (Map.Entry<Bitmap, Timestamp> mapSet : listBitmaps.entrySet()) {
+				mapSet.getKey().recycle();
+			}
+			listBitmaps.clear();
+			listBitmaps = null;
+		}
+		unbindDrawables(view);
+		view = null;
+		task = null;
+		route = null;
+		System.gc();
 		super.onDestroy();
 	}
 
@@ -221,10 +240,9 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
 		myGallery.removeAllViews();
-
-		BitmapWorkerTask task = new BitmapWorkerTask(myGallery, getActivity());
+		listBitmaps = new LinkedHashMap<Bitmap, Timestamp>();
+		task = new BmTask(listBitmaps, this);
 		task.execute(route);
-	
 
 	}
 
@@ -381,7 +399,7 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		long durationAct = 0;
 		long routeDuration = 0;
 		long index = 0;
-		
+
 		// Set the start Lat and Long
 		double startMarkerLat = 0;
 		double startMarkerLong = 0;
@@ -487,9 +505,105 @@ public class DetailFragment extends android.support.v4.app.Fragment {
 		String seconds = String.format(format, duration % 60);
 		String minutes = String.format(format, (duration % 3600) / 60);
 		String hours = String.format(format, duration / 3600);
-		String days = String.format(format, (duration /3600 / 24));
+		String days = String.format(format, (duration / 3600 / 24));
 		String time = days + ":" + hours + ":" + minutes + ":" + seconds;
 		return time;
+	}
+
+	public void addImageListener(ImageView imageView) {
+		imageView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+
+				int i;
+
+				i = 1;
+
+			}
+		});
+
+		imageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				for (RoutePoint point : route.getRoutePoints()) {
+
+					// Timestamp of the clicked picture
+					Timestamp tsClicked = (Timestamp) v.getTag();
+
+					if (tsClicked == point.getTimestamp()) {
+						LatLngBounds.Builder builder = new LatLngBounds.Builder();
+						LatLng latlng = new LatLng(point.getLatitude(), point
+								.getLongitude());
+
+						if (latlng != null) {
+
+							builder.include(latlng);
+
+							LatLngBounds bounds = builder.build();
+							CameraUpdate camUpdate = CameraUpdateFactory
+									.newLatLngBounds(bounds, 60);
+							map.animateCamera(camUpdate);
+
+						}
+
+					}
+
+				}
+
+			}
+		});
+
+		imageView.setOnLongClickListener(new View.OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+
+				// Looping over the routelist to get the right picture
+				for (RoutePoint point : route.getRoutePoints()) {
+
+					// Timestamp of the clicked picture
+					Timestamp tsClicked = (Timestamp) v.getTag();
+
+					if (tsClicked == point.getTimestamp()) {
+
+						// Call the Callback interface to execute the required
+						// action
+						weakCallBack.get().onLongPictureClick(route, point);
+
+						return true;
+
+					}
+
+				}
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public void onTaskfinished(LinkedHashMap<Bitmap, Timestamp> bitmaps) {
+
+		// Bilder sollten automatisch ins Layout passen
+		int index = 0;
+		for (Map.Entry<Bitmap, Timestamp> mapSet : bitmaps.entrySet()) {
+
+			ImageView imageView = new ImageView(getActivity());
+			imageView.setAdjustViewBounds(true);
+			if (index == 0) {
+				imageView.setPadding(0, 12, 0, 12);
+			} else {
+				imageView.setPadding(5, 12, 0, 12);
+			}
+			index++;
+			imageView.setImageBitmap(mapSet.getKey());
+			imageView.setTag(mapSet.getValue());
+			addImageListener(imageView);
+			myGallery.addView(imageView);
+		}
+
 	}
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
       <dimen name="h1">20dp</dimen>
-      <dimen name="smallText">16dp</dimen>
+      <dimen name="text">16dp</dimen>
+      <dimen name="h2">18dp</dimen>
 </resources>
 
