@@ -251,10 +251,9 @@ int layout fragment_settings_facebook 0x7f03000e
 int layout fragment_settings_gps 0x7f03000f
 int layout layout_details 0x7f030010
 int layout slidermenu_list_item 0x7f030011
-int string aboutTheApp_description 0x7f060029
-int string aboutTheApp_developer 0x7f060028
+int string aboutTheApp_description 0x7f060028
+int string aboutTheApp_developer 0x7f060027
 int string action_settings 0x7f06001b
-int string app_id 0x7f060023
 int string app_name 0x7f06001a
 int string auth_client_needs_enabling_title 0x7f060015
 int string auth_client_needs_installation_title 0x7f060016
@@ -262,9 +261,9 @@ int string auth_client_needs_update_title 0x7f060017
 int string auth_client_play_services_err_notification_msg 0x7f060018
 int string auth_client_requested_by_msg 0x7f060019
 int string auth_client_using_bad_version_title 0x7f060014
-int string camera_save_settings 0x7f060025
-int string camera_save_settings_description 0x7f060026
-int string camera_save_settings_note 0x7f060027
+int string camera_save_settings 0x7f060024
+int string camera_save_settings_description 0x7f060025
+int string camera_save_settings_note 0x7f060026
 int string common_google_play_services_enable_button 0x7f060006
 int string common_google_play_services_enable_text 0x7f060005
 int string common_google_play_services_enable_title 0x7f060004
@@ -285,8 +284,8 @@ int string common_google_play_services_update_text 0x7f060008
 int string common_google_play_services_update_title 0x7f060007
 int string common_signin_button_text 0x7f060012
 int string common_signin_button_text_long 0x7f060013
-int string desc_list_item_icon 0x7f06002a
-int string gps_settings_note 0x7f060024
+int string desc_list_item_icon 0x7f060029
+int string gps_settings_note 0x7f060023
 int string hello_world 0x7f06001c
 int string kamera_oeffnen 0x7f06001f
 int string karte_oeffnen 0x7f06001d
