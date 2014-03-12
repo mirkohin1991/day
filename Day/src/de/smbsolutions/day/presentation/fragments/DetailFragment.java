@@ -69,7 +69,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private LinearLayout myGallery;
 	private ViewFlipper flipper;
 	private String duration;
-	private int distanceMeter;
 	private double distanceKm;
 	private double aveSpeed;
 	private BmTask task;
@@ -99,32 +98,24 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	}
 
-	// /DEBUG FRAGMENT LIFECYLCE
+	@Override
+	public void onDestroyView() {
+
+		super.onDestroyView();
+	}
+
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
-		if (myGallery != null) {
-			myGallery.removeAllViews();
-			myGallery = null;
-		}
-
-		if (map != null) {
-			map.clear();
-			map = null;
-		}
-		if (listBitmaps != null) {
-			for (Map.Entry<Bitmap, Timestamp> mapSet : listBitmaps.entrySet()) {
-				mapSet.getKey().recycle();
-			}
-			listBitmaps.clear();
-			listBitmaps = null;
-		}
 		unbindDrawables(view);
-		view = null;
-		task = null;
-		route = null;
-		System.gc();
+
+		clearFragment();
 		super.onDestroy();
+	}
+
+	@Override
+	public void onPause() {
+
+		super.onPause();
 	}
 
 	@Override
@@ -243,6 +234,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		listBitmaps = new LinkedHashMap<Bitmap, Timestamp>();
 		task = new BmTask(listBitmaps, this);
 		task.execute(route);
+		myGallery.removeAllViews();
+		myGallery = null;
 
 	}
 
@@ -303,7 +296,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 
 			// Getting the current timestamp
-			Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+
 			if (resultCode == -1) {
 
 				File small_picture = BitmapManager
@@ -328,9 +321,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 						e.printStackTrace();
 					}
 					bitmap.recycle();
+					bitmap = null;
+					fOut = null;
+
 					weakCallBack.get().onPictureTaken(route, fileUri,
 							small_picture);
-
+					small_picture = null;
 					// If no small picture could be created, NULL is stored
 				} else {
 					// SOll hier noch was passieren???
@@ -450,39 +446,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		distanceKm = (double) Math.round(distanceTotal * 100.0) / 100.0;
 		aveSpeed = distanceKm / (durationAct / (1000 * 60 * 60)) % 24;
 		duration = getDuration(routeDuration);
-		// SimpleDateFormat dateFormat = new SimpleDateFormat(
-		// "yyyy/MM/dd HH:mm:ss");
-		// Date date = new Date(test);
-		// duration = dateFormat.format(date);
-		// long second = (durationAct / 1000) % 60;
-		// long minute = (durationAct / (1000 * 60)) % 60;
-		// long hour = (durationAct / (1000 * 60 * 60)) % 24;
-		// long day = (durationAct / (1000 * 60 * 60 * 24)) % 7;
-		//
-		// String seconds = String.format("%02d", second);
-		// String minutes = String.format("%02d", minute);
-		// String hours = String.format("%02d", hour);
-		// String days = String.format("%02d", day);
-		//
-		// if (minute >= 1) {
-		// if (hour >= 1) {
-		// if (day >= 1) {
-		// if (day == 1) {
-		// duration = days + " Tag, " + hours + ":" + minutes
-		// + " Stunden";
-		// } else {
-		// duration = days + " Tage, " + hours + ":" + minutes
-		// + " Stunden";
-		// }
-		//
-		// duration = hours + ":" + minutes + " Stunden";
-		// }
-		// } else {
-		// duration = minutes + ":" + seconds + " Minuten";
-		// }
-		// } else {
-		// duration = seconds + " Sekunden";
-		// }
+		route = null;
 	}
 
 	private void unbindDrawables(View view) {
@@ -515,11 +479,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-
-				int i;
-
-				i = 1;
-
 			}
 		});
 
@@ -600,10 +559,57 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			index++;
 			imageView.setImageBitmap(mapSet.getKey());
 			imageView.setTag(mapSet.getValue());
+
 			addImageListener(imageView);
 			myGallery.addView(imageView);
+
+			imageView = null;
 		}
 
+		bitmaps.clear();
+		bitmaps = null;
+
 	}
+
+	public void clearFragment() {
+		if (listBitmaps != null) {
+			for (Map.Entry<Bitmap, Timestamp> mapSet : listBitmaps.entrySet()) {
+				mapSet.getKey().recycle();
+			}
+			listBitmaps.clear();
+			listBitmaps = null;
+		}
+		if (myGallery != null) {
+			myGallery.removeAllViews();
+			myGallery = null;
+		}
+
+		if (map != null) {
+			map.clear();
+			map = null;
+		}
+		ibCamera.setImageBitmap(null);
+		ibCamera = null;
+
+		if (flipper != null) {
+			flipper.removeAllViews();
+			flipper = null;
+		}
+		if (mapFragment != null) {
+			mapFragment = null;
+		}
+		ibInfoSliderIn.setImageBitmap(null);
+		ibInfoSliderIn = null;
+		ibInfoSliderOut.setImageBitmap(null);
+		ibInfoSliderOut = null;
+		tvDistance = null;
+		tvDuration = null;
+		tvAveSpeed = null;
+		weakCallBack = null;
+		view = null;
+		task = null;
+		fileUri = null;
+	}
+
 
 }

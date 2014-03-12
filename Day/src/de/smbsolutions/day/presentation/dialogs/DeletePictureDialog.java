@@ -60,7 +60,7 @@ public class DeletePictureDialog extends DialogFragment {
 
 							}
 							dismiss();
-							mCallback.onDeletePicture(route);
+							mCallback.onShowRoute(route);
 
 						} catch (Exception e) {
 

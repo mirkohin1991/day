@@ -6,20 +6,25 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
+import com.google.android.gms.internal.bi;
+
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
-public class BmTask extends AsyncTask<Route, Void, LinkedHashMap<Bitmap, Timestamp>> {
+public class BmTask extends
+		AsyncTask<Route, Void, LinkedHashMap<Bitmap, Timestamp>> {
 
 	private FragmentCallback callback;
-	private LinkedHashMap<Bitmap,Timestamp> bitmaps;
-	public BmTask( LinkedHashMap<Bitmap, Timestamp> bitmaps, FragmentCallback callback) {
+	private LinkedHashMap<Bitmap, Timestamp> bitmaps;
+
+	public BmTask(LinkedHashMap<Bitmap, Timestamp> bitmaps,
+			FragmentCallback callback) {
 		this.bitmaps = bitmaps;
 		this.callback = callback;
-		
+
 	}
 
 	@Override
@@ -29,13 +34,15 @@ public class BmTask extends AsyncTask<Route, Void, LinkedHashMap<Bitmap, Timesta
 		for (RoutePoint point : route.getRoutePoints()) {
 			if (point.getPicture() != null) {
 
-				final File bitmapFile = new File(point.getPicturePreview());
+				File bitmapFile = new File(point.getPicturePreview());
 
-				final Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
+				Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
 						bitmapFile.getPath(), 220, 220);// richtige größe?
 
 				bitmaps.put(bm, point.getTimestamp());
-				
+				bitmapFile = null;
+
+				bm = null;
 			}
 
 		}
@@ -43,12 +50,13 @@ public class BmTask extends AsyncTask<Route, Void, LinkedHashMap<Bitmap, Timesta
 		// TODO Auto-generated method stub
 		return bitmaps;
 	}
+
 	@Override
 	protected void onPostExecute(LinkedHashMap<Bitmap, Timestamp> result) {
 		// TODO Auto-generated method stub
+
 		super.onPostExecute(result);
 		callback.onTaskfinished(result);
 	}
-
 
 }

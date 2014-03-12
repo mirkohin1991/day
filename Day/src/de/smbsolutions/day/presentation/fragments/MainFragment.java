@@ -94,9 +94,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+
 		if (map == null) {
 			map = mapFragment.getMap();
-
+			map.setMapType(Device.getAPP_SETTINGS().getMapType());
+			map.getUiSettings().setZoomControlsEnabled(false);
+			map.setPadding(0, 70, 0, 0);
 		}
 
 		initializeFragmentPortrait();
@@ -112,10 +115,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			// view
 
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
-
-			map.setMapType(Device.getAPP_SETTINGS().getMapType());
-			map.getUiSettings().setZoomControlsEnabled(false);
-			map.setPadding(0, 70, 0, 0);
 
 			meineListView = (ListView) view.findViewById(R.id.listView1);
 
