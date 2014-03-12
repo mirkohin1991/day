@@ -49,12 +49,17 @@ public interface MainCallback {
 
 	// SERVICE START / STOP
 
-	public void onStartTrackingService(RouteList routeList, Route route);
+	public void onStartTrackingService(Route route);
 
 	// SERVICE HAS TO STORE PICTURE
 	public void onPictureTaken(Route route, Uri fileUri, File small_picture);
 
 	// SERVICE HAS TO BE STOPPED AGAIN WHEN NO ROUTE WAS CREATED
 	public void onDialogCreateCanceled();
+	
+	
+	public void onActiveRouteNoService (Route route);
+		
+	
 
 }

@@ -165,7 +165,22 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// fragment not in back
 		// stack, create it.
 //		
-//		if (route.isActive() && mService.getco)
+  	if (route.isActive()) {
+  		
+  		//Active route should always have an active service
+  		//--> If not, the app was closed meanwhile,
+  		if (mService == null) {
+  		
+  			onStartTrackingService(route);
+  		
+  			
+  		//Service has been created, but is not active any longer
+  		//Some error occured -> try it again
+  		} else if (mService.isServiceInProgress() == false ) {
+  			onStartTrackingService(route);
+  		}
+	
+}
 
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
@@ -503,12 +518,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onStartTrackingService(RouteList routeList, Route route) {
+	public void onStartTrackingService(Route route) {
 
 		if (mService != null) {
 			mService.saveActivity(this);
 			// Warum liste und route übergeben??
-			mService.startLocationTrackingAndSaveFirst(routeList, route);
+			mService.startLocationTrackingAndSaveFirst(route);
 
 		} else {
 			Toast.makeText(this, "Service wurde nicht gestartet",
@@ -539,6 +554,28 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService = null;
 		}
 
+	}
+
+	@Override
+	public void onActiveRouteNoService(Route route) {
+	
+	  		
+	  		//Active route should always have an active service
+	  		//--> If not, the app was closed meanwhile,
+	  		if (mService == null) {
+	  			//Start service again
+	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	  		
+
+	  		//Service has been created, but is not active any longer
+	  		//Some error occured -> try it again
+	  		} else if (mService.isServiceInProgress() == false ) {
+	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	  	
+	  		}
+		
 	}
 
 }

@@ -47,7 +47,6 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	private static LocationTrackerPLAYSERVICE tracker;
 	private LocationClient mLocationClient;
 	private Route route;
-	private RouteList routeList;
 	private MainCallback mCallback;
 	private Location previousLocation;
 
@@ -133,10 +132,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	}
 
-	public void startLocationTrackingAndSaveFirst(RouteList routeList,
+	public void startLocationTrackingAndSaveFirst(
 			Route route) {
 
-		this.routeList = routeList;
+		
 		this.route = route;
 		this.flag_first = true;
 
@@ -254,7 +253,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 				null, location.getLatitude(), location.getLongitude(), location
 						.getAltitude()));
 
-		routeList.addRoute(route);
+	//	routeList.addRoute(route);
 
 		previousLocation = location;
 
@@ -400,6 +399,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 			// Showing Alert Message
 			alertDialog.show();
+		}
+
+		public boolean isServiceInProgress() {
+			return mInProgress;
 		}
 
 }

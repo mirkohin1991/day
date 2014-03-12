@@ -49,8 +49,10 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 						String routeName = nameText.getText().toString();
 						// Calling the db
 						Route route = new Route(routeName);
+						
+						routeList.addRoute(route);
 
-						mCallback.onStartTrackingService(routeList, route);
+						mCallback.onStartTrackingService(route);
 
 					}
 				}).setNegativeButton("Abbrechen",
