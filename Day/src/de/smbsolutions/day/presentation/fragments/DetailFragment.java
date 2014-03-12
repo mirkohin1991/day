@@ -444,10 +444,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		// Calculates the distance from km to meter
 		distanceKm = (double) Math.round(distanceTotal * 100.0) / 100.0;
-		aveSpeed = distanceKm / (durationAct / (1000 * 60 * 60)) % 24;
+		aveSpeed = (double) Math.round(((distanceAct / routeDuration) / 3600) * 100.0) / 100.0;
 		duration = getDuration(routeDuration);
-		route = null;
+		
 	}
+
 
 	private void unbindDrawables(View view) {
 		if (view.getBackground() != null) {
@@ -462,15 +463,41 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		}
 	}
 
+
 	public String getDuration(long timeseconds) {
+		String time = null;
 		long duration = timeseconds;
-		String format = String.format("%%0%dd", 2);
+
 		duration = duration / 1000;
-		String seconds = String.format(format, duration % 60);
-		String minutes = String.format(format, (duration % 3600) / 60);
-		String hours = String.format(format, duration / 3600);
-		String days = String.format(format, (duration / 3600 / 24));
-		String time = days + ":" + hours + ":" + minutes + ":" + seconds;
+
+		 long second = duration % 60;
+		 long minute = (duration % 3600) / 60;
+		 long hour = duration / 3600;
+		 long day = duration /3600 / 24;
+		 
+		 
+			 String sSecond = String.format("%02d", second);
+			 String sMinute = String.format("%02d", minute);
+			 String sHour = String.format("%02d", hour);
+			 String sDay = String.format("%02d", day);
+		 
+		
+		if (minute >= 1) {
+			 if (hour >= 1) {
+				 if (day >= 1) {
+						 time = sDay + " T, " + sHour + ":" + sMinute + " Stunden";
+					  }
+				 else{
+					 time = sHour + ":" + sMinute + " Stunden";
+				 }
+				 
+			 	} else {
+			 		time = sMinute + ":" + sSecond + " Minuten";
+			 	}
+			 } else {
+				 time = sSecond + " Sekunden";
+			 }
+
 		return time;
 	}
 

@@ -168,7 +168,7 @@ containing a value of this type.
         public static final int isTablet=0x7f090000;
     }
     public static final class color {
-        public static final int Weiss=0x7f040015;
+        public static final int Weiss=0x7f040016;
         public static final int common_action_bar_splitter=0x7f040009;
         /**  Sign-in Button Colors 
          */
@@ -181,8 +181,8 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f040006;
         public static final int common_signin_btn_light_text_focused=0x7f040007;
         public static final int common_signin_btn_light_text_pressed=0x7f040005;
-        public static final int common_signin_btn_text_dark=0x7f040016;
-        public static final int common_signin_btn_text_light=0x7f040017;
+        public static final int common_signin_btn_text_dark=0x7f040017;
+        public static final int common_signin_btn_text_light=0x7f040018;
         public static final int counter_text_bg=0x7f040011;
         public static final int counter_text_color=0x7f040012;
         public static final int gray=0x7f04000b;
@@ -193,6 +193,7 @@ containing a value of this type.
         public static final int list_item_title=0x7f04000d;
         public static final int settings_background=0x7f040013;
         public static final int settings_text=0x7f040014;
+        public static final int textRoutName=0x7f040015;
         public static final int white=0x7f04000a;
     }
     public static final class dimen {
@@ -206,6 +207,7 @@ containing a value of this type.
         public static final int activity_vertical_margin=0x7f080001;
         public static final int h1=0x7f080002;
         public static final int h2=0x7f080004;
+        public static final int margin_top_text_info_slider=0x7f080005;
         public static final int text=0x7f080003;
     }
     public static final class drawable {
@@ -421,9 +423,9 @@ containing a value of this type.
     }
     public static final class string {
         public static final int aboutTheApp_description=0x7f060029;
-        public static final int aboutTheApp_developer=0x7f060027;
+        public static final int aboutTheApp_developer=0x7f060028;
         public static final int action_settings=0x7f06001b;
-        public static final int app_id=0x7f060028;
+        public static final int app_id=0x7f060023;
         public static final int app_name=0x7f06001a;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
@@ -448,9 +450,9 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f060014;
-        public static final int camera_save_settings=0x7f060024;
-        public static final int camera_save_settings_description=0x7f060025;
-        public static final int camera_save_settings_note=0x7f060026;
+        public static final int camera_save_settings=0x7f060025;
+        public static final int camera_save_settings_description=0x7f060026;
+        public static final int camera_save_settings_note=0x7f060027;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -525,7 +527,7 @@ containing a value of this type.
         /**  Content Description 
          */
         public static final int desc_list_item_icon=0x7f06002a;
-        public static final int gps_settings_note=0x7f060023;
+        public static final int gps_settings_note=0x7f060024;
         public static final int hello_world=0x7f06001c;
         public static final int kamera_oeffnen=0x7f06001f;
         public static final int karte_oeffnen=0x7f06001d;

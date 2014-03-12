@@ -17,7 +17,7 @@ int attr uiZoomGestures 0x7f01000d
 int attr useViewLifecycle 0x7f01000e
 int attr zOrderOnTop 0x7f01000f
 int bool isTablet 0x7f090000
-int color Weiss 0x7f040015
+int color Weiss 0x7f040016
 int color common_action_bar_splitter 0x7f040009
 int color common_signin_btn_dark_text_default 0x7f040000
 int color common_signin_btn_dark_text_disabled 0x7f040002
@@ -28,8 +28,8 @@ int color common_signin_btn_light_text_default 0x7f040004
 int color common_signin_btn_light_text_disabled 0x7f040006
 int color common_signin_btn_light_text_focused 0x7f040007
 int color common_signin_btn_light_text_pressed 0x7f040005
-int color common_signin_btn_text_dark 0x7f040016
-int color common_signin_btn_text_light 0x7f040017
+int color common_signin_btn_text_dark 0x7f040017
+int color common_signin_btn_text_light 0x7f040018
 int color counter_text_bg 0x7f040011
 int color counter_text_color 0x7f040012
 int color gray 0x7f04000b
@@ -40,11 +40,13 @@ int color list_divider 0x7f040010
 int color list_item_title 0x7f04000d
 int color settings_background 0x7f040013
 int color settings_text 0x7f040014
+int color textRoutName 0x7f040015
 int color white 0x7f04000a
 int dimen activity_horizontal_margin 0x7f080000
 int dimen activity_vertical_margin 0x7f080001
 int dimen h1 0x7f080002
 int dimen h2 0x7f080004
+int dimen margin_top_text_info_slider 0x7f080005
 int dimen text 0x7f080003
 int drawable ab_background_textured_appbasetheme 0x7f020000
 int drawable ab_bottom_solid_appbasetheme 0x7f020001
@@ -250,9 +252,9 @@ int layout fragment_settings_gps 0x7f03000f
 int layout layout_details 0x7f030010
 int layout slidermenu_list_item 0x7f030011
 int string aboutTheApp_description 0x7f060029
-int string aboutTheApp_developer 0x7f060027
+int string aboutTheApp_developer 0x7f060028
 int string action_settings 0x7f06001b
-int string app_id 0x7f060028
+int string app_id 0x7f060023
 int string app_name 0x7f06001a
 int string auth_client_needs_enabling_title 0x7f060015
 int string auth_client_needs_installation_title 0x7f060016
@@ -260,9 +262,9 @@ int string auth_client_needs_update_title 0x7f060017
 int string auth_client_play_services_err_notification_msg 0x7f060018
 int string auth_client_requested_by_msg 0x7f060019
 int string auth_client_using_bad_version_title 0x7f060014
-int string camera_save_settings 0x7f060024
-int string camera_save_settings_description 0x7f060025
-int string camera_save_settings_note 0x7f060026
+int string camera_save_settings 0x7f060025
+int string camera_save_settings_description 0x7f060026
+int string camera_save_settings_note 0x7f060027
 int string common_google_play_services_enable_button 0x7f060006
 int string common_google_play_services_enable_text 0x7f060005
 int string common_google_play_services_enable_title 0x7f060004
@@ -284,7 +286,7 @@ int string common_google_play_services_update_title 0x7f060007
 int string common_signin_button_text 0x7f060012
 int string common_signin_button_text_long 0x7f060013
 int string desc_list_item_icon 0x7f06002a
-int string gps_settings_note 0x7f060023
+int string gps_settings_note 0x7f060024
 int string hello_world 0x7f06001c
 int string kamera_oeffnen 0x7f06001f
 int string karte_oeffnen 0x7f06001d
