@@ -32,14 +32,13 @@ public class Route implements Parcelable {
 	private ArrayList<RoutePoint> routePoints = new ArrayList<RoutePoint>();
 	private String routeName;
 	private String date;
-	private GoogleMap map;
 	private boolean active;
 	private int id;
 
 	PolylineOptions polylineOptions_back = new PolylineOptions().width(3)
 			.color(Color.rgb(123, 207, 168));
-	PolylineOptions polylineOptions_top = new PolylineOptions().width(8)
-			.color(Color.rgb(19, 88, 5));
+	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(
+			Color.rgb(19, 88, 5));
 
 	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
@@ -100,11 +99,9 @@ public class Route implements Parcelable {
 
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
 
-		// saving the map
-		this.map = mapImport;
-
 		Bitmap bitmap = null;
-		map.clear();
+		;
+		mapImport.clear();
 		// Necessary to save in order to connect timestamp and marker
 		markerMap = new LinkedHashMap<RoutePoint, Marker>();
 
@@ -117,32 +114,26 @@ public class Route implements Parcelable {
 					new LatLng(point.getLatitude(), point.getLongitude()))
 					.title(getRouteName());
 
-			Marker marker = map.addMarker(markerOpt);
+			Marker marker = mapImport.addMarker(markerOpt);
 			markerMap.put(point, marker);
 
 		}
 
-		Polyline polyline_top = map.addPolyline(polylineOptions_top);
-		Polyline polyline_back = map.addPolyline(polylineOptions_back);
+		Polyline polyline_top = mapImport.addPolyline(polylineOptions_top);
+		Polyline polyline_back = mapImport.addPolyline(polylineOptions_back);
 
 		// Setting the zoom
-		setZoomAllMarkers();
-		return map;
+		setZoomAllMarkers(mapImport);
+		return mapImport;
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public GoogleMap prepareMapDetails(final GoogleMap mapImport,
 			Context context) {
 
-		// saving the map
-		this.map = mapImport;
-		map.clear();
-		// Intern speichern, damit der Action Listener unten anspringen kann
-
 		// Necessary to save connect timestamp and marker
 		if (markerMap != null) {
-			 markerMap.clear();
+			markerMap.clear();
 		} else {
 			markerMap = new LinkedHashMap<RoutePoint, Marker>();
 		}
@@ -151,21 +142,19 @@ public class Route implements Parcelable {
 
 		// add markers to map
 		if (hasPicturePoint()) {
-			map.clear();
+			mapImport.clear();
 			for (RoutePoint point : this.routePoints) {
 
 				MarkerOptions markerOpt = new MarkerOptions().position(
 						new LatLng(point.getLatitude(), point.getLongitude()))
 						.title(getRouteName());
 
-				Marker marker = map.addMarker(markerOpt);
+				Marker marker = mapImport.addMarker(markerOpt);
 				markerMap.put(point, marker);
 
 			}
-
-			final MarkerWorkerTask task = new MarkerWorkerTask(map, markerMap,
+			MarkerWorkerTask task = new MarkerWorkerTask(mapImport, markerMap,
 					this, context);
-
 			task.execute(this.routePoints);
 
 		} else {
@@ -183,21 +172,21 @@ public class Route implements Parcelable {
 						new LatLng(point.getLatitude(), point.getLongitude()))
 						.title(getRouteName());
 
-				Marker marker = map.addMarker(markerOpt);
+				Marker marker = mapImport.addMarker(markerOpt);
 				markerMap.put(point, marker);
 
 			}
-			map.addPolyline(polylineOptions_top);
-			map.addPolyline(polylineOptions_back);
-			setZoomAllMarkers();
+			mapImport.addPolyline(polylineOptions_top);
+			mapImport.addPolyline(polylineOptions_back);
+			setZoomAllMarkers(mapImport);
 
 		}
-		return map;
+		return mapImport;
 
 	}
 
 	// PERPARE MAP HAS TO BE CALLED BEFORE!
-	private void setZoomAllMarkers() {
+	private void setZoomAllMarkers(GoogleMap map) {
 		// zoompoint
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -215,7 +204,7 @@ public class Route implements Parcelable {
 	}
 
 	// Method to set the zoom of the map to a certain point
-	public void setZoomSpecificMarker(RoutePoint point) {
+	public void setZoomSpecificMarker(RoutePoint point, GoogleMap map) {
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
 		// Getting the marker for the routepoint
@@ -306,6 +295,15 @@ public class Route implements Parcelable {
 		if (Database.deletePicturePath(deletePoint) == true) {
 			routePoints.remove(deletePoint);
 		}
+
+	}
+
+	public void freeObjects() {
+
+		routePoints.clear();
+		routePoints = null;
+		markerMap.clear();
+		markerMap = null;
 
 	}
 

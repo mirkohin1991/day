@@ -144,6 +144,22 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onShowRoute(Route route) {
 
+		Fragment detfrag = getSupportFragmentManager().findFragmentByTag(
+				TAG_DETAILFRAGMENT);
+		Fragment picfrag = getSupportFragmentManager().findFragmentByTag(
+				TAG_PICTUREFRAGMENT);
+		if (detfrag != null) {
+			getSupportFragmentManager().beginTransaction().remove(detfrag)
+					.commit();
+			getSupportFragmentManager().popBackStack();
+
+		}
+		if (picfrag != null) {
+			getSupportFragmentManager().beginTransaction().remove(picfrag)
+					.commit();
+			getSupportFragmentManager().popBackStack();
+		}
+
 		DetailFragment detail_frag = new DetailFragment();
 
 		// fragment not in back
@@ -172,6 +188,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		detail_frag.setArguments(bundle);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		int cpount = getSupportFragmentManager().getBackStackEntryCount();
+
 		ft.replace(R.id.frame_container, detail_frag, TAG_DETAILFRAGMENT);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.addToBackStack(TAG_DETAILFRAGMENT);
@@ -180,6 +198,18 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
 		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
 
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		 super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 	}
 
 	@Override
@@ -316,10 +346,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.frame_container, frag, slidertag)
 					.addToBackStack(slidertag).commit();
+			CURRENT_FRAGMENT = slidertag;
 		} else {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.frame_container, frag, slidertag)
 					.addToBackStack(slidertag).commit();
+			CURRENT_FRAGMENT = slidertag;
 		}
 
 	}
@@ -397,8 +429,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		pictureFrag.setArguments(bundle);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT).addToBackStack(TAG_PICTUREFRAGMENT)
-				.commit();
+		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
+				.addToBackStack(TAG_PICTUREFRAGMENT).commit();
 		CURRENT_FRAGMENT = TAG_PICTUREFRAGMENT;
 	}
 
@@ -410,10 +442,37 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onBackPressed() {
+		// change current_fragment to right on for changing the map type
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-			finish();
+			moveTaskToBack(true);
 		} else {
-			CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+
+			List<Fragment> list = getSupportFragmentManager().getFragments();
+			if (list.size() >= 3) {
+				if (list.get(2) != null) {
+					if (list.get(list.size() - 2) instanceof MainFragment) {
+						CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+					} else {
+						CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+					}
+				} else {
+					if (list.get(list.size() - 3) instanceof MainFragment) {
+
+						CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+					} else {
+						CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+					}
+				}
+
+			} else {
+				if (list.get(list.size() - 1) instanceof DetailFragment) {
+
+					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+				} else {
+					CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+				}
+			}
+
 			super.onBackPressed();
 		}
 

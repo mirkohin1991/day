@@ -164,7 +164,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 					if (tsClicked == point.getTimestamp()) {
 
-						route.setZoomSpecificMarker(point);
+//						route.setZoomSpecificMarker(point);
 
 					}
 

@@ -48,11 +48,9 @@ public class MarkerWorkerTask
 	private MainCallback mCallback;
 	private GoogleMap map;
 	private Context context;
-	private List<RoutePoint> routePoints;
+	private ArrayList<RoutePoint> routePoints;
 	private Route route;
 
-
-	private View view;
 	MarkerOptions markerOpt = new MarkerOptions();
 	private final WeakReference<LinkedHashMap<RoutePoint, Marker>> hashMapRef;
 	private WeakReference<Bitmap> weakBM;
@@ -62,11 +60,12 @@ public class MarkerWorkerTask
 
 	PolylineOptions polylineOptions_back = new PolylineOptions().width(3)
 			.color(Color.rgb(123, 207, 168));
-	PolylineOptions polylineOptions_top = new PolylineOptions().width(8)
-			.color(Color.rgb(19, 88, 5));
+	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(
+			Color.rgb(19, 88, 5));
 
 	public MarkerWorkerTask(GoogleMap map,
-			LinkedHashMap<RoutePoint, Marker> markerMap, Route route, Context context) {
+			LinkedHashMap<RoutePoint, Marker> markerMap, Route route,
+			Context context) {
 
 		hashMapRef = new WeakReference<LinkedHashMap<RoutePoint, Marker>>(
 				markerMap);
@@ -74,9 +73,6 @@ public class MarkerWorkerTask
 		this.map = map;
 		this.route = route;
 
-		view = View.inflate(context, R.layout.detail_infobar, null);
-
-		
 		// Saving the markermap. Necessary, because the route object shall get
 		// the changes!
 		this.markerMap = markerMap;
@@ -104,8 +100,8 @@ public class MarkerWorkerTask
 
 				File pic = new File(point.getPicturePreview());
 				Uri uri = Uri.fromFile(pic);
-				
-					//vielleicht eierverursacher!!!
+
+				// vielleicht eierverursacher!!!
 				Bitmap resizedBitmap_Placeholder = BitmapFactory
 						.decodeResource(context.getResources(),
 								R.drawable.resizedbitmap_placeholder);
@@ -124,7 +120,7 @@ public class MarkerWorkerTask
 
 					bitmapMap.put(point, weakBM.get());
 					weakBM.clear();
-					
+
 				}
 
 			}
@@ -149,15 +145,11 @@ public class MarkerWorkerTask
 			Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet()
 					.iterator().next();
 
-			
-
 			for (Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
 
 				// Gets the actual lat and long
 				double markerLat = mapSet.getKey().getLatitude();
 				double markerLong = mapSet.getKey().getLongitude();
-
-			
 
 				polylineOptions_top.add(new LatLng(markerLat, markerLong));
 				polylineOptions_back.add(new LatLng(markerLat, markerLong));
@@ -188,14 +180,15 @@ public class MarkerWorkerTask
 					bitmapSaved.recycle();
 					background.recycle();
 					resizedBitmap_Placeholder.recycle();
-
+					bitmapSaved = null;
+					background = null;
+					resizedBitmap_Placeholder = null;
 				}
 
 				builder.include(mapSet.getValue().getPosition());
 
 			}
 
-		
 			Polyline polyline_top = map.addPolyline(polylineOptions_top);
 			Polyline polyline_back = map.addPolyline(polylineOptions_back);
 
@@ -206,11 +199,9 @@ public class MarkerWorkerTask
 			addMarkerClickListener(map);
 		}
 		hashMapRef.clear();
-		//markerMap.clear();
+		// markerMap.clear();
 		bitmapMap.clear();
 		context = null;
-		view = null;
-		// route = null;
 
 	}
 
