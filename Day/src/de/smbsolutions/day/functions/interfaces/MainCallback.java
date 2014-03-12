@@ -30,7 +30,7 @@ public interface MainCallback {
 
 	// Methods regarding the PictureScrollbar
 	// Opens Dialog for deleting picture
-	public void onLongPictureClick(Route route, RoutePoint point);
+	public void onDeletePictureClick(Route route, RoutePoint point);
 
 	// Opens PictureFragment
 	public void onPictureClick(Route route, RoutePoint point);

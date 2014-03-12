@@ -257,7 +257,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onLongPictureClick(Route route, RoutePoint point) {
+	public void onDeletePictureClick(Route route, RoutePoint point) {
 
 		DeletePictureDialog deletePictureDialog = new DeletePictureDialog();
 		Bundle bundle = new Bundle();

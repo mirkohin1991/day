@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
@@ -33,6 +35,8 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	private Route route;
 	private RoutePoint routePoint;
 	private ImageView pictureView;
+	private ImageButton btn_sharePicture;
+	private ImageButton btn_deletePicture;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,9 +48,36 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 		view = inflater.inflate(R.layout.fragment_picture, container, false);
 		pictureView = (ImageView) view.findViewById(R.id.imageViewFullPicture);
+		btn_sharePicture = (ImageButton) view.findViewById(R.id.pictureShareButton);
+		btn_deletePicture = (ImageButton) view.findViewById(R.id.pitctureDeleteButton);
+		
+		addButtonClickListener();
 
 		return view;
 
+	}
+
+	private void addButtonClickListener() {
+		btn_sharePicture.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+		
+			}
+		});
+		
+		btn_deletePicture.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				mCallback.onDeletePictureClick(route, routePoint);
+			}
+		});
+	
+		
 	}
 
 	@Override
