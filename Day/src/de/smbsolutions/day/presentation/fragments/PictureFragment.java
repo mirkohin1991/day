@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,12 +12,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
@@ -28,7 +31,6 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 	private Bundle data;
 	private View view;
-	private Configuration config;
 
 	private MainCallback mCallback;
 
@@ -37,6 +39,8 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	private ImageView pictureView;
 	private ImageButton btn_sharePicture;
 	private ImageButton btn_deletePicture;
+	private File pictureFile;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,8 +66,13 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-		
+				
+				// Opening dialog to share the picture
+				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+				sharingIntent.setType("image/*");
+				sharingIntent.putExtra(Intent.EXTRA_TEXT, "Aufgenommen mit 'Hike', der interaktiven Wander-App!");
+				sharingIntent.putExtra(Intent.EXTRA_STREAM,  Uri.fromFile(pictureFile));
+				startActivity(Intent.createChooser(sharingIntent, "Bild teilen mit"));
 			}
 		});
 		
@@ -71,8 +80,7 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+			
 				mCallback.onDeletePictureClick(route, routePoint);
 			}
 		});
@@ -92,22 +100,23 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		}
 
 	}
-
+ 
+	@Override
 	public void onResume() {
 		super.onResume();
-
+		 
 		initializeFragmentPortrait();
 
 	}
-
+	
 
 
 	public void initializeFragmentPortrait() {
-		File targetDirector;
+		
 
-		targetDirector = new File(routePoint.getPicturePreview());
+		pictureFile = new File(routePoint.getPicturePreview());
 		Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-				targetDirector.getPath(), 220, 220);// richtige größe?
+				pictureFile.getPath(), 220, 220);// richtige größe?
 
 		if (bm != null) {
 			pictureView.setImageBitmap(bm);
@@ -115,11 +124,36 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	// BRAUCHEN WIR DAS?
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	    super.onActivityResult(requestCode, resultCode, data);
 
+	 
 	}
+
+	@Override
+	public void onDestroy() {
+	
+		super.onDestroy();
+		
+		
+		data = null;
+		 view = null;
+		mCallback = null;
+		 route = null;
+		routePoint = null;
+		 pictureView = null;
+		btn_sharePicture = null;
+		btn_deletePicture = null;
+		 pictureFile = null;
+		
+		
+	}
+	
+	
+
+
+	
 
 }

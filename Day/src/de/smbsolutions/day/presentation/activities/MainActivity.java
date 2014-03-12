@@ -164,6 +164,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		// fragment not in back
 		// stack, create it.
+//		
+//		if (route.isActive() && mService.getco)
 
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
