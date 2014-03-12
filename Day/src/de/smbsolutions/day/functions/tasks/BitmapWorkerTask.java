@@ -188,7 +188,7 @@ public class BitmapWorkerTask extends AsyncTask<Route, Void, List<ImageView>> {
 
 						// Call the Callback interface to execute the required
 						// action
-						mCallback.onLongPictureClick(route, point);
+						mCallback.onDeletePictureClick(route, point);
 
 						return true;
 

@@ -571,7 +571,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 						// Call the Callback interface to execute the required
 						// action
-						weakCallBack.get().onLongPictureClick(route, point);
+						weakCallBack.get().onDeletePictureClick(route, point);
 
 						return true;
 
