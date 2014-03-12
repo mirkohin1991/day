@@ -144,6 +144,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onShowRoute(Route route) {
 
+		
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(TAG_DETAILFRAGMENT);
+		if (frag != null) {
+			getSupportFragmentManager().beginTransaction().remove(frag).commit();
+			getSupportFragmentManager().popBackStack();
+		}
+		
+		
 		DetailFragment detail_frag = new DetailFragment();
 
 		// fragment not in back
@@ -152,8 +160,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
-
+		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		int cpount = getSupportFragmentManager().getBackStackEntryCount();
+		
 		ft.replace(R.id.frame_container, detail_frag, TAG_DETAILFRAGMENT);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.addToBackStack(TAG_DETAILFRAGMENT);
@@ -392,6 +402,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onBackPressed() {
+		
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			finish();
 		} else {

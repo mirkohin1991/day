@@ -94,7 +94,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
 		if (map == null) {
 			map = mapFragment.getMap();
 
