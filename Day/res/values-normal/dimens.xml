@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
       <dimen name="h1">20dp</dimen>
-      <dimen name="text">16dp</dimen>
+      <dimen name="text">12dp</dimen>
       <dimen name="h2">18dp</dimen>
+      <dimen name="margin_top_text_info_slider">6dp</dimen>
 </resources>
 

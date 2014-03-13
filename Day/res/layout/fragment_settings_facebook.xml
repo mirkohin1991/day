@@ -14,5 +14,4 @@
         android:text="Facebook LogIn"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    
 </LinearLayout>

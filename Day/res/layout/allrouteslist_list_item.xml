@@ -18,9 +18,9 @@
             android:id="@+id/textRouteName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="test"
-            android:textColor="#333"
-            android:textSize="20dp" />
+            android:text=""
+            android:textColor="@color/textRoutName"
+            android:textSize="@dimen/h1" />
 
         
 
@@ -35,9 +35,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="test2"
+            android:text=""
             android:textColor="@color/lightgreen"
-            android:textSize="18dp" />
+            android:textSize="@dimen/h2" />
 
             <Button
                 android:id="@+id/imagebuttonDetails"
