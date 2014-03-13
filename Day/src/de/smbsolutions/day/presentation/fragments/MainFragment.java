@@ -294,7 +294,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				if (routeList.isOpenRoute()) {
 					// A route is active -> user wants to stop it
 
-					mCallback.onStopPopup(routeList);
+					mCallback.onOpenDialogStopRoute(routeList);
 
 				}
 				return false;
@@ -333,7 +333,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int index, long arg3) {
 				// Call Interface to handle the deletion of the route
-				mCallback.onLongItemSelected(routeList,
+				mCallback.onOpenDialogDeleteRoute(routeList,
 						meineListView.getCount() - (index + 1));
 				return false;
 

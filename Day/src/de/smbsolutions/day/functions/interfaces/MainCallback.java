@@ -20,13 +20,15 @@ public interface MainCallback {
 	public void onNewRouteStarted(Route route);
 
 	// Opens Dialog for deleting routes
-	public void onLongItemSelected(RouteList routeList, int index);
+	public void onOpenDialogDeleteRoute(RouteList routeList, int index);
+	// Deletes Route
+	public void onRouteDeleted();
 
 	// Opens Dialog for stopping routes
-	public void onStopPopup(RouteList routeList);
+	public void onOpenDialogStopRoute(RouteList routeList);
+	public void onRouteStopped();
+	
 
-	// Deletes Route
-	public void onDeleteRoute();
 
 	// Methods regarding the PictureScrollbar
 	// Opens Dialog for deleting picture
@@ -37,9 +39,6 @@ public interface MainCallback {
 
 	public void onDeletePicture(Route route);
 
-	public void onShowFullPicture(Route route);
-
-	public void onStopRoute();
 
 	public void onCamStart(Route route);
 
@@ -58,7 +57,12 @@ public interface MainCallback {
 	public void onDialogCreateCanceled();
 	
 	
+	//CALLED WHEN ACTIVE ROUTE SHALL BE DISPLAYED, BUT NO SERVIC IS ACTIVE
 	public void onActiveRouteNoService (Route route);
+	
+	
+	public void onOpenDialogPauseRoute(Route Route);
+	public void onRoutePaused ();
 		
 	
 

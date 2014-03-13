@@ -38,7 +38,7 @@ public class DeleteRouteDialog extends DialogFragment {
 
 						routeList.deleteRouteDB(index);
 						dismiss();
-						mCallback.onDeleteRoute();
+						mCallback.onRouteDeleted();
 					}
 				}).create();
 	}

@@ -43,6 +43,7 @@ import de.smbsolutions.day.functions.objects.SliderMenu;
 import de.smbsolutions.day.presentation.dialogs.CreateRouteDialog;
 import de.smbsolutions.day.presentation.dialogs.DeletePictureDialog;
 import de.smbsolutions.day.presentation.dialogs.DeleteRouteDialog;
+import de.smbsolutions.day.presentation.dialogs.PauseRouteDialog;
 import de.smbsolutions.day.presentation.dialogs.StopRouteDialog;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
@@ -176,7 +177,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
   			
   		//Service has been created, but is not active any longer
   		//Some error occured -> try it again
-  		} else if (mService.isServiceInProgress() == false ) {
+  		} else if (mService.isServiceRunning() == false ) {
   			onStartTrackingService(route);
   		}
 	
@@ -223,6 +224,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		// WENN BENUTZER DEN DIALOG VERNEINT MUSS ER WIEDER BEENDET WERDEN
 		Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+		//bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 		// Showing the popup / Second Parameter: Unique Name, that is
@@ -233,7 +235,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onLongItemSelected(RouteList routeList, int index) {
+	public void onOpenDialogDeleteRoute(RouteList routeList, int index) {
 
 		DeleteRouteDialog dialog = new DeleteRouteDialog();
 		Bundle bundle = new Bundle();
@@ -248,7 +250,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onStopPopup(RouteList routeList) {
+	public void onOpenDialogStopRoute(RouteList routeList) {
 
 		StopRouteDialog dialog = new StopRouteDialog();
 		Bundle bundle = new Bundle();
@@ -262,7 +264,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onDeleteRoute() {
+	public void onRouteDeleted() {
 
 		MainFragment mainfrag = new MainFragment();
 		getSupportFragmentManager().beginTransaction()
@@ -311,13 +313,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	// GLEICH WIE DELETE ROUTE
 	@Override
-	public void onStopRoute() {
+	public void onRouteStopped() {
 		MainFragment mainfrag = new MainFragment();
 
 		// Stop service
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
+			
 		}
 
 		getSupportFragmentManager().beginTransaction()
@@ -477,11 +480,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	}
 
-	@Override
-	public void onShowFullPicture(Route route) {
-		// TODO Was soll hier geschehen?
-
-	}
 
 	@Override
 	public void onRefreshMap() {
@@ -567,11 +565,41 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	  		//Service has been created, but is not active any longer
 	  		//Some error occured -> try it again
-	  		} else if (mService.isServiceInProgress() == false ) {
+	  		} else if (mService.isServiceRunning() == false ) {
 	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
 	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	  	
 	  		}
+		
+	}
+
+	@Override
+	public void onOpenDialogPauseRoute(Route route) {
+		
+		PauseRouteDialog dialog = new PauseRouteDialog();
+		Bundle bundle = new Bundle();
+		
+		//MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE GESTOPPT
+		//bundle.putParcelable("route", route);
+		dialog.setArguments(bundle);
+		// Showing the popup / Second Parameter: Unique Name, that is
+		// used
+		// to identify the dialog
+		dialog.show(getSupportFragmentManager(), "PauseRouteDialog");
+
+		
+		
+		
+		
+	}
+
+	@Override
+	public void onRoutePaused() {
+	
+		if (mService != null) {
+			unbindService(mConnection);
+			mService = null;
+		}
 		
 	}
 

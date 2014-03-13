@@ -58,6 +58,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private ImageButton ibCamera;
 	private ImageButton ibInfoSliderIn;
 	private ImageButton ibInfoSliderOut;
+	private ImageButton ibPauseRoute;
 	private TextView tvDistance;
 	private TextView tvDuration;
 	private TextView tvAveSpeed;
@@ -166,6 +167,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
 			addButtonClickListenerCamera(ibCamera);
 		}
+		
+		if (ibPauseRoute == null) {
+			ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
+			addButtonClickListenerPauseRoute(ibPauseRoute);
+		}
 
 		if (ibInfoSliderIn == null) {
 			ibInfoSliderIn = (ImageButton) view
@@ -201,9 +207,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			tvAveSpeed.setText(String.valueOf("Durch. Gesch.: " + aveSpeed
 					+ " km/h"));
 		}
-		// Closed routes cannot generate a new picture
+		// Closed routes cannot generate a new picture and cannot pause a route
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
+			ibPauseRoute.setVisibility(View.INVISIBLE);
 		}
 
 		view.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -259,6 +266,23 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		});
 
 	}
+	
+	public void addButtonClickListenerPauseRoute(ImageButton imageButton) {
+		imageButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				weakCallBack.get().onOpenDialogPauseRoute(route);
+
+			}
+		});
+
+	}
+	
+	
+	
+	
 
 	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
@@ -588,8 +612,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			map.clear();
 			map = null;
 		}
+		
 		ibCamera.setImageBitmap(null);
 		ibCamera = null;
+		
+		ibPauseRoute.setImageBitmap(null);
+		ibPauseRoute = null;
 
 		if (flipper != null) {
 			flipper.removeAllViews();
