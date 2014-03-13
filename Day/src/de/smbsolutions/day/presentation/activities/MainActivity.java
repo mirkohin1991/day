@@ -165,22 +165,22 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// fragment not in back
 		// stack, create it.
 //		
-  	if (route.isActive()) {
-  		
-  		//Active route should always have an active service
-  		//--> If not, the app was closed meanwhile,
-  		if (mService == null) {
-  		
-  			onStartTrackingService(route);
-  		
-  			
-  		//Service has been created, but is not active any longer
-  		//Some error occured -> try it again
-  		} else if (mService.isServiceInProgress() == false ) {
-  			onStartTrackingService(route);
-  		}
-	
-}
+//  	if (route.isActive()) {
+//  		
+//  		//Active route should always have an active service
+//  		//--> If not, the app was closed meanwhile,
+//  		if (mService == null) {
+//  		
+//  			onStartTrackingService(route);
+//  		
+//  			
+//  		//Service has been created, but is not active any longer
+//  		//Some error occured -> try it again
+//  		} else if (mService.isServiceInProgress() == false ) {
+//  			onStartTrackingService(route);
+//  		}
+//	
+//}
 
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
