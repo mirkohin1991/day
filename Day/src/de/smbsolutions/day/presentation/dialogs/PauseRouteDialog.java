@@ -10,22 +10,22 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class DeleteRouteDialog extends DialogFragment {
+
+public class PauseRouteDialog extends DialogFragment {
 
 	private RouteList routeList;
 	private Bundle bundle;
-	private int index;
 	private MainCallback mCallback;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		bundle = this.getArguments();
-		routeList = (RouteList) bundle.getParcelable("routeList");
-		index = bundle.getInt("routeIndex");
+	//	routeList = (RouteList) bundle.getParcelable("routeList");
+	
 
-		return new AlertDialog.Builder(getActivity()).setTitle("Route löschen")
-				.setMessage("Möchten Sie die Route wirklich löschen?")
+		return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")
+				.setMessage("Wenn Sie die Route pausieren, werden keine neuen Standortdaten gespeichert bis Sie die Route das nächste Mal aufrufen.")
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -35,10 +35,11 @@ public class DeleteRouteDialog extends DialogFragment {
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-
-						routeList.deleteRouteDB(index);
+						// The last route is always the active one
+						//routeList.getlastRoute().closeRoute();
 						dismiss();
-						mCallback.onRouteDeleted();
+						//Call the communication interface to start the follow-on fragment
+						mCallback.onRoutePaused();
 					}
 				}).create();
 	}

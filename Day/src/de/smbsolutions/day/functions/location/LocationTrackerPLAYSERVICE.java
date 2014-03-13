@@ -73,7 +73,11 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	private final IBinder mBinder = new LocalBinder();
 
+	//Indicating that the entered route location is the first one for the route
 	private boolean flag_first = false;
+	
+	
+	private boolean flag_serviceRunning = false;
 
 
 
@@ -135,12 +139,18 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	public void startLocationTrackingAndSaveFirst(
 			Route route) {
 
-		
 		this.route = route;
 		this.flag_first = true;
 
 		startLocationTracking();
 
+	}
+	
+	public void reStartLocationTrackingAndSavePoint () {
+		this.route = route;
+		this.flag_first = false;
+
+		startLocationTracking();
 	}
 
 	@Override
@@ -183,7 +193,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	 */
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		// TODO Auto-generated method stub
+		flag_serviceRunning = true;
 
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
@@ -203,8 +213,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 					location.getLongitude(), location.getAltitude()));
 
 			previousLocation = location;
-
+            
+			if (flag_first == true) {
 			mCallback.onNewRouteStarted(route);
+			}
 
 			// Display the connection status
 			Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
@@ -226,6 +238,9 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	@Override
 	public void onDisconnected() {
+		
+		flag_serviceRunning = false;
+		
 		// Turn off the request flag
 		mInProgress = false;
 		// Destroy the current location client
@@ -238,6 +253,9 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
 		// Report to the UI that the location was updated
+		
+		//refreshing that the service is still alive
+		flag_serviceRunning = true;
 
 		if (previousLocation != null) {
 			if (location.distanceTo(previousLocation) < Device.getAPP_SETTINGS().getTrackingMeter()) {
@@ -298,6 +316,9 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	@Override
 	public void onDestroy() {
+		
+		flag_serviceRunning = false;
+		
 		// Turn off the request flag
 		mInProgress = false;
 		if (servicesAvailable && mLocationClient != null) {
@@ -401,8 +422,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			alertDialog.show();
 		}
 
-		public boolean isServiceInProgress() {
-			return mInProgress;
+		public boolean isServiceRunning() {
+			return flag_serviceRunning;
 		}
 
 }

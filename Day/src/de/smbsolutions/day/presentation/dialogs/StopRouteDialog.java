@@ -23,7 +23,7 @@
 			routeList = (RouteList) bundle.getParcelable("routeList");
 		
 
-			return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")
+			return new AlertDialog.Builder(getActivity()).setTitle("Route anhalten")
 					.setMessage("Möchten Sie die Route wirklich beenden?")
 					.setNegativeButton(android.R.string.no, new OnClickListener() {
 						@Override
@@ -38,7 +38,7 @@
 							routeList.getlastRoute().closeRoute();
 							dismiss();
 							//Call the communication interface to start the follow-on fragment
-							mCallback.onStopRoute();
+							mCallback.onRouteStopped();
 						}
 					}).create();
 		}

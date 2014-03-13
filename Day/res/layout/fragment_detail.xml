@@ -57,6 +57,17 @@
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1" >
             </FrameLayout>
+            
+              <ImageButton
+                                android:id="@+id/ibPauseRoute"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#00000000"
+                                android:scaleType="fitEnd"
+                                android:src="@drawable/slr"
+                                android:text="Button"
+                                android:textColor="@color/white" />
 
             <FrameLayout
                 android:layout_width="match_parent"
