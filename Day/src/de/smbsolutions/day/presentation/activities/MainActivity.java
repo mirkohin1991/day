@@ -159,28 +159,25 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			getSupportFragmentManager().popBackStack();
 		}
 
+		
+
+		if (route.isActive()) {
+
+			// Active route should always have an active service
+			// --> If not, the app was closed meanwhile,
+			if (mService == null) {
+
+				onStartTrackingService(route);
+
+				// Service has been created, but is not active any longer
+				// Some error occured -> try it again
+			} else if (mService.isServiceRunning() == false) {
+				onStartTrackingService(route);
+			}
+
+		}
+
 		DetailFragment detail_frag = new DetailFragment();
-
-		// fragment not in back
-		// stack, create it.
-//		
-  	if (route.isActive()) {
-  		
-  		//Active route should always have an active service
-  		//--> If not, the app was closed meanwhile,
-  		if (mService == null) {
-  		
-  			onStartTrackingService(route);
-  		
-  			
-  		//Service has been created, but is not active any longer
-  		//Some error occured -> try it again
-  		} else if (mService.isServiceRunning() == false ) {
-  			onStartTrackingService(route);
-  		}
-	
-}
-
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
@@ -201,7 +198,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		 super.onPause();
+		super.onPause();
 	}
 
 	@Override
@@ -261,7 +258,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void  onRouteDeleted() {
+	public void onRouteDeleted() {
 
 		MainFragment mainfrag = new MainFragment();
 		getSupportFragmentManager().beginTransaction()
@@ -310,7 +307,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	// GLEICH WIE DELETE ROUTE
 	@Override
-	public void  onRouteStopped() {
+	public void onRouteStopped() {
 		MainFragment mainfrag = new MainFragment();
 
 		// Stop service
@@ -465,10 +462,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			} else {
 				if (list.get(list.size() - 1) instanceof DetailFragment) {
 					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
-					
-				} else if(list.get(list.size() - 1) instanceof MainFragment){
+
+				} else if (list.get(list.size() - 1) instanceof MainFragment) {
 					CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
-					
+
 				} else {
 					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 				}
@@ -551,54 +548,49 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onActiveRouteNoService(Route route) {
-	
-	  		
-	  		//Active route should always have an active service
-	  		//--> If not, the app was closed meanwhile,
-	  		if (mService == null) {
-	  			//Start service again
-	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
-	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	  		
 
-	  		//Service has been created, but is not active any longer
-	  		//Some error occured -> try it again
-	  		} else if (mService.isServiceRunning() == false ) {
-	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
-	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	  	
-	  		}
-		
+		// Active route should always have an active service
+		// --> If not, the app was closed meanwhile,
+		if (mService == null) {
+			// Start service again
+			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+			// Service has been created, but is not active any longer
+			// Some error occured -> try it again
+		} else if (mService.isServiceRunning() == false) {
+			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+		}
+
 	}
-		@Override
+
+	@Override
 	public void onOpenDialogPauseRoute(Route route) {
-		
+
 		PauseRouteDialog dialog = new PauseRouteDialog();
 		Bundle bundle = new Bundle();
-		
-		//MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE GESTOPPT
-		//bundle.putParcelable("route", route);
+
+		// MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE
+		// GESTOPPT
+		// bundle.putParcelable("route", route);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
 		// to identify the dialog
 		dialog.show(getSupportFragmentManager(), "PauseRouteDialog");
 
-		
-		
-		
-		
 	}
 
 	@Override
 	public void onRoutePaused() {
-	
+
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
 		}
-		
+
 	}
-	
 
 }

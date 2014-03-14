@@ -103,11 +103,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		}
 
 		initializeFragmentPortrait();
-		
-		
-		if (routeList.isOpenRoute())
-		{
-		mCallback.onActiveRouteNoService(routeList.getlastRoute());
+
+		if (routeList.isOpenRoute()) {
+			mCallback.onActiveRouteNoService(routeList.getlastRoute());
 		}
 
 	}
@@ -173,32 +171,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 							map = routeList.getlastRoute().prepareMapPreview(
 									map);
 
-							addListitemListender(meineListView);
-
-							// Child == 1 --> the "active route item" layout is
-							// displayed
-							if (vfNewOrCurrent.getDisplayedChild() == 1) {
-
-								addButtonClickListenerContinue(btnContinueRoute);
-								// addButtonClickListenerStop(btnStopRoute);
-
-								// Getting the whole line (including the two
-								// buttons)
-								View viewInclude = (View) view
-										.findViewById(R.id.includeCurrentElement);
-
-								addButtonClickListenerCurrentPreview(viewInclude);
-
-								// No current route -> add listener to create
-								// new one
-							} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
-
-								View viewInclude = (View) view
-										.findViewById(R.id.includeNewElement);
-
-								addButtonClickListenerCreate(viewInclude);
-							}
-
 						}
 					});
 
@@ -207,7 +179,30 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					"Fehler Initialisierung Fragment: " + e.getMessage(),
 					Toast.LENGTH_LONG).show();
 		}
+		addListitemListender(meineListView);
 
+		// Child == 1 --> the "active route item" layout is
+		// displayed
+		if (vfNewOrCurrent.getDisplayedChild() == 1) {
+
+			addButtonClickListenerContinue(btnContinueRoute);
+			// addButtonClickListenerStop(btnStopRoute);
+
+			// Getting the whole line (including the two
+			// buttons)
+			View viewInclude = (View) view
+					.findViewById(R.id.includeCurrentElement);
+
+			addButtonClickListenerCurrentPreview(viewInclude);
+
+			// No current route -> add listener to create
+			// new one
+		} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
+
+			View viewInclude = (View) view.findViewById(R.id.includeNewElement);
+
+			addButtonClickListenerCreate(viewInclude);
+		}
 	}
 
 	public void addButtonClickListenerContinue(Button button) {

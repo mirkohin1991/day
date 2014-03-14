@@ -57,6 +57,7 @@ public class Route implements Parcelable {
 		this.routeName = routeName;
 		// Get the last route id and 1 to get the new id
 		id = Database.getlastRouteID() + 1;
+		
 		date = today;
 		active = true;
 
