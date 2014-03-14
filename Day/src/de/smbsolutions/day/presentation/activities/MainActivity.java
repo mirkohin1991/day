@@ -1,8 +1,6 @@
 package de.smbsolutions.day.presentation.activities;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ComponentName;
@@ -161,6 +159,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			getSupportFragmentManager().popBackStack();
 		}
 
+		
+
 		DetailFragment detail_frag = new DetailFragment();
 
 //		// Only if tracking via service is enabled
@@ -182,9 +182,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				}
 
 			}
-
-//		}
-
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
@@ -222,7 +219,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
 
-// AUS PERFORMANCEGRÜNDEN SERVICE SCHONMAL STARTEN
+		// AUS PERFORMANCEGRÜNDEN SERVICE SCHONMAL STARTEN
 
 		// WENN BENUTZER DEN DIALOG VERNEINT MUSS ER WIEDER BEENDET WERDEN
 		Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
@@ -521,7 +518,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService.saveActivity(this);
 			// Warum liste und route übergeben??
 			mService.startLocationTrackingAndSaveFirst(route);
-			
+
 		} else {
 			Toast.makeText(this, "Service wurde nicht gestartet",
 					Toast.LENGTH_SHORT).show();
@@ -531,16 +528,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onPictureTaken(Route route, Uri fileUri, File small_picture) {
-		
-		
 		if (mService != null) {
 
 			mService.addPictureLocation(route, fileUri, small_picture);
-			
-//			if (Database.getSettingValue(Database.SETTINGS_TRACKING ) == 0) {
-//				mService.saveActivity(this);
-//				mService.startLocationTrackingAndPicture(route);
-//			}
 
 		} else {
 			Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();
@@ -555,7 +545,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// -> But now he decided to cancel to process
 		if (mService != null) {
 			unbindService(mConnection);
-			Toast.makeText(this, "Unbind Service", Toast.LENGTH_SHORT).show();
 			mService = null;
 		}
 
@@ -607,7 +596,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
-
 	@Override
 	public void onTrackingIntervalChanged() {
 
@@ -642,8 +630,5 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 		
 	}
-
-
-
 
 }

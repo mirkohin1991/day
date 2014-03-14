@@ -57,6 +57,7 @@ public class Route implements Parcelable {
 		this.routeName = routeName;
 		// Get the last route id and 1 to get the new id
 		id = Database.getlastRouteID() + 1;
+		
 		date = today;
 		active = true;
 
@@ -100,7 +101,7 @@ public class Route implements Parcelable {
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
 
 		Bitmap bitmap = null;
-		;
+		
 		mapImport.clear();
 		// Necessary to save in order to connect timestamp and marker
 		markerMap = new LinkedHashMap<RoutePoint, Marker>();

@@ -158,6 +158,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setMyLocationEnabled(true);
 			map.setBuildingsEnabled(true);
+			map.getUiSettings().setCompassEnabled(false);
 		}
 
 		initializeFragmentPortrait();
@@ -170,7 +171,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
 			addButtonClickListenerCamera(ibCamera);
 		}
-		
+
 		if (ibPauseRoute == null) {
 			ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
 			addButtonClickListenerPauseRoute(ibPauseRoute);
@@ -215,26 +216,23 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibPauseRoute.setVisibility(View.INVISIBLE);
 		}
+		view.post(new Runnable() {
 
-		view.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-
-					@Override
-					public void onGlobalLayout() {
-						if (route != null) {
-							if (mapPrepared == false) {
-								// if point added, only edit polyline and add
-								// new marker!!! TODO
-								map = route.prepareMapDetails(map,
-										getActivity());
-								mapPrepared = true;
-							}
-
-						}
-
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (route != null) {
+					if (mapPrepared == false) {
+						// if point added, only edit polyline and add
+						// new marker!!! TODO
+						map = route.prepareMapDetails(map, getActivity());
+						mapPrepared = true;
 					}
 
-				});
+				}
+			}
+
+		});
 
 	}
 
@@ -271,7 +269,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		});
 
 	}
-	
+
 	public void addButtonClickListenerPauseRoute(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
 
@@ -284,10 +282,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		});
 
 	}
-	
-	
-	
-	
 
 	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
@@ -477,11 +471,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		// Calculates the distance from km to meter
 		distanceKm = (double) Math.round(distanceTotal * 100.0) / 100.0;
-		aveSpeed = (double) Math.round(((distanceAct / routeDuration) / 3600) * 100.0) / 100.0;
+		aveSpeed = (double) Math
+				.round(((distanceAct / routeDuration) / 3600) * 100.0) / 100.0;
 		duration = getDuration(routeDuration);
-		
-	}
 
+	}
 
 	private void unbindDrawables(View view) {
 		if (view.getBackground() != null) {
@@ -496,40 +490,36 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		}
 	}
 
-
 	public String getDuration(long timeseconds) {
 		String time = null;
 		long duration = timeseconds;
 
 		duration = duration / 1000;
 
-		 long second = duration % 60;
-		 long minute = (duration % 3600) / 60;
-		 long hour = duration / 3600;
-		 long day = duration /3600 / 24;
-		 
-		 
-			 String sSecond = String.format("%02d", second);
-			 String sMinute = String.format("%02d", minute);
-			 String sHour = String.format("%02d", hour);
-			 String sDay = String.format("%02d", day);
-		 
-		
+		long second = duration % 60;
+		long minute = (duration % 3600) / 60;
+		long hour = duration / 3600;
+		long day = duration / 3600 / 24;
+
+		String sSecond = String.format("%02d", second);
+		String sMinute = String.format("%02d", minute);
+		String sHour = String.format("%02d", hour);
+		String sDay = String.format("%02d", day);
+
 		if (minute >= 1) {
-			 if (hour >= 1) {
-				 if (day >= 1) {
-						 time = sDay + " T, " + sHour + ":" + sMinute + " Stunden";
-					  }
-				 else{
-					 time = sHour + ":" + sMinute + " Stunden";
-				 }
-				 
-			 	} else {
-			 		time = sMinute + ":" + sSecond + " Minuten";
-			 	}
-			 } else {
-				 time = sSecond + " Sekunden";
-			 }
+			if (hour >= 1) {
+				if (day >= 1) {
+					time = sDay + " T, " + sHour + ":" + sMinute + " Stunden";
+				} else {
+					time = sHour + ":" + sMinute + " Stunden";
+				}
+
+			} else {
+				time = sMinute + ":" + sSecond + " Minuten";
+			}
+		} else {
+			time = sSecond + " Sekunden";
+		}
 
 		return time;
 	}
@@ -648,10 +638,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			map.clear();
 			map = null;
 		}
-		
+
 		ibCamera.setImageBitmap(null);
 		ibCamera = null;
-		
+
 		ibPauseRoute.setImageBitmap(null);
 		ibPauseRoute = null;
 
@@ -673,7 +663,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		view = null;
 		task = null;
 		fileUri = null;
-	}
 
+	}
 
 }
