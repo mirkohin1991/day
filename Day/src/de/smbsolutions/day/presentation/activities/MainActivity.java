@@ -222,11 +222,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
 
-		// AUS LAUFZEITGRÜNDEN SERVICE SCHON HIER STARTEN
-			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
-			// bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		
+// AUS PERFORMANCEGRÜNDEN SERVICE SCHONMAL STARTEN
+
+		// WENN BENUTZER DEN DIALOG VERNEINT MUSS ER WIEDER BEENDET WERDEN
+		Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -321,7 +321,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
-
 		}
 
 		getSupportFragmentManager().beginTransaction()
@@ -523,8 +522,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			// Warum liste und route übergeben??
 			mService.startLocationTrackingAndSaveFirst(route);
 			
-
-
 		} else {
 			Toast.makeText(this, "Service wurde nicht gestartet",
 					Toast.LENGTH_SHORT).show();
