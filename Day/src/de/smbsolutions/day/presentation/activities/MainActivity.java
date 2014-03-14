@@ -183,8 +183,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			}
 
-//		}
-
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
@@ -251,11 +249,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onOpenDialogStopRoute(RouteList routeList) {
+	public void onOpenDialogStopRoute(Route route) {
 
 		StopRouteDialog dialog = new StopRouteDialog();
 		Bundle bundle = new Bundle();
-		bundle.putParcelable("routeList", routeList);
+		bundle.putParcelable("route", route);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -536,11 +534,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (mService != null) {
 
 			mService.addPictureLocation(route, fileUri, small_picture);
-			
-//			if (Database.getSettingValue(Database.SETTINGS_TRACKING ) == 0) {
-//				mService.saveActivity(this);
-//				mService.startLocationTrackingAndPicture(route);
-//			}
+
 
 		} else {
 			Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();

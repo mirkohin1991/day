@@ -26,7 +26,7 @@ public interface MainCallback {
 	public void onRouteDeleted();
 
 	// Opens Dialog for stopping routes
-	public void onOpenDialogStopRoute(RouteList routeList);
+	public void onOpenDialogStopRoute(Route route);
 
 	public void onRouteStopped();
 
@@ -60,6 +60,7 @@ public interface MainCallback {
 
 	public void onOpenDialogPauseRoute(Route Route);
 
+
 	public void onRoutePaused ();
 	
 	
@@ -67,6 +68,7 @@ public interface MainCallback {
 	
 	
 	public void onTrackingTurnedOnOff ();
+
 
 
 }

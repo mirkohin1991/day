@@ -104,13 +104,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		}
 
 		initializeFragmentPortrait();
-		
-		
-		if (routeList.isOpenRoute())
-		{
-			
-			//if(Database.getSettingValue(Database.SETTINGS_TRACKING) == 1)
-		mCallback.onActiveRouteNoService(routeList.getlastRoute());
+
+		if (routeList.isOpenRoute()) {
+			mCallback.onActiveRouteNoService(routeList.getlastRoute());
+
 		}
 
 	}
@@ -166,51 +163,44 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				btnCreateRoute = (Button) view
 						.findViewById(R.id.imagebuttonCreate);
 			}
+			view.post(new Runnable() {
 
-			view.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
-
-						@Override
-						public void onGlobalLayout() {
-
-							map = routeList.getlastRoute().prepareMapPreview(
-									map);
-
-							addListitemListender(meineListView);
-
-							// Child == 1 --> the "active route item" layout is
-							// displayed
-							if (vfNewOrCurrent.getDisplayedChild() == 1) {
-
-								addButtonClickListenerContinue(btnContinueRoute);
-								// addButtonClickListenerStop(btnStopRoute);
-
-								// Getting the whole line (including the two
-								// buttons)
-								View viewInclude = (View) view
-										.findViewById(R.id.includeCurrentElement);
-
-								addButtonClickListenerCurrentPreview(viewInclude);
-
-								// No current route -> add listener to create
-								// new one
-							} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
-
-								View viewInclude = (View) view
-										.findViewById(R.id.includeNewElement);
-
-								addButtonClickListenerCreate(viewInclude);
-							}
-
-						}
-					});
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					map = routeList.getlastRoute().prepareMapPreview(map);
+				}
+			});
 
 		} catch (Exception e) {
 			Toast.makeText(getActivity(),
 					"Fehler Initialisierung Fragment: " + e.getMessage(),
 					Toast.LENGTH_LONG).show();
 		}
+		addListitemListender(meineListView);
 
+		// Child == 1 --> the "active route item" layout is
+		// displayed
+		if (vfNewOrCurrent.getDisplayedChild() == 1) {
+
+			addButtonClickListenerContinue(btnContinueRoute);
+			// addButtonClickListenerStop(btnStopRoute);
+
+			// Getting the whole line (including the two
+			// buttons)
+			View viewInclude = (View) view
+					.findViewById(R.id.includeCurrentElement);
+
+			addButtonClickListenerCurrentPreview(viewInclude);
+
+			// No current route -> add listener to create
+			// new one
+		} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
+
+			View viewInclude = (View) view.findViewById(R.id.includeNewElement);
+
+			addButtonClickListenerCreate(viewInclude);
+		}
 	}
 
 	public void addButtonClickListenerContinue(Button button) {
@@ -297,7 +287,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				if (routeList.isOpenRoute()) {
 					// A route is active -> user wants to stop it
 
-					mCallback.onOpenDialogStopRoute(routeList);
+					mCallback.onOpenDialogStopRoute(routeList.getlastRoute());
 
 				}
 				return false;
