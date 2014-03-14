@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
@@ -106,6 +107,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 		if (routeList.isOpenRoute()) {
 			mCallback.onActiveRouteNoService(routeList.getlastRoute());
+
 		}
 
 	}

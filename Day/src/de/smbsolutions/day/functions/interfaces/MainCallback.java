@@ -62,4 +62,8 @@ public interface MainCallback {
 
 	public void onRoutePaused();
 
+	public void onTrackingIntervalChanged();
+
+	public void onTrackingTurnedOnOff();
+
 }

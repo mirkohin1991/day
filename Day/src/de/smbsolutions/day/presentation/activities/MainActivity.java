@@ -161,23 +161,27 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		
 
-		if (route.isActive()) {
-
-			// Active route should always have an active service
-			// --> If not, the app was closed meanwhile,
-			if (mService == null) {
-
-				onStartTrackingService(route);
-
-				// Service has been created, but is not active any longer
-				// Some error occured -> try it again
-			} else if (mService.isServiceRunning() == false) {
-				onStartTrackingService(route);
-			}
-
-		}
-
 		DetailFragment detail_frag = new DetailFragment();
+
+//		// Only if tracking via service is enabled
+//		if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
+
+			if (route.isActive()) {
+
+				// Active route should always have an active service
+				// --> If not, the app was closed meanwhile,
+				if (mService == null) {
+					mService.saveActivity(this);
+					mService.reStartLocationTrackingAndSavePoint(route);
+
+					// Service has been created, but is not active any longer
+					// Some error occured -> try it again
+				} else if (mService.isServiceRunning() == false) {
+					mService.saveActivity(this);
+					mService.reStartLocationTrackingAndSavePoint(route);
+				}
+
+			}
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
@@ -591,6 +595,40 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService = null;
 		}
 
+	}
+	@Override
+	public void onTrackingIntervalChanged() {
+
+		if (mService != null) {
+
+			// Always refresh the values
+			mService.refreshTrackingInterval();
+
+			if (mService.isServiceRunning()) {
+
+				// Restart tacker only when really running
+				mService.restartLocationTracker();
+
+			}
+		}
+
+	}
+
+	@Override
+	public void onTrackingTurnedOnOff() {
+		// TODO Auto-generated method stub
+		
+		
+		if (mService != null) {
+
+			if (mService.isServiceRunning()) {
+
+				// Restart tacker only when really running
+				mService.restartLocationTracker();
+
+			}
+		}
+		
 	}
 
 }

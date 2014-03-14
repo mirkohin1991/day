@@ -45,7 +45,7 @@ public class CameraFragment extends android.support.v4.app.Fragment {
         }
         
         final File path = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+                Environment.DIRECTORY_PICTURES), "Hike App");
 
         //Wenn Wert geaendert wird, diesen in die Datenbank schreiben
         switchShowInGal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
