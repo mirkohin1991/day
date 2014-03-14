@@ -110,17 +110,21 @@ public class Route implements Parcelable {
 					.getLongitude()));
 			polylineOptions_top.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
+			
+			if (point.getPicture() != null ){
 			MarkerOptions markerOpt = new MarkerOptions().position(
 					new LatLng(point.getLatitude(), point.getLongitude()))
 					.title(getRouteName());
 
 			Marker marker = mapImport.addMarker(markerOpt);
 			markerMap.put(point, marker);
+			
+			}
 
 		}
 
-		Polyline polyline_top = mapImport.addPolyline(polylineOptions_top);
-		Polyline polyline_back = mapImport.addPolyline(polylineOptions_back);
+		mapImport.addPolyline(polylineOptions_top);
+		mapImport.addPolyline(polylineOptions_back);
 
 		// Setting the zoom
 		setZoomAllMarkers(mapImport);
