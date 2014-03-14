@@ -101,7 +101,7 @@ public class Route implements Parcelable {
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
 
 		Bitmap bitmap = null;
-		;
+		
 		mapImport.clear();
 		// Necessary to save in order to connect timestamp and marker
 		markerMap = new LinkedHashMap<RoutePoint, Marker>();

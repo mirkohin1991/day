@@ -163,18 +163,14 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				btnCreateRoute = (Button) view
 						.findViewById(R.id.imagebuttonCreate);
 			}
+			view.post(new Runnable() {
 
-			view.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
-
-						@Override
-						public void onGlobalLayout() {
-
-							map = routeList.getlastRoute().prepareMapPreview(
-									map);
-
-						}
-					});
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					map = routeList.getlastRoute().prepareMapPreview(map);
+				}
+			});
 
 		} catch (Exception e) {
 			Toast.makeText(getActivity(),
