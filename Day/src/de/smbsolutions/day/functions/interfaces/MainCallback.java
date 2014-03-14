@@ -59,7 +59,7 @@ public interface MainCallback {
 	public void onActiveRouteNoService(Route route);
 
 	public void onOpenDialogPauseRoute(Route Route);
-<<<<<<< HEAD
+
 	public void onRoutePaused ();
 	
 	
@@ -68,9 +68,5 @@ public interface MainCallback {
 	
 	public void onTrackingTurnedOnOff ();
 
-=======
-
-	public void onRoutePaused();
->>>>>>> branch 'master' of https://github.com/mirkohin1991/day.git
 
 }
