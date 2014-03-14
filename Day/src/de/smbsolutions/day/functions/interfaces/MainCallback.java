@@ -63,7 +63,12 @@ public interface MainCallback {
 	
 	public void onOpenDialogPauseRoute(Route Route);
 	public void onRoutePaused ();
-		
 	
+	
+	public void onTrackingIntervalChanged ();
+	
+	
+	public void onTrackingTurnedOnOff ();
+
 
 }

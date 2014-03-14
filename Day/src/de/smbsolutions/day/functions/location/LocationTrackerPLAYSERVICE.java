@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
+import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
@@ -44,24 +45,13 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	 */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 	private Activity activity;
-	private static LocationTrackerPLAYSERVICE tracker;
 	private LocationClient mLocationClient;
 	private Route route;
 	private MainCallback mCallback;
 	private Location previousLocation;
 
-	// Milliseconds per second
-	private static int MILLISECONDS_PER_SECOND = 1000;
-	// Update frequency in seconds
-	public static int UPDATE_INTERVAL_IN_SECONDS = 10;
-	// Update frequency in milliseconds
-	private static  long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND
-			* UPDATE_INTERVAL_IN_SECONDS;
-	// The fastest update frequency, in seconds
-	private static int FASTEST_INTERVAL_IN_SECONDS = 1;
-	// A fast frequency ceiling in milliseconds
-	private static long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND
-			* FASTEST_INTERVAL_IN_SECONDS;
+	private static long UPDATE_INTERVAL;
+	private static long FASTEST_INTERVAL;
 
 	// object that holds accuracy and frequency parameters
 	LocationRequest mLocationRequest;
@@ -73,13 +63,15 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	private final IBinder mBinder = new LocalBinder();
 
-	//Indicating that the entered route location is the first one for the route
+	// Indicating that the entered route location is the first one for the route
 	private boolean flag_first = false;
-	
-	
+
 	private boolean flag_serviceRunning = false;
-
-
+	
+	
+	private boolean flag_noService_Picture = false;
+	
+	
 
 	public void saveActivity(Activity activity) {
 		this.activity = activity;
@@ -104,7 +96,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	}
 
 	public void addPictureLocation(Route route, Uri fileUri, File small_picture) {
-
+		
 		// Brauchen wir vielleicht auch nicht!
 		this.route = route;
 
@@ -125,9 +117,9 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		} else {
 			showPopUpEnableSettings();
 
-//			// Display the connection status
-//			Toast.makeText(activity, "Location couldn't be detected",
-//					Toast.LENGTH_SHORT).show();
+			// // Display the connection status
+			// Toast.makeText(activity, "Location couldn't be detected",
+			// Toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
 		}
 
@@ -135,9 +127,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		// mCallback.onShowRoute(route);
 
 	}
+	
+	
 
-	public void startLocationTrackingAndSaveFirst(
-			Route route) {
+	public void startLocationTrackingAndSaveFirst(Route route) {
 
 		this.route = route;
 		this.flag_first = true;
@@ -145,8 +138,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		startLocationTracking();
 
 	}
-	
-	public void reStartLocationTrackingAndSavePoint () {
+
+	public void reStartLocationTrackingAndSavePoint(Route route) {
 		this.route = route;
 		this.flag_first = false;
 
@@ -199,12 +192,23 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 		// EINFACHSTE LÖSUNG. VIELLEICHT GEHT DA ABER AUCH ÜBER
 		// ONLOCATIONCHANGED
-		
+
 		if (mLocationClient.isConnected()) {
-			Toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT).show();
+			Toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
+					.show();
 		}
-		Location location = mLocationClient.getLastLocation();
 		
+		
+		
+		
+		//If the location shall only be tracked when taking a picture this routine has to be skipped
+		if (flag_noService_Picture == true) {
+			flag_noService_Picture = false;
+			return;
+		}
+		
+		
+		Location location = mLocationClient.getLastLocation();
 
 		if (location != null) {
 
@@ -213,34 +217,56 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 					location.getLongitude(), location.getAltitude()));
 
 			previousLocation = location;
-            
+
 			if (flag_first == true) {
-			mCallback.onNewRouteStarted(route);
+				mCallback.onNewRouteStarted(route);
 			}
 
 			// Display the connection status
 			Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
+			
+			
+			
+			//Tracking aus --> kein locationlistener nötig
+			if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 0) {
+				return;
+			}
+			
+	
+			UPDATE_INTERVAL = Database
+					.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
+			FASTEST_INTERVAL = UPDATE_INTERVAL / 5;
+
+			// Create the LocationRequest object
+			mLocationRequest = LocationRequest.create();
+			// Use high accuracy
+			mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+			// Set the update interval to 5 seconds
+			mLocationRequest.setInterval(UPDATE_INTERVAL);
+			// Set the fastest update interval to 1 second
+			mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+			
 
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 
 		} else {
-			
+
 			showPopUpEnableSettings();
 
-//			// Display the connection status
-//			Toast.makeText(activity, "Location couldn't be detected",
-//					Toast.LENGTH_SHORT).show();
-//			// If already requested, start periodic updates
+			// // Display the connection status
+			// Toast.makeText(activity, "Location couldn't be detected",
+			// Toast.LENGTH_SHORT).show();
+			// // If already requested, start periodic updates
 		}
 
 	}
 
 	@Override
 	public void onDisconnected() {
-		
+
 		flag_serviceRunning = false;
-		
+
 		// Turn off the request flag
 		mInProgress = false;
 		// Destroy the current location client
@@ -253,13 +279,15 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
 		// Report to the UI that the location was updated
-		
-		//refreshing that the service is still alive
+
+		// refreshing that the service is still alive
 		flag_serviceRunning = true;
 
 		if (previousLocation != null) {
-			if (location.distanceTo(previousLocation) < Device.getAPP_SETTINGS().getTrackingMeter()) {
-				Toast.makeText(activity, "Zu nahe am letzten Punkt", Toast.LENGTH_SHORT).show();
+			if (location.distanceTo(previousLocation) < Database
+					.getSettingValue(Database.SETTINGS_TRACKING_METER)) {
+				Toast.makeText(activity, "Zu nahe am letzten Punkt",
+						Toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
@@ -271,7 +299,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 				null, location.getLatitude(), location.getLongitude(), location
 						.getAltitude()));
 
-	//	routeList.addRoute(route);
+		// routeList.addRoute(route);
 
 		previousLocation = location;
 
@@ -300,15 +328,6 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 		mInProgress = false;
 
-		// Create the LocationRequest object
-		mLocationRequest = LocationRequest.create();
-		// Use high accuracy
-		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-		// Set the update interval to 5 seconds
-		mLocationRequest.setInterval(UPDATE_INTERVAL);
-		// Set the fastest update interval to 1 second
-		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
 		// Check if google play service is available
 		servicesAvailable = servicesConnected();
 
@@ -316,9 +335,9 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	@Override
 	public void onDestroy() {
-		
+
 		flag_serviceRunning = false;
-		
+
 		// Turn off the request flag
 		mInProgress = false;
 		if (servicesAvailable && mLocationClient != null) {
@@ -382,48 +401,74 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			return false;
 		}
 	}
-	
-	
-	
-	
-		/**
-		 * Function to show settings alert dialog On pressing Settings button will
-		 * lauch Settings Options
-		 * */
-	private void showPopUpEnableSettings () {
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
-			// Setting Dialog Title
-			alertDialog.setTitle("Standort Einstellungen");
+	public void refreshTrackingInterval() {
+		Toast.makeText(this, "Interval refreshed", Toast.LENGTH_LONG).show();
+		// Changing the interval parameters
+		UPDATE_INTERVAL = Database
+				.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
+		FASTEST_INTERVAL = UPDATE_INTERVAL / 5;
 
-			// Setting Dialog Message
-			alertDialog
-					.setMessage("Mit den aktuellen Einstellungen, kann der Standort nicht bestimmt werden. Bedingt durch einen Betriebssystemfehler ist in manchen Fällen leider auch ein kompletter Neustart nötig ");
+	}
 
-			// On pressing Settings button
-			alertDialog.setPositiveButton("Einstellungen ändern",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							activity.startActivity(intent);
-						}
-					});
+	public void restartLocationTracker() {
 
-			// on pressing cancel button
-			alertDialog.setNegativeButton("Abbrechen",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-						}
-					});
+		mLocationClient.removeLocationUpdates(this);
+		Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
+		
+		//Only when gps tracking is enabled the periodical tracking is started
+		if (Database.getSettingValue(Database.SETTINGS_TRACKING)  == 1) {
 
-			// Showing Alert Message
-			alertDialog.show();
+		// Set the update interval to 5 seconds
+		mLocationRequest.setInterval(UPDATE_INTERVAL);
+		// Set the fastest update interval to 1 second
+		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+		// Start request with new params again
+		mLocationClient.requestLocationUpdates(mLocationRequest, this);
+		
 		}
 
-		public boolean isServiceRunning() {
-			return flag_serviceRunning;
-		}
+	}
+
+	/**
+	 * Function to show settings alert dialog On pressing Settings button will
+	 * lauch Settings Options
+	 * */
+	private void showPopUpEnableSettings() {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+		// Setting Dialog Title
+		alertDialog.setTitle("Standort Einstellungen");
+
+		// Setting Dialog Message
+		alertDialog
+				.setMessage("Mit den aktuellen Einstellungen, kann der Standort nicht bestimmt werden. Bedingt durch einen Betriebssystemfehler ist in manchen Fällen leider auch ein kompletter Neustart nötig ");
+
+		// On pressing Settings button
+		alertDialog.setPositiveButton("Einstellungen ändern",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						Intent intent = new Intent(
+								Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						activity.startActivity(intent);
+					}
+				});
+
+		// on pressing cancel button
+		alertDialog.setNegativeButton("Abbrechen",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+
+		// Showing Alert Message
+		alertDialog.show();
+	}
+
+	public boolean isServiceRunning() {
+		return flag_serviceRunning;
+	}
 
 }

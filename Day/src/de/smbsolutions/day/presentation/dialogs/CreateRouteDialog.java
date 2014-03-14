@@ -1,5 +1,7 @@
 package de.smbsolutions.day.presentation.dialogs;
 
+import java.sql.Timestamp;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 
@@ -53,6 +57,8 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 						routeList.addRoute(route);
 
 						mCallback.onStartTrackingService(route);
+						
+					
 
 					}
 				}).setNegativeButton("Abbrechen",

@@ -163,25 +163,27 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		DetailFragment detail_frag = new DetailFragment();
 
-		// fragment not in back
-		// stack, create it.
-//		
-  	if (route.isActive()) {
-  		
-  		//Active route should always have an active service
-  		//--> If not, the app was closed meanwhile,
-  		if (mService == null) {
-  		
-  			onStartTrackingService(route);
-  		
-  			
-  		//Service has been created, but is not active any longer
-  		//Some error occured -> try it again
-  		} else if (mService.isServiceRunning() == false ) {
-  			onStartTrackingService(route);
-  		}
-	
-}
+//		// Only if tracking via service is enabled
+//		if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
+
+			if (route.isActive()) {
+
+				// Active route should always have an active service
+				// --> If not, the app was closed meanwhile,
+				if (mService == null) {
+					mService.saveActivity(this);
+					mService.reStartLocationTrackingAndSavePoint(route);
+
+					// Service has been created, but is not active any longer
+					// Some error occured -> try it again
+				} else if (mService.isServiceRunning() == false) {
+					mService.saveActivity(this);
+					mService.reStartLocationTrackingAndSavePoint(route);
+				}
+
+			}
+
+//		}
 
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
@@ -203,7 +205,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
-		 super.onPause();
+		super.onPause();
 	}
 
 	@Override
@@ -220,12 +222,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
 
-		// AUS PERFORMANCEGRÜNDEN SERVICE SCHONMAL STARTEN
-
-		// WENN BENUTZER DEN DIALOG VERNEINT MUSS ER WIEDER BEENDET WERDEN
-		Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
-		//bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		// AUS LAUFZEITGRÜNDEN SERVICE SCHON HIER STARTEN
+			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			// bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		
 
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -320,7 +321,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
-			
+
 		}
 
 		getSupportFragmentManager().beginTransaction()
@@ -469,10 +470,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			} else {
 				if (list.get(list.size() - 1) instanceof DetailFragment) {
 					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
-					
-				} else if(list.get(list.size() - 1) instanceof MainFragment){
+
+				} else if (list.get(list.size() - 1) instanceof MainFragment) {
 					CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
-					
+
 				} else {
 					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 				}
@@ -482,7 +483,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
-
 
 	@Override
 	public void onRefreshMap() {
@@ -522,6 +522,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService.saveActivity(this);
 			// Warum liste und route übergeben??
 			mService.startLocationTrackingAndSaveFirst(route);
+			
+
 
 		} else {
 			Toast.makeText(this, "Service wurde nicht gestartet",
@@ -532,9 +534,16 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onPictureTaken(Route route, Uri fileUri, File small_picture) {
+		
+		
 		if (mService != null) {
 
 			mService.addPictureLocation(route, fileUri, small_picture);
+			
+//			if (Database.getSettingValue(Database.SETTINGS_TRACKING ) == 0) {
+//				mService.saveActivity(this);
+//				mService.startLocationTrackingAndPicture(route);
+//			}
 
 		} else {
 			Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();
@@ -549,6 +558,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// -> But now he decided to cancel to process
 		if (mService != null) {
 			unbindService(mConnection);
+			Toast.makeText(this, "Unbind Service", Toast.LENGTH_SHORT).show();
 			mService = null;
 		}
 
@@ -556,54 +566,87 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onActiveRouteNoService(Route route) {
-	
-	  		
-	  		//Active route should always have an active service
-	  		//--> If not, the app was closed meanwhile,
-	  		if (mService == null) {
-	  			//Start service again
-	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
-	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	  		
 
-	  		//Service has been created, but is not active any longer
-	  		//Some error occured -> try it again
-	  		} else if (mService.isServiceRunning() == false ) {
-	  			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
-	  			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	  	
-	  		}
-		
+		// Active route should always have an active service
+		// --> If not, the app was closed meanwhile,
+		if (mService == null) {
+			// Start service again
+			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+			// Service has been created, but is not active any longer
+			// Some error occured -> try it again
+		} else if (mService.isServiceRunning() == false) {
+			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+		}
+
 	}
 
 	@Override
 	public void onOpenDialogPauseRoute(Route route) {
-		
+
 		PauseRouteDialog dialog = new PauseRouteDialog();
 		Bundle bundle = new Bundle();
-		
-		//MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE GESTOPPT
-		//bundle.putParcelable("route", route);
+
+		// MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE
+		// GESTOPPT
+		// bundle.putParcelable("route", route);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
 		// to identify the dialog
 		dialog.show(getSupportFragmentManager(), "PauseRouteDialog");
 
-		
-		
-		
-		
 	}
 
 	@Override
 	public void onRoutePaused() {
-	
+
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
 		}
+
+	}
+
+	@Override
+	public void onTrackingIntervalChanged() {
+
+		if (mService != null) {
+
+			// Always refresh the values
+			mService.refreshTrackingInterval();
+
+			if (mService.isServiceRunning()) {
+
+				// Restart tacker only when really running
+				mService.restartLocationTracker();
+
+			}
+		}
+
+	}
+
+	@Override
+	public void onTrackingTurnedOnOff() {
+		// TODO Auto-generated method stub
+		
+		
+		if (mService != null) {
+
+			if (mService.isServiceRunning()) {
+
+				// Restart tacker only when really running
+				mService.restartLocationTracker();
+
+			}
+		}
 		
 	}
+
+
+
 
 }

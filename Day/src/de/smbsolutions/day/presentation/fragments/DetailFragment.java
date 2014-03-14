@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -38,9 +39,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
+import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
@@ -251,6 +254,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			@Override
 			public void onClick(View v) {
+				
 
 				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE,
 						false);
@@ -261,7 +265,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				// start camera activity
 				startActivityForResult(intent,
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-
+				
+				
 			}
 		});
 
@@ -347,6 +352,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					bitmap.recycle();
 					bitmap = null;
 					fOut = null;
+					
+			
+
+					
 
 					weakCallBack.get().onPictureTaken(route, fileUri,
 							small_picture);
