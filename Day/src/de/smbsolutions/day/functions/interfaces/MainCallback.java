@@ -26,7 +26,7 @@ public interface MainCallback {
 	public void onRouteDeleted();
 
 	// Opens Dialog for stopping routes
-	public void onOpenDialogStopRoute(RouteList routeList);
+	public void onOpenDialogStopRoute(Route route);
 
 	public void onRouteStopped();
 

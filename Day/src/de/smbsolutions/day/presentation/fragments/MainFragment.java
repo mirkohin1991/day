@@ -287,7 +287,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				if (routeList.isOpenRoute()) {
 					// A route is active -> user wants to stop it
 
-					mCallback.onOpenDialogStopRoute(routeList);
+					mCallback.onOpenDialogStopRoute(routeList.getlastRoute());
 
 				}
 				return false;

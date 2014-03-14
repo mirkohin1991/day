@@ -159,29 +159,27 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			getSupportFragmentManager().popBackStack();
 		}
 
-		
-
 		DetailFragment detail_frag = new DetailFragment();
 
-//		// Only if tracking via service is enabled
-//		if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
+		// // Only if tracking via service is enabled
+		// if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
 
-			if (route.isActive()) {
+		if (route.isActive()) {
 
-				// Active route should always have an active service
-				// --> If not, the app was closed meanwhile,
-				if (mService == null) {
-					mService.saveActivity(this);
-					mService.reStartLocationTrackingAndSavePoint(route);
+			// Active route should always have an active service
+			// --> If not, the app was closed meanwhile,
+			if (mService == null) {
+				mService.saveActivity(this);
+				mService.reStartLocationTrackingAndSavePoint(route);
 
-					// Service has been created, but is not active any longer
-					// Some error occured -> try it again
-				} else if (mService.isServiceRunning() == false) {
-					mService.saveActivity(this);
-					mService.reStartLocationTrackingAndSavePoint(route);
-				}
-
+				// Service has been created, but is not active any longer
+				// Some error occured -> try it again
+			} else if (mService.isServiceRunning() == false) {
+				mService.saveActivity(this);
+				mService.reStartLocationTrackingAndSavePoint(route);
 			}
+
+		}
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
@@ -248,11 +246,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onOpenDialogStopRoute(RouteList routeList) {
+	public void onOpenDialogStopRoute(Route route) {
 
 		StopRouteDialog dialog = new StopRouteDialog();
 		Bundle bundle = new Bundle();
-		bundle.putParcelable("routeList", routeList);
+		bundle.putParcelable("route", route);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -596,6 +594,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
+
 	@Override
 	public void onTrackingIntervalChanged() {
 
@@ -617,8 +616,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onTrackingTurnedOnOff() {
 		// TODO Auto-generated method stub
-		
-		
+
 		if (mService != null) {
 
 			if (mService.isServiceRunning()) {
@@ -628,7 +626,20 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			}
 		}
-		
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (mService != null) {
+			unbindService(mConnection);
+			mService = null;
+			Toast.makeText(this, "MainActivity destroyed -> Service unbinded",
+					Toast.LENGTH_SHORT).show();
+		}
+
 	}
 
 	@Override

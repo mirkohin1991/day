@@ -1,7 +1,7 @@
 	package de.smbsolutions.day.presentation.dialogs;
 
 	import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,8 +12,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 	public class StopRouteDialog  extends DialogFragment {
-
-		private RouteList routeList;
+		
+		private Route route;
 		private Bundle bundle;
 		private MainCallback mCallback;
 
@@ -21,8 +21,7 @@ import android.support.v4.app.DialogFragment;
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 			bundle = this.getArguments();
-			routeList = (RouteList) bundle.getParcelable("routeList");
-		
+route = (Route) bundle.getParcelable("route");		
 
 			return new AlertDialog.Builder(getActivity()).setTitle("Route anhalten")
 					.setMessage("Möchten Sie die Route wirklich beenden?")
@@ -36,7 +35,7 @@ import android.support.v4.app.DialogFragment;
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// The last route is always the active one
-							routeList.getlastRoute().closeRoute();
+								route.closeRoute();
 							dismiss();
 							//Call the communication interface to start the follow-on fragment
 							if (mCallback.getlastFragment() instanceof MainFragment){

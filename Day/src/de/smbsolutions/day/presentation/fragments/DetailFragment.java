@@ -62,6 +62,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private ImageButton ibInfoSliderIn;
 	private ImageButton ibInfoSliderOut;
 	private ImageButton ibPauseRoute;
+	private ImageButton ibStopRoute;
 	private TextView tvDistance;
 	private TextView tvDuration;
 	private TextView tvAveSpeed;
@@ -176,6 +177,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
 			addButtonClickListenerPauseRoute(ibPauseRoute);
 		}
+		
+		if (ibStopRoute == null) {
+			ibStopRoute = (ImageButton) view.findViewById(R.id.ibStopRoute);
+			addButtonClickListenerStopRoute( ibStopRoute);
+		}
 
 		if (ibInfoSliderIn == null) {
 			ibInfoSliderIn = (ImageButton) view
@@ -215,6 +221,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibPauseRoute.setVisibility(View.INVISIBLE);
+			ibStopRoute.setVisibility(View.INVISIBLE);
 		}
 		view.post(new Runnable() {
 
@@ -281,6 +288,21 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 		});
 
+	}
+	
+	
+	public void addButtonClickListenerStopRoute (ImageButton imageButton) {
+		
+		imageButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				weakCallBack.get().onOpenDialogStopRoute(route);
+
+			}
+		});
+		
 	}
 
 	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
@@ -644,6 +666,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		ibPauseRoute.setImageBitmap(null);
 		ibPauseRoute = null;
+		
+		ibStopRoute.setImageBitmap(null);
+		ibStopRoute = null;
 
 		if (flipper != null) {
 			flipper.removeAllViews();
