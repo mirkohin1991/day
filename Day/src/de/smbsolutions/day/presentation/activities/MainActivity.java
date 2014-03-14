@@ -643,6 +643,18 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (mService != null) {
+			unbindService(mConnection);
+			mService = null;
+			Toast.makeText(this, "MainActivity destroyed -> Service unbinded", Toast.LENGTH_SHORT).show();
+		}
+
+	}
+
 
 
 

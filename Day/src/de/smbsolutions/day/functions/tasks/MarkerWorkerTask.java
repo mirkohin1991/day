@@ -58,10 +58,8 @@ public class MarkerWorkerTask
 	LinkedHashMap<RoutePoint, Bitmap> bitmapMap = new LinkedHashMap<RoutePoint, Bitmap>();
 	LinkedHashMap<RoutePoint, Marker> markerMap;
 
-	PolylineOptions polylineOptions_back = new PolylineOptions().width(3)
-			.color(Color.rgb(123, 207, 168));
-	PolylineOptions polylineOptions_top = new PolylineOptions().width(8).color(
-			Color.rgb(19, 88, 5));
+	PolylineOptions polylineOptions_back;
+	PolylineOptions polylineOptions_top ;
 
 	public MarkerWorkerTask(GoogleMap map,
 			LinkedHashMap<RoutePoint, Marker> markerMap, Route route,
@@ -140,6 +138,12 @@ public class MarkerWorkerTask
 			LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
 			map.clear();
+			
+			
+			polylineOptions_back = new PolylineOptions().width(3)
+					.color(Color.rgb(123, 207, 168));
+			polylineOptions_top = new PolylineOptions().width(8).color(
+					Color.rgb(19, 88, 5));
 
 			// Gets the first marker
 			Map.Entry<RoutePoint, Marker> firstMarker = markerMap.entrySet()
