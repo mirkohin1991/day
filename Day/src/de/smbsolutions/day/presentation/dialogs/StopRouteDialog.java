@@ -1,14 +1,15 @@
 	package de.smbsolutions.day.presentation.dialogs;
 
 	import de.smbsolutions.day.functions.interfaces.MainCallback;
-	import de.smbsolutions.day.functions.objects.RouteList;
-	import android.app.Activity;
-	import android.app.AlertDialog;
-	import android.app.Dialog;
-	import android.content.DialogInterface;
-	import android.content.DialogInterface.OnClickListener;
-	import android.os.Bundle;
-	import android.support.v4.app.DialogFragment;
+import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.presentation.fragments.MainFragment;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
 	public class StopRouteDialog  extends DialogFragment {
 
@@ -38,7 +39,10 @@
 							routeList.getlastRoute().closeRoute();
 							dismiss();
 							//Call the communication interface to start the follow-on fragment
-							mCallback.onRouteStopped();
+							if (mCallback.getlastFragment() instanceof MainFragment){
+								mCallback.onRouteStopped();
+							}
+					
 						}
 					}).create();
 		}

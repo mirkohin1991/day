@@ -1,28 +1,26 @@
 package de.smbsolutions.day.presentation.dialogs;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 
 	private RouteList routeList;
 	private Bundle bundle;
 	private MainCallback mCallback;
-
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction
@@ -36,6 +34,7 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 
 		// Get the layout inflater
 		LayoutInflater inflater = getActivity().getLayoutInflater();
+		
 
 		final View nameView = inflater.inflate(R.layout.dialog_createroute,
 				null);
@@ -53,12 +52,10 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 						String routeName = nameText.getText().toString();
 						// Calling the db
 						Route route = new Route(routeName);
-						
+
 						routeList.addRoute(route);
 
 						mCallback.onStartTrackingService(route);
-						
-					
 
 					}
 				}).setNegativeButton("Abbrechen",

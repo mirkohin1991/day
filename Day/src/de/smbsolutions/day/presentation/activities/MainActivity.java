@@ -631,4 +631,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		
 	}
 
+	@Override
+	public Fragment getlastFragment() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
