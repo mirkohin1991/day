@@ -113,7 +113,6 @@ public class Route implements Parcelable {
 				.color(Color.rgb(123, 207, 168));
 		polylineOptions_top = new PolylineOptions().width(8).color(
 				Color.rgb(19, 88, 5));
-
 		for (RoutePoint point : this.routePoints) {
 			polylineOptions_back.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));

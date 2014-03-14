@@ -645,7 +645,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public Fragment getlastFragment() {
 		// TODO Auto-generated method stub
-		return null;
+		Fragment test = getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 2);
+		return test;
 	}
 
 }
