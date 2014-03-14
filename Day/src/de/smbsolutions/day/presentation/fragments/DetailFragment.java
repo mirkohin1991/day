@@ -222,7 +222,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibPauseRoute.setVisibility(View.INVISIBLE);
 			ibStopRoute.setVisibility(View.INVISIBLE);
+			
 		}
+			
+
 		view.post(new Runnable() {
 
 			@Override
@@ -642,6 +645,31 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		bitmaps = null;
 
 	}
+	
+	
+	@Override
+	public void onRouteStopped() {
+		// TODO Auto-generated method stub
+		
+		weakCallBack.get().removeService();
+		
+		ibCamera.setVisibility(View.INVISIBLE);
+		ibPauseRoute.setVisibility(View.INVISIBLE);
+		ibStopRoute.setVisibility(View.INVISIBLE);
+		
+	}
+	
+	@Override
+	public void onRoutePaused() {
+
+    weakCallBack.get().removeService();
+    
+     ibCamera.setVisibility(View.INVISIBLE);
+     ibPauseRoute.setVisibility(View.INVISIBLE);
+		
+	}
+
+
 
 	public void clearFragment() {
 		if (listBitmaps != null) {
@@ -690,5 +718,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		fileUri = null;
 
 	}
+
+
 
 }

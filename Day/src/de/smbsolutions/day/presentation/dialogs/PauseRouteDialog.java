@@ -1,5 +1,6 @@
 package de.smbsolutions.day.presentation.dialogs;
 
+import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.RouteList;
 import android.app.Activity;
@@ -9,13 +10,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 
 
 public class PauseRouteDialog extends DialogFragment {
 
 	private RouteList routeList;
 	private Bundle bundle;
-	private MainCallback mCallback;
+	private FragmentCallback fragCallback;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,7 +26,7 @@ public class PauseRouteDialog extends DialogFragment {
 	//	routeList = (RouteList) bundle.getParcelable("routeList");
 	
 
-		return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")
+		return new AlertDialog.Builder(getActivity()).setTitle("Route anhalten")
 				.setMessage("Wenn Sie die Route pausieren, werden keine neuen Standortdaten gespeichert bis Sie die Route das nächste Mal aufrufen.")
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
@@ -39,7 +41,7 @@ public class PauseRouteDialog extends DialogFragment {
 						//routeList.getlastRoute().closeRoute();
 						dismiss();
 						//Call the communication interface to start the follow-on fragment
-						mCallback.onRoutePaused();
+						fragCallback.onRoutePaused();
 					}
 				}).create();
 	}
@@ -49,7 +51,8 @@ public class PauseRouteDialog extends DialogFragment {
 		super.onAttach(activity);
 
 		try {
-			mCallback = (MainCallback) activity;
+			android.support.v4.app.FragmentActivity frag = (FragmentActivity) activity;
+			fragCallback = (FragmentCallback) frag.getSupportFragmentManager().findFragmentByTag("DETAIL");
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnButtonClick Interface");

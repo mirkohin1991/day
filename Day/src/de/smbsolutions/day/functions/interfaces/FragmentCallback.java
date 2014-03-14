@@ -8,4 +8,8 @@ import android.graphics.Bitmap;
 public interface FragmentCallback {
 
 	public void onTaskfinished(LinkedHashMap<Bitmap, Timestamp> bitmaps);
+	
+	public void onRouteStopped();
+	
+	public void onRoutePaused ();
 }

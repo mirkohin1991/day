@@ -62,7 +62,7 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 
-						mCallback.onDialogCreateCanceled();
+						mCallback.removeService();
 					}
 				});
 		// Create the AlertDialog object and return it
