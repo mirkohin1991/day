@@ -160,6 +160,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			map.setMyLocationEnabled(true);
 			map.setBuildingsEnabled(true);
 			map.getUiSettings().setCompassEnabled(false);
+		} else {
+			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		}
 
 		initializeFragmentPortrait();

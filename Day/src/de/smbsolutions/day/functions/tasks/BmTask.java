@@ -41,7 +41,6 @@ public class BmTask extends
 
 				bitmaps.put(bm, point.getTimestamp());
 				bitmapFile = null;
-
 				bm = null;
 			}
 

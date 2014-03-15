@@ -88,8 +88,7 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						
-					
+										
 						
 						if (isChecked) {
 							// Device.getAPP_SETTINGS().setTrackingStatus(1);
