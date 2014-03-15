@@ -536,9 +536,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onDialogCreateCanceled() {
+	public void removeService() {
 
-		// Stop service, because it has been startet when the user pressed the
+		// Stop service, because it has been started when the user pressed the
 		// create route button
 		// -> But now he decided to cancel to process
 		if (mService != null) {
@@ -585,15 +585,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	}
 
-	@Override
-	public void onRoutePaused() {
 
-		if (mService != null) {
-			unbindService(mConnection);
-			mService = null;
-		}
-
-	}
 
 	@Override
 	public void onTrackingIntervalChanged() {

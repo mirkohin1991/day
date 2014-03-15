@@ -1,7 +1,10 @@
 	package de.smbsolutions.day.presentation.dialogs;
 
-	import de.smbsolutions.day.functions.interfaces.MainCallback;
+	import de.smbsolutions.day.R;
+import de.smbsolutions.day.functions.interfaces.FragmentCallback;
+import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
+import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,12 +13,14 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 
 	public class StopRouteDialog  extends DialogFragment {
 		
 		private Route route;
 		private Bundle bundle;
-		private MainCallback mCallback;
+		private MainCallback mainCallback;
+		private FragmentCallback fragCallback;
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -23,7 +28,7 @@ import android.support.v4.app.DialogFragment;
 			bundle = this.getArguments();
 route = (Route) bundle.getParcelable("route");		
 
-			return new AlertDialog.Builder(getActivity()).setTitle("Route anhalten")
+			return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")
 					.setMessage("Möchten Sie die Route wirklich beenden?")
 					.setNegativeButton(android.R.string.no, new OnClickListener() {
 						@Override
@@ -38,8 +43,11 @@ route = (Route) bundle.getParcelable("route");
 								route.closeRoute();
 							dismiss();
 							//Call the communication interface to start the follow-on fragment
-							if (mCallback.getlastFragment() instanceof MainFragment){
-								mCallback.onRouteStopped();
+							if (mainCallback.getlastFragment() instanceof MainFragment){
+								mainCallback.onRouteStopped();
+							
+							}else if (mainCallback.getlastFragment() instanceof DetailFragment){
+								fragCallback.onRouteStopped();
 							}
 					
 						}
@@ -51,7 +59,13 @@ route = (Route) bundle.getParcelable("route");
 			super.onAttach(activity);
 
 			try {
-				mCallback = (MainCallback) activity;
+				
+				
+				mainCallback = (MainCallback) activity;
+				
+				android.support.v4.app.FragmentActivity frag = (FragmentActivity) activity;
+				fragCallback = (FragmentCallback) frag.getSupportFragmentManager().findFragmentByTag("DETAIL");
+		
 			} catch (ClassCastException e) {
 				throw new ClassCastException(activity.toString()
 						+ " must implement OnButtonClick Interface");

@@ -52,8 +52,6 @@ public interface MainCallback {
 	// SERVICE HAS TO STORE PICTURE
 	public void onPictureTaken(Route route, Uri fileUri, File small_picture);
 
-	// SERVICE HAS TO BE STOPPED AGAIN WHEN NO ROUTE WAS CREATED
-	public void onDialogCreateCanceled();
 
 	// CALLED WHEN ACTIVE ROUTE SHALL BE DISPLAYED, BUT NO SERVIC IS ACTIVE
 	public void onActiveRouteNoService(Route route);
@@ -62,7 +60,7 @@ public interface MainCallback {
 
 	public Fragment getlastFragment();
 
-	public void onRoutePaused();
+	public void removeService();
 
 	public void onTrackingIntervalChanged();
 

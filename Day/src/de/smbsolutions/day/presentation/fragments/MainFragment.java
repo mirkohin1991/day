@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -15,11 +16,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.internal.iv;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -40,7 +43,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private TextView txtViewPic;
 	private TextView txtViewDate;
 	private ListView meineListView;
-
+	private ImageView ivPlayAnim;
 	private Button btnContinueRoute;
 	private Button btnCreateRoute;
 	private ViewFlipper vfNewOrCurrent;
@@ -58,6 +61,18 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		// Configuration for device orientation and shit
 
 		view = inflater.inflate(R.layout.fragment_main, container, false);
+
+		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
+		final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
+				.getDrawable();
+		ivPlayAnim.post(new Runnable() {
+
+			@Override
+			public void run() {
+				tvAnimation.start();
+			}
+		});
+
 		return view;
 	}
 
