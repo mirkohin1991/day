@@ -585,8 +585,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	}
 
-
-
 	@Override
 	public void onTrackingIntervalChanged() {
 
@@ -637,8 +635,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public Fragment getlastFragment() {
 		// TODO Auto-generated method stub
-		Fragment test = getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getFragments().size() - 2);
-		return test;
+		Fragment lastFragment = getSupportFragmentManager().getFragments().get(
+				getSupportFragmentManager().getFragments().size() - 2);
+		return lastFragment;
 	}
+
+	
 
 }

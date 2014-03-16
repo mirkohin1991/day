@@ -1,11 +1,9 @@
 package de.smbsolutions.day.functions.objects;
 
-import java.io.Serializable;
 import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import de.smbsolutions.day.functions.database.Database;
 
 public class RouteList implements Parcelable {

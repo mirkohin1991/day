@@ -26,6 +26,7 @@
             android:layout_gravity="center_vertical"
             android:layout_height="15dp"
             android:scaleType="fitCenter"
+            android:visibility="invisible"
             android:layout_marginLeft="10dp"
             android:src="@anim/anim_android" />
 

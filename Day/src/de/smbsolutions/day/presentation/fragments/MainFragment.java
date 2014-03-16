@@ -59,19 +59,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 		routeList = new RouteList();
 		// Configuration for device orientation and shit
-
+		getActivity().setTitle("Übersicht");
 		view = inflater.inflate(R.layout.fragment_main, container, false);
-
-		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
-		final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
-				.getDrawable();
-		ivPlayAnim.post(new Runnable() {
-
-			@Override
-			public void run() {
-				tvAnimation.start();
-			}
-		});
 
 		return view;
 	}
@@ -136,6 +125,35 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			// view
 
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
+
+			if (ivPlayAnim == null) {
+
+				ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
+				final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
+						.getDrawable();
+				ivPlayAnim.setVisibility(1);
+				ivPlayAnim.post(new Runnable() {
+
+					@Override
+					public void run() {
+						tvAnimation.start();
+					}
+				});
+
+			} else {
+
+				final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
+						.getDrawable();
+				ivPlayAnim.setVisibility(1);
+				ivPlayAnim.post(new Runnable() {
+
+					@Override
+					public void run() {
+						tvAnimation.start();
+					}
+				});
+
+			}
 
 			meineListView = (ListView) view.findViewById(R.id.listView1);
 

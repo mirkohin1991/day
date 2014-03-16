@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -21,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -39,11 +37,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
@@ -81,9 +77,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		Bundle data = getArguments();
 		route = (Route) data.getParcelable("route");
-
+		getActivity().setTitle(route.getRouteName());
 		// If a route doesn't have a picture point, the Picture Scrollbar is
 		// disabled
 		if (route.hasPicturePoint() == false) {
@@ -172,28 +169,28 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		if (ibCamera == null) {
 			ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
-			addButtonClickListenerCamera(ibCamera);
+
 		}
 
 		if (ibPauseRoute == null) {
 			ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
-			addButtonClickListenerPauseRoute(ibPauseRoute);
+
 		}
-		
+
 		if (ibStopRoute == null) {
 			ibStopRoute = (ImageButton) view.findViewById(R.id.ibStopRoute);
-			addButtonClickListenerStopRoute( ibStopRoute);
+
 		}
 
 		if (ibInfoSliderIn == null) {
 			ibInfoSliderIn = (ImageButton) view
 					.findViewById(R.id.ibInfoSliderIn);
-			addButtonClickListenerSliderIn(ibInfoSliderIn);
+
 		}
 		if (ibInfoSliderOut == null) {
 			ibInfoSliderOut = (ImageButton) view
 					.findViewById(R.id.ibInfoSliderOut);
-			addButtonClickListenerSliderOut(ibInfoSliderOut);
+
 		}
 
 		calcRouteFacts(route);
@@ -224,15 +221,20 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibPauseRoute.setVisibility(View.INVISIBLE);
 			ibStopRoute.setVisibility(View.INVISIBLE);
-			
+
 		}
-			
 
 		view.post(new Runnable() {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+
+				addButtonClickListenerCamera(ibCamera);
+				addButtonClickListenerPauseRoute(ibPauseRoute);
+				addButtonClickListenerStopRoute(ibStopRoute);
+				addButtonClickListenerSliderIn(ibInfoSliderIn);
+				addButtonClickListenerSliderOut(ibInfoSliderOut);
+
 				if (route != null) {
 					if (mapPrepared == false) {
 						// if point added, only edit polyline and add
@@ -264,7 +266,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				
 
 				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE,
 						false);
@@ -275,8 +276,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				// start camera activity
 				startActivityForResult(intent,
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-				
-				
+
 			}
 		});
 
@@ -294,10 +294,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		});
 
 	}
-	
-	
-	public void addButtonClickListenerStopRoute (ImageButton imageButton) {
-		
+
+	public void addButtonClickListenerStopRoute(ImageButton imageButton) {
+
 		imageButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -307,7 +306,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			}
 		});
-		
+
 	}
 
 	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
@@ -373,10 +372,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					bitmap.recycle();
 					bitmap = null;
 					fOut = null;
-					
-			
-
-					
 
 					weakCallBack.get().onPictureTaken(route, fileUri,
 							small_picture);
@@ -647,31 +642,27 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		bitmaps = null;
 
 	}
-	
-	
+
 	@Override
 	public void onRouteStopped() {
 		// TODO Auto-generated method stub
-		
+
 		weakCallBack.get().removeService();
-		
+
 		ibCamera.setVisibility(View.INVISIBLE);
 		ibPauseRoute.setVisibility(View.INVISIBLE);
 		ibStopRoute.setVisibility(View.INVISIBLE);
-		
+
 	}
-	
+
 	@Override
 	public void onRoutePaused() {
 
-    weakCallBack.get().removeService();
-    
-     ibCamera.setVisibility(View.INVISIBLE);
-     ibPauseRoute.setVisibility(View.INVISIBLE);
-		
+		weakCallBack.get().removeService();
+		ibCamera.setVisibility(View.INVISIBLE);
+		ibPauseRoute.setVisibility(View.INVISIBLE);
+
 	}
-
-
 
 	public void clearFragment() {
 		if (listBitmaps != null) {
@@ -696,7 +687,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		ibPauseRoute.setImageBitmap(null);
 		ibPauseRoute = null;
-		
+
 		ibStopRoute.setImageBitmap(null);
 		ibStopRoute = null;
 
@@ -720,7 +711,5 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		fileUri = null;
 
 	}
-
-
 
 }

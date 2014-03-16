@@ -191,19 +191,7 @@ public class SliderMenu {
 			view.setTag("selected");
 			ImageView imgIcon = (ImageView) view.findViewById(R.id.icon);
 			TextView txtTitle = (TextView) view.findViewById(R.id.title);
-			
-			
-//			if (position == 0) {
-//				imgIcon.setImageResource(R.drawable.map_normal);
-//				 txtTitle.setTextColor(Color.WHITE);
-//				
-//			} else if (position == 1){
-//				imgIcon.setImageResource(R.drawable.map_satelite);
-//				txtTitle.setTextColor(Color.WHITE);
-//			}else if (position == 2) {
-//				imgIcon.setImageResource(R.drawable.map_terrain);
-//				txtTitle.setTextColor(Color.WHITE);
-//			}
+
 				
 		}
 	}
@@ -222,7 +210,6 @@ public class SliderMenu {
 		switch (position) {
 		case 0:
 			// MapType: Karte
-			// // MapType: Karte
 			Device.getAPP_SETTINGS().setMapType(1);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
@@ -280,11 +267,11 @@ public class SliderMenu {
 			mCallback.onSliderClick(fragment);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-			// context.setTitle(navMenuTitles[position]);
+			context.setTitle("Einstellungen");
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			// error in creating fragment
-			Log.e("MainActivity", "Error in creating fragment");
+			Log.d("MainActivity", "MapType changed");
 		}
 
 	}

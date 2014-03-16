@@ -52,7 +52,6 @@ public interface MainCallback {
 	// SERVICE HAS TO STORE PICTURE
 	public void onPictureTaken(Route route, Uri fileUri, File small_picture);
 
-
 	// CALLED WHEN ACTIVE ROUTE SHALL BE DISPLAYED, BUT NO SERVIC IS ACTIVE
 	public void onActiveRouteNoService(Route route);
 
