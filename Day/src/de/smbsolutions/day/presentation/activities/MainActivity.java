@@ -169,14 +169,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			// Active route should always have an active service
 			// --> If not, the app was closed meanwhile,
 			if (mService == null) {
-				mService.saveActivity(this);
-				mService.reStartLocationTrackingAndSavePoint(route);
+				restartTracking(route);
 
 				// Service has been created, but is not active any longer
 				// Some error occured -> try it again
 			} else if (mService.isServiceRunning() == false) {
-				mService.saveActivity(this);
-				mService.reStartLocationTrackingAndSavePoint(route);
+				restartTracking(route);
 			}
 
 		}
@@ -549,7 +547,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onActiveRouteNoService(Route route) {
+	public void onActiveRouteNoService() {
 
 		// Active route should always have an active service
 		// --> If not, the app was closed meanwhile,
@@ -631,7 +629,30 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
+@Override
+	public boolean isServiceActive() {
 
+		if (mService != null) {
+
+			if (mService.isServiceRunning()) {
+
+				return true;
+				
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public void restartTracking(Route route) {
+		
+		mService.saveActivity(this);
+		mService.reStartLocationTrackingAndSavePoint(route);
+		
+	}
 	@Override
 	public Fragment getlastFragment() {
 		// TODO Auto-generated method stub

@@ -59,9 +59,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 		routeList = new RouteList();
 		// Configuration for device orientation and shit
-		getActivity().setTitle("Übersicht");
-		view = inflater.inflate(R.layout.fragment_main, container, false);
 
+		view = inflater.inflate(R.layout.fragment_main, container, false);
+ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
+		animateRunningIcon(ivPlayAnim);
 		return view;
 	}
 
@@ -110,7 +111,19 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		initializeFragmentPortrait();
 
 		if (routeList.isOpenRoute()) {
-			mCallback.onActiveRouteNoService(routeList.getlastRoute());
+			
+			//a service for the route is running -> "Route is active"button
+           if ( mCallback.isServiceActive()) {
+        	   
+        	   ivPlayAnim.setImageResource(R.anim.anim_android);
+        	   animateRunningIcon(ivPlayAnim);
+        	   
+        	 //no service for open route -> "Route is paused"button
+           } else {
+        	   ivPlayAnim.setImageResource(R.drawable.icon_pause);
+           }
+        	   
+			mCallback.onActiveRouteNoService();
 
 		}
 
@@ -126,34 +139,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
 
-			if (ivPlayAnim == null) {
-
-				ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
-				final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
-						.getDrawable();
-				ivPlayAnim.setVisibility(1);
-				ivPlayAnim.post(new Runnable() {
-
-					@Override
-					public void run() {
-						tvAnimation.start();
-					}
-				});
-
-			} else {
-
-				final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
-						.getDrawable();
-				ivPlayAnim.setVisibility(1);
-				ivPlayAnim.post(new Runnable() {
-
-					@Override
-					public void run() {
-						tvAnimation.start();
-					}
-				});
-
-			}
+		
 
 			meineListView = (ListView) view.findViewById(R.id.listView1);
 
@@ -381,5 +367,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 		super.onPause();
 	}
+	public void animateRunningIcon(ImageView animateImage) {
+		final AnimationDrawable tvAnimation = (AnimationDrawable) animateImage
+				.getDrawable();
+		animateImage.post(new Runnable() {
 
+			@Override
+			public void run() {
+				tvAnimation.start();
+			}
+		});
+	}
 }
