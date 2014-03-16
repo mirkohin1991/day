@@ -63,6 +63,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private ImageButton ibInfoSliderOut;
 	private ImageButton ibPauseRoute;
 	private ImageButton ibStopRoute;
+	private ImageButton ibRestartRoute;
 	private TextView tvDistance;
 	private TextView tvDuration;
 	private TextView tvAveSpeed;
@@ -72,7 +73,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private boolean mapPrepared = false;
 	private LinearLayout myGallery;
-	private ViewFlipper flipper;
+	private ViewFlipper flipperInfo;
+	private ViewFlipper flipperStartStop;
 	private String duration;
 	private double distanceKm;
 	private double aveSpeed;
@@ -172,17 +174,22 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		if (ibCamera == null) {
 			ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
-			addButtonClickListenerCamera(ibCamera);
 		}
+		addButtonClickListenerCamera(ibCamera);
 
 		if (ibPauseRoute == null) {
 			ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
 			addButtonClickListenerPauseRoute(ibPauseRoute);
 		}
-		
+
 		if (ibStopRoute == null) {
 			ibStopRoute = (ImageButton) view.findViewById(R.id.ibStopRoute);
-			addButtonClickListenerStopRoute( ibStopRoute);
+			addButtonClickListenerStopRoute(ibStopRoute);
+		}
+		
+		if (ibRestartRoute == null) {
+			ibRestartRoute = (ImageButton) view.findViewById(R.id.ibRestartRoute);
+			addButtonClickListenerRestartRoute(ibRestartRoute);
 		}
 
 		if (ibInfoSliderIn == null) {
@@ -219,14 +226,28 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			tvAveSpeed.setText(String.valueOf("Durch. Gesch.: " + aveSpeed
 					+ " km/h"));
 		}
+
+		if (flipperStartStop == null) {
+			flipperStartStop = (ViewFlipper) view
+					.findViewById(R.id.flipperStartStop);
+		}
+
 		// Closed routes cannot generate a new picture and cannot pause a route
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibPauseRoute.setVisibility(View.INVISIBLE);
-			ibStopRoute.setVisibility(View.INVISIBLE);
-			
+			flipperStartStop.setVisibility(View.INVISIBLE);
+
+			// route is active
+		} else {
+
+			// Callback method isServiceActive cannot be used to check which
+			// icon shall be displayed,
+			// because the service is connecting async.
+			// But getting to the detailfragment will always restart the route
+			flipperStartStop.setDisplayedChild(0);
+
 		}
-			
 
 		view.post(new Runnable() {
 
@@ -264,7 +285,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				
 
 				fileUri = BitmapManager.getOutputMediaFileUri(MEDIA_TYPE_IMAGE,
 						false);
@@ -275,11 +295,27 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				// start camera activity
 				startActivityForResult(intent,
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-				
-				
+
 			}
 		});
 
+	}
+	
+	public void addButtonClickListenerRestartRoute(ImageButton imageButton) {
+		
+		imageButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				weakCallBack.get().restartTracking(route);
+
+				ibCamera.setVisibility(View.VISIBLE);
+				flipperStartStop.setDisplayedChild(0);
+
+			}
+		});
+		
 	}
 
 	public void addButtonClickListenerPauseRoute(ImageButton imageButton) {
@@ -294,10 +330,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		});
 
 	}
-	
-	
-	public void addButtonClickListenerStopRoute (ImageButton imageButton) {
-		
+
+	public void addButtonClickListenerStopRoute(ImageButton imageButton) {
+
 		imageButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -307,7 +342,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			}
 		});
-		
+
 	}
 
 	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
@@ -316,10 +351,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			@Override
 			public void onClick(View v) {
 
-				flipper = (ViewFlipper) view.findViewById(R.id.flipper);
-				flipper.setInAnimation(inFromLeftAnimation());
-				flipper.setOutAnimation(outToLeftAnimation());
-				flipper.showNext();
+				flipperInfo = (ViewFlipper) view.findViewById(R.id.flipperInfo);
+				flipperInfo.setInAnimation(inFromLeftAnimation());
+				flipperInfo.setOutAnimation(outToLeftAnimation());
+				flipperInfo.showNext();
 			}
 		});
 
@@ -331,10 +366,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			@Override
 			public void onClick(View v) {
 
-				flipper = (ViewFlipper) view.findViewById(R.id.flipper);
-				flipper.setInAnimation(inFromLeftAnimation());
-				flipper.setOutAnimation(outToLeftAnimation());
-				flipper.showNext();
+				flipperInfo = (ViewFlipper) view.findViewById(R.id.flipperInfo);
+				flipperInfo.setInAnimation(inFromLeftAnimation());
+				flipperInfo.setOutAnimation(outToLeftAnimation());
+				flipperInfo.showNext();
 			}
 		});
 
@@ -373,10 +408,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					bitmap.recycle();
 					bitmap = null;
 					fOut = null;
-					
-			
-
-					
 
 					weakCallBack.get().onPictureTaken(route, fileUri,
 							small_picture);
@@ -647,30 +678,27 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		bitmaps = null;
 
 	}
-	
-	
+
 	@Override
 	public void onRouteStopped() {
 		// TODO Auto-generated method stub
-		
+
 		weakCallBack.get().removeService();
-		
+
 		ibCamera.setVisibility(View.INVISIBLE);
 		ibPauseRoute.setVisibility(View.INVISIBLE);
 		ibStopRoute.setVisibility(View.INVISIBLE);
-		
+
 	}
-	
+
 	@Override
 	public void onRoutePaused() {
 
-    weakCallBack.get().removeService();
-    
-     ibCamera.setVisibility(View.INVISIBLE);
-     ibPauseRoute.setVisibility(View.INVISIBLE);
-		
-	}
+		weakCallBack.get().removeService();
 
+		ibCamera.setVisibility(View.INVISIBLE);
+		flipperStartStop.setDisplayedChild(1);
+	}
 
 
 	public void clearFragment() {
@@ -696,13 +724,13 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		ibPauseRoute.setImageBitmap(null);
 		ibPauseRoute = null;
-		
+
 		ibStopRoute.setImageBitmap(null);
 		ibStopRoute = null;
 
-		if (flipper != null) {
-			flipper.removeAllViews();
-			flipper = null;
+		if (flipperInfo != null) {
+			flipperInfo.removeAllViews();
+			flipperInfo = null;
 		}
 		if (mapFragment != null) {
 			mapFragment = null;
@@ -720,7 +748,5 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		fileUri = null;
 
 	}
-
-
 
 }

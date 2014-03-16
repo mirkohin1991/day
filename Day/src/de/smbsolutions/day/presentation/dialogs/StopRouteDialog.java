@@ -47,7 +47,10 @@ route = (Route) bundle.getParcelable("route");
 								mainCallback.onRouteStopped();
 							
 							}else if (mainCallback.getlastFragment() instanceof DetailFragment){
+								
 								fragCallback.onRouteStopped();
+								
+								
 							}
 					
 						}

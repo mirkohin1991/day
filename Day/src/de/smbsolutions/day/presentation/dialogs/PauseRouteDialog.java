@@ -1,8 +1,11 @@
 package de.smbsolutions.day.presentation.dialogs;
 
+import com.google.android.gms.internal.ac;
+
 import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.RouteList;
+import de.smbsolutions.day.presentation.activities.MainActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,16 +18,13 @@ import android.support.v4.app.FragmentActivity;
 
 public class PauseRouteDialog extends DialogFragment {
 
-	private RouteList routeList;
-	private Bundle bundle;
 	private FragmentCallback fragCallback;
+	private MainCallback mainCallback;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		bundle = this.getArguments();
-	//	routeList = (RouteList) bundle.getParcelable("routeList");
-	
+		
 
 		return new AlertDialog.Builder(getActivity()).setTitle("Route anhalten")
 				.setMessage("Wenn Sie die Route pausieren, werden keine neuen Standortdaten gespeichert bis Sie die Route das nächste Mal aufrufen.")
@@ -42,6 +42,7 @@ public class PauseRouteDialog extends DialogFragment {
 						dismiss();
 						//Call the communication interface to start the follow-on fragment
 						fragCallback.onRoutePaused();
+						mainCallback.onActiveRouteNoService();
 					}
 				}).create();
 	}
@@ -53,6 +54,7 @@ public class PauseRouteDialog extends DialogFragment {
 		try {
 			android.support.v4.app.FragmentActivity frag = (FragmentActivity) activity;
 			fragCallback = (FragmentCallback) frag.getSupportFragmentManager().findFragmentByTag("DETAIL");
+			mainCallback = (MainCallback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnButtonClick Interface");

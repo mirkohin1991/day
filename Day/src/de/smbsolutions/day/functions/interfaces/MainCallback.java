@@ -54,7 +54,7 @@ public interface MainCallback {
 
 
 	// CALLED WHEN ACTIVE ROUTE SHALL BE DISPLAYED, BUT NO SERVIC IS ACTIVE
-	public void onActiveRouteNoService(Route route);
+	public void onActiveRouteNoService();
 
 	public void onOpenDialogPauseRoute(Route Route);
 
@@ -65,5 +65,11 @@ public interface MainCallback {
 	public void onTrackingIntervalChanged();
 
 	public void onTrackingTurnedOnOff();
+	
+	public void restartTracking(Route route);
+	
+	
+	public boolean isServiceActive();
+	
 
 }

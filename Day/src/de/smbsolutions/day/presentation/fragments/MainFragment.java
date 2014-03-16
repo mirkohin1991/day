@@ -52,6 +52,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private int index = 0;
 	private MainCallback mCallback;
 	private List<AllRoutesListElement> meineListe;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,15 +64,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		view = inflater.inflate(R.layout.fragment_main, container, false);
 
 		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
-		final AnimationDrawable tvAnimation = (AnimationDrawable) ivPlayAnim
-				.getDrawable();
-		ivPlayAnim.post(new Runnable() {
-
-			@Override
-			public void run() {
-				tvAnimation.start();
-			}
-		});
+		animateRunningIcon(ivPlayAnim);
 
 		return view;
 	}
@@ -121,7 +114,19 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		initializeFragmentPortrait();
 
 		if (routeList.isOpenRoute()) {
-			mCallback.onActiveRouteNoService(routeList.getlastRoute());
+			
+			//a service for the route is running -> "Route is active"button
+           if ( mCallback.isServiceActive()) {
+        	   
+        	   ivPlayAnim.setImageResource(R.anim.anim_android);
+        	   animateRunningIcon(ivPlayAnim);
+        	   
+        	 //no service for open route -> "Route is paused"button
+           } else {
+        	   ivPlayAnim.setImageResource(R.drawable.icon_pause);
+           }
+        	   
+			mCallback.onActiveRouteNoService();
 
 		}
 
@@ -134,6 +139,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			// viewflipper are used to change views at the same position
 			// --> Flipper to change between current route view and create route
 			// view
+			
+			
 
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
 
@@ -362,6 +369,18 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		map.clear();
 
 		super.onPause();
+	}
+	
+	public void animateRunningIcon(ImageView animateImage) {
+		final AnimationDrawable tvAnimation = (AnimationDrawable) animateImage
+				.getDrawable();
+		animateImage.post(new Runnable() {
+
+			@Override
+			public void run() {
+				tvAnimation.start();
+			}
+		});
 	}
 
 }
