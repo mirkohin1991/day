@@ -189,10 +189,7 @@ public class SliderMenu {
 			displayView(position);
 			
 			view.setTag("selected");
-			ImageView imgIcon = (ImageView) view.findViewById(R.id.icon);
-			TextView txtTitle = (TextView) view.findViewById(R.id.title);
 
-				
 		}
 	}
 
@@ -267,7 +264,6 @@ public class SliderMenu {
 			mCallback.onSliderClick(fragment);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
-			context.setTitle("Einstellungen");
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
 			// error in creating fragment

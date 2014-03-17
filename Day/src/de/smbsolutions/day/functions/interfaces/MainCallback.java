@@ -57,7 +57,7 @@ public interface MainCallback {
 
 	public void onOpenDialogPauseRoute(Route Route);
 
-	public Fragment getlastFragment();
+	public Fragment getpreviousFragment();
 
 	public void removeService();
 
@@ -68,6 +68,8 @@ public interface MainCallback {
 	public void restartTracking(Route route);
 	
 	public boolean isServiceActive();
+	
+	public void onLocationChanged(Route route);
 	
 
 }

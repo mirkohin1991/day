@@ -1,6 +1,7 @@
 package de.smbsolutions.day.presentation.activities;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ComponentName;
@@ -249,6 +250,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		StopRouteDialog dialog = new StopRouteDialog();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
+		bundle.putString("fragmentFlag", CURRENT_FRAGMENT);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -309,6 +311,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onRouteStopped() {
 		MainFragment mainfrag = new MainFragment();
+		
+		getSupportFragmentManager().beginTransaction()
+		.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
+		.addToBackStack(TAG_MAINFRAGMENT).commit();
+		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 
 		// Stop service
 		if (mService != null) {
@@ -316,10 +323,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService = null;
 		}
 
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
-				.addToBackStack(TAG_MAINFRAGMENT).commit();
-		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+		
 
 	}
 
@@ -424,7 +428,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		pictureFrag.setArguments(bundle);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
+		ft.add(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
 				.addToBackStack(TAG_PICTUREFRAGMENT).commit();
 		CURRENT_FRAGMENT = TAG_PICTUREFRAGMENT;
 	}
@@ -438,12 +442,17 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onBackPressed() {
 		// change current_fragment to right on for changing the map type
+		List<Fragment> list = getSupportFragmentManager().getFragments();
+
+		int count = 0;
+		for (Fragment fragment : list) {
+			count++;
+		}
+
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			moveTaskToBack(true);
 		} else {
-
-			List<Fragment> list = getSupportFragmentManager().getFragments();
-			if (list.size() >= 3) {
+			if (count >= 3) {
 				if (list.get(2) != null) {
 					if (list.get(list.size() - 2) instanceof MainFragment) {
 						CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
@@ -629,7 +638,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
-@Override
+
+	@Override
 	public boolean isServiceActive() {
 
 		if (mService != null) {
@@ -637,7 +647,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			if (mService.isServiceRunning()) {
 
 				return true;
-				
+
 			} else {
 				return false;
 			}
@@ -648,19 +658,44 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void restartTracking(Route route) {
-		
+
 		mService.saveActivity(this);
 		mService.reStartLocationTrackingAndSavePoint(route);
+
+	}
+
+	@Override
+	public Fragment getpreviousFragment() {
+		// TODO Auto-generated method stub
+		
+		Fragment previousFragment = getSupportFragmentManager().getFragments()
+				.get(getSupportFragmentManager().getFragments().size() - 2);
+		return previousFragment;
+	}
+
+	public GoogleMap getCurrentMap() {
+		SupportMapFragment mapFragment;
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(CURRENT_FRAGMENT);
+		if (frag instanceof MainFragment) {
+		return null;
+		} else {
+			mapFragment = (SupportMapFragment) getSupportFragmentManager()
+					.findFragmentByTag(CURRENT_FRAGMENT).getChildFragmentManager()
+					.findFragmentById(R.id.cr_map);
+		}
+		
+		if (mapFragment != null) {
+			GoogleMap map = mapFragment.getMap();
+			return map;
+		} else return null;
 		
 	}
+
 	@Override
-	public Fragment getlastFragment() {
-		// TODO Auto-generated method stub
-		Fragment lastFragment = getSupportFragmentManager().getFragments().get(
-				getSupportFragmentManager().getFragments().size() - 2);
-		return lastFragment;
+	public void onLocationChanged(Route route) {
+		GoogleMap map = getCurrentMap();
+		if (map != null) {
+			route.prepareMapPreview(map);
+		}
 	}
-
-	
-
 }

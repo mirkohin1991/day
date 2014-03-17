@@ -16,6 +16,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -69,7 +71,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	public static final int MEDIA_TYPE_VIDEO = 2;
 	private boolean mapPrepared = false;
 	private LinearLayout myGallery;
-		private ViewFlipper flipperInfo;
+	private ViewFlipper flipperInfo;
 	private ViewFlipper flipperStartStop;
 	private String duration;
 	private double distanceKm;
@@ -82,7 +84,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		Bundle data = getArguments();
 		route = (Route) data.getParcelable("route");
-		getActivity().setTitle(route.getRouteName());
+
 		// If a route doesn't have a picture point, the Picture Scrollbar is
 		// disabled
 		if (route.hasPicturePoint() == false) {
@@ -183,9 +185,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			ibStopRoute = (ImageButton) view.findViewById(R.id.ibStopRoute);
 			addButtonClickListenerStopRoute(ibStopRoute);
 		}
-		
+
 		if (ibRestartRoute == null) {
-			ibRestartRoute = (ImageButton) view.findViewById(R.id.ibRestartRoute);
+			ibRestartRoute = (ImageButton) view
+					.findViewById(R.id.ibRestartRoute);
 			addButtonClickListenerRestartRoute(ibRestartRoute);
 		}
 
@@ -227,13 +230,13 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			flipperStartStop = (ViewFlipper) view
 					.findViewById(R.id.flipperStartStop);
 		}
-		
+
 		// Closed routes cannot generate a new picture and cannot pause a route
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibStopRoute.setVisibility(View.INVISIBLE);
-		flipperStartStop.setVisibility(View.INVISIBLE);
-	// route is active
+			flipperStartStop.setVisibility(View.INVISIBLE);
+			// route is active
 		} else {
 
 			// Callback method isServiceActive cannot be used to check which
@@ -249,13 +252,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			@Override
 			public void run() {
 
-				addButtonClickListenerCamera(ibCamera);
-				addButtonClickListenerPauseRoute(ibPauseRoute);
-				addButtonClickListenerStopRoute(ibStopRoute);
-				addButtonClickListenerRestartRoute(ibRestartRoute);
-				addButtonClickListenerSliderIn(ibInfoSliderIn);
-				addButtonClickListenerSliderOut(ibInfoSliderOut);
-
 				if (route != null) {
 					if (mapPrepared == false) {
 						// if point added, only edit polyline and add
@@ -268,7 +264,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 
 		});
-
+		addButtonClickListenerCamera(ibCamera);
+		addButtonClickListenerPauseRoute(ibPauseRoute);
+		addButtonClickListenerStopRoute(ibStopRoute);
+		addButtonClickListenerRestartRoute(ibRestartRoute);
+		addButtonClickListenerSliderIn(ibInfoSliderIn);
+		addButtonClickListenerSliderOut(ibInfoSliderOut);
 	}
 
 	public void addPhotos2Gallery(LinearLayout myGallery) {
@@ -281,8 +282,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		myGallery = null;
 
 	}
-public void addButtonClickListenerRestartRoute(ImageButton imageButton) {
-		
+
+	public void addButtonClickListenerRestartRoute(ImageButton imageButton) {
+
 		imageButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -295,8 +297,9 @@ public void addButtonClickListenerRestartRoute(ImageButton imageButton) {
 
 			}
 		});
-		
+
 	}
+
 	public void addButtonClickListenerCamera(ImageButton imageButton) {
 		imageButton.setOnClickListener(new OnClickListener() {
 
@@ -366,7 +369,7 @@ public void addButtonClickListenerRestartRoute(ImageButton imageButton) {
 			@Override
 			public void onClick(View v) {
 
-			flipperInfo = (ViewFlipper) view.findViewById(R.id.flipperInfo);
+				flipperInfo = (ViewFlipper) view.findViewById(R.id.flipperInfo);
 				flipperInfo.setInAnimation(inFromLeftAnimation());
 				flipperInfo.setOutAnimation(outToLeftAnimation());
 				flipperInfo.showNext();
@@ -691,7 +694,7 @@ public void addButtonClickListenerRestartRoute(ImageButton imageButton) {
 
 	}
 
-		@Override
+	@Override
 	public void onRoutePaused() {
 
 		weakCallBack.get().removeService();

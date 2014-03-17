@@ -63,7 +63,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		view = inflater.inflate(R.layout.fragment_main, container, false);
 
 		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
-//		animateRunningIcon(ivPlayAnim);
+
 
 		return view;
 	}

@@ -6,33 +6,29 @@ import java.sql.Timestamp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
-import android.location.LocationManager;
-
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.text.format.DateFormat;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.internal.ac;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.GoogleMap;
 
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
-import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public class LocationTrackerPLAYSERVICE extends Service implements
@@ -67,11 +63,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	private boolean flag_first = false;
 
 	private boolean flag_serviceRunning = false;
-	
-	
+
 	private boolean flag_noService_Picture = false;
-	
-	
 
 	public void saveActivity(Activity activity) {
 		this.activity = activity;
@@ -96,7 +89,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	}
 
 	public void addPictureLocation(Route route, Uri fileUri, File small_picture) {
-		
+
 		// Brauchen wir vielleicht auch nicht!
 		this.route = route;
 
@@ -127,8 +120,6 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		// mCallback.onShowRoute(route);
 
 	}
-	
-	
 
 	public void startLocationTrackingAndSaveFirst(Route route) {
 
@@ -197,17 +188,14 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			Toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
 					.show();
 		}
-		
-		
-		
-		
-		//If the location shall only be tracked when taking a picture this routine has to be skipped
+
+		// If the location shall only be tracked when taking a picture this
+		// routine has to be skipped
 		if (flag_noService_Picture == true) {
 			flag_noService_Picture = false;
 			return;
 		}
-		
-		
+
 		Location location = mLocationClient.getLastLocation();
 
 		if (location != null) {
@@ -225,15 +213,12 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			// Display the connection status
 			Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
-			
-			
-			
-			//Tracking aus --> kein locationlistener nötig
+
+			// Tracking aus --> kein locationlistener nötig
 			if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 0) {
 				return;
 			}
-			
-	
+
 			UPDATE_INTERVAL = Database
 					.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
 			FASTEST_INTERVAL = UPDATE_INTERVAL / 5;
@@ -241,12 +226,12 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			// Create the LocationRequest object
 			mLocationRequest = LocationRequest.create();
 			// Use high accuracy
-			mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+			mLocationRequest
+					.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 			// Set the update interval to 5 seconds
 			mLocationRequest.setInterval(UPDATE_INTERVAL);
 			// Set the fastest update interval to 1 second
 			mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-			
 
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 
@@ -293,12 +278,12 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		}
 
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
+		RoutePoint point = new RoutePoint(route.getId(), timestamp, null, null,
+				location.getLatitude(), location.getLongitude(),
+				location.getAltitude());
 		// No picture
-		route.addRoutePointDB(new RoutePoint(route.getId(), timestamp, null,
-				null, location.getLatitude(), location.getLongitude(), location
-						.getAltitude()));
-
+		route.addRoutePointDB(point);
+		mCallback.onLocationChanged(route);
 		// routeList.addRoute(route);
 
 		previousLocation = location;
@@ -415,18 +400,18 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 		mLocationClient.removeLocationUpdates(this);
 		Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
-		
-		//Only when gps tracking is enabled the periodical tracking is started
-		if (Database.getSettingValue(Database.SETTINGS_TRACKING)  == 1) {
 
-		// Set the update interval to 5 seconds
-		mLocationRequest.setInterval(UPDATE_INTERVAL);
-		// Set the fastest update interval to 1 second
-		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+		// Only when gps tracking is enabled the periodical tracking is started
+		if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
 
-		// Start request with new params again
-		mLocationClient.requestLocationUpdates(mLocationRequest, this);
-		
+			// Set the update interval to 5 seconds
+			mLocationRequest.setInterval(UPDATE_INTERVAL);
+			// Set the fastest update interval to 1 second
+			mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+			// Start request with new params again
+			mLocationClient.requestLocationUpdates(mLocationRequest, this);
+
 		}
 
 	}
