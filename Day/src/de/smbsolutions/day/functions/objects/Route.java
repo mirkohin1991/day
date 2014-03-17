@@ -368,20 +368,7 @@ public class Route implements Parcelable {
 				}
 
 			}
-			// Bild -> Marker mit Bild Icon
-			if (point.getPicture() != null) {
-				MarkerOptions markerOpt = new MarkerOptions()
-						.position(
-								new LatLng(point.getLatitude(), point
-										.getLongitude()))
-						.title(getRouteName())
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.custom_marker_image_placeholder_white));
-
-				Marker marker = map.addMarker(markerOpt);
-				// markerMap.put(point, marker);
-
-			}
+			
 		}
 		map.addPolyline(polylineOptions_top);
 		map.addPolyline(polylineOptions_back);
