@@ -698,4 +698,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			route.prepareMapPreview(map);
 		}
 	}
+
+	@Override
+	public void refreshSliderMenu() {
+
+       slidermenu.removeSelectedItem();
+		
+	}
 }

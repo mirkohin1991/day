@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 
@@ -95,6 +97,20 @@ public class Route implements Parcelable {
 	public void addRoutePoint(RoutePoint point) {
 		routePoints.add(point);
 	}
+	
+	
+//	markerOpt = new MarkerOptions()
+//	.position(
+//			new LatLng(mapSet.getKey().getLatitude(),
+//					mapSet.getKey().getLongitude()))
+//	.icon(BitmapDescriptorFactory.fromBitmap(this
+//			.overlay(background,
+//					resizedBitmap_Placeholder,
+//					bitmapSaved)))
+//	.title("Ihr aktueller Standort");
+	
+	
+	
 
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
 
@@ -114,15 +130,46 @@ public class Route implements Parcelable {
 		polylineOptions_top = new PolylineOptions().width(8).color(
 				Color.rgb(19, 88, 5));
 		for (RoutePoint point : this.routePoints) {
+			
 			polylineOptions_back.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
 			polylineOptions_top.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
 			
-			if (point.getPicture() != null) {
+			
+	    // Erster RoutePoint --> Flagge
+		if (point == routePoints.get(0)) {
 			MarkerOptions markerOpt = new MarkerOptions().position(
 					new LatLng(point.getLatitude(), point.getLongitude()))
-					.title(getRouteName());
+					.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+			Marker marker = mapImport.addMarker(markerOpt);
+			markerMap.put(point, marker);
+			}
+		
+		//Letzter Eintrag --> Flagge (
+		if (point == routePoints.get(routePoints.size()-1)){
+			
+			
+			//Nur wenn die Route schon beendet ist, soll das Finish Icon erscheinen
+			if( active == false) {
+			
+			MarkerOptions markerOpt = new MarkerOptions().position(
+					new LatLng(point.getLatitude(), point.getLongitude()))
+					.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+			Marker marker = mapImport.addMarker(markerOpt);
+			markerMap.put(point, marker);
+			
+			}
+			
+		}
+		
+		//Bild -> Marker mit Bild Icon 
+		if (point.getPicture() != null) {
+			MarkerOptions markerOpt = new MarkerOptions().position(
+					new LatLng(point.getLatitude(), point.getLongitude()))
+					.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_image_placeholder_white));
 
 			Marker marker = mapImport.addMarker(markerOpt);
 			markerMap.put(point, marker);
@@ -130,7 +177,6 @@ public class Route implements Parcelable {
 		}
 			
 		
-
 		}
 
 		mapImport.addPolyline(polylineOptions_top);
@@ -185,12 +231,35 @@ public class Route implements Parcelable {
 						.getLongitude()));
 				polylineOptions_top.add(new LatLng(point.getLatitude(), point
 						.getLongitude()));
-				MarkerOptions markerOpt = new MarkerOptions().position(
-						new LatLng(point.getLatitude(), point.getLongitude()))
-						.title(getRouteName());
+				
+				
+				// Erster RoutePoint --> Flagge
+				if (point == routePoints.get(0)) {
+					MarkerOptions markerOpt = new MarkerOptions().position(
+							new LatLng(point.getLatitude(), point.getLongitude()))
+							.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
 
-				Marker marker = mapImport.addMarker(markerOpt);
-				markerMap.put(point, marker);
+					Marker marker = mapImport.addMarker(markerOpt);
+					markerMap.put(point, marker);
+					}
+				
+				//Letzter Eintrag --> Flagge (
+				if (point == routePoints.get(routePoints.size()-1)){
+					
+					
+					//Nur wenn die Route schon beendet ist, soll das Finish Icon erscheinen
+					if( active == false) {
+					
+					MarkerOptions markerOpt = new MarkerOptions().position(
+							new LatLng(point.getLatitude(), point.getLongitude()))
+							.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+					Marker marker = mapImport.addMarker(markerOpt);
+					markerMap.put(point, marker);
+					
+					}
+					
+				}
 
 			}
 			mapImport.addPolyline(polylineOptions_top);

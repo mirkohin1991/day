@@ -71,5 +71,7 @@ public interface MainCallback {
 	
 	public void onLocationChanged(Route route);
 	
+	public void refreshSliderMenu();
+	
 
 }

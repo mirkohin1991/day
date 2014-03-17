@@ -64,7 +64,15 @@ public class SliderMenu {
 					+ " must implement OnButtonClick Interface");
 		}
 	}
+	
+	
+	public void removeSelectedItem() {
+		
+		mDrawerList.clearChoices();
+		mDrawerList.requestLayout();
+	}
 
+	
 	public DrawerLayout getmDrawerLayout() {
 		return mDrawerLayout;
 	}
@@ -130,6 +138,7 @@ public class SliderMenu {
 		adapter = new SliderMenuListAdapter(context.getApplicationContext(),
 				navDrawerItems);
 		mDrawerList.setAdapter(adapter);
+		
 
 		// enabling action bar app icon and behaving it as toggle button
 
