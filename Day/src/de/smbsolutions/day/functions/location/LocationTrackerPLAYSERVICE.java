@@ -397,7 +397,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	}
 
 	public void restartLocationTracker() {
-
+		
+       try {
 		mLocationClient.removeLocationUpdates(this);
 		Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
 
@@ -413,6 +414,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 
 		}
+		
+   	} catch (Exception e) {
+		// TODO: handle exception
+	}
 
 	}
 
