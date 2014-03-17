@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import de.smbsolutions.day.functions.database.Database;
@@ -55,17 +53,13 @@ public class Route implements Parcelable {
 		this.routeName = routeName;
 		// Get the last route id and 1 to get the new id
 		id = Database.getlastRouteID() + 1;
-		
+
 		date = today;
 		active = true;
 
 		// If the Database insert fails, the active flag is deleted
 		if (Database.createNewRoute(this) != true) {
 			this.active = false;
-
-			// Was soll noch passieren?
-			// Z.B. hat die Klasse dann die neue ID, die es in der DB
-			// noch garnicht gibt
 		}
 
 	}
@@ -98,46 +92,12 @@ public class Route implements Parcelable {
 
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
 
-		Bitmap bitmap = null;
-		
 		mapImport.clear();
-		
-		if (markerMap != null) {
-			markerMap.clear();
-		} else {
-		// Necessary to save in order to connect timestamp and marker
-		markerMap = new LinkedHashMap<RoutePoint, Marker>();
-		}
-		
-		polylineOptions_back = new PolylineOptions().width(3)
-				.color(Color.rgb(123, 207, 168));
-		polylineOptions_top = new PolylineOptions().width(8).color(
-				Color.rgb(19, 88, 5));
-		for (RoutePoint point : this.routePoints) {
-			polylineOptions_back.add(new LatLng(point.getLatitude(), point
-					.getLongitude()));
-			polylineOptions_top.add(new LatLng(point.getLatitude(), point
-					.getLongitude()));
-			
-			if (point.getPicture() != null) {
-			MarkerOptions markerOpt = new MarkerOptions().position(
-					new LatLng(point.getLatitude(), point.getLongitude()))
-					.title(getRouteName());
 
-			Marker marker = mapImport.addMarker(markerOpt);
-			markerMap.put(point, marker);
-			
-		}
-			
-		
-
-		}
-
-		mapImport.addPolyline(polylineOptions_top);
-		mapImport.addPolyline(polylineOptions_back);
-
+		addPolylines(mapImport);
 		// Setting the zoom
 		setZoomAllMarkers(mapImport);
+		
 		return mapImport;
 
 	}
@@ -151,17 +111,9 @@ public class Route implements Parcelable {
 		} else {
 			markerMap = new LinkedHashMap<RoutePoint, Marker>();
 		}
-		
-		polylineOptions_back = new PolylineOptions().width(3)
-				.color(Color.rgb(123, 207, 168));
-		polylineOptions_top = new PolylineOptions().width(8).color(
-				Color.rgb(19, 88, 5));
-
-		
 
 		// add markers to map
 		if (hasPicturePoint()) {
-			mapImport.clear();
 			for (RoutePoint point : this.routePoints) {
 
 				MarkerOptions markerOpt = new MarkerOptions().position(
@@ -172,29 +124,17 @@ public class Route implements Parcelable {
 				markerMap.put(point, marker);
 
 			}
+			mapImport.clear();
 			
+			addPolylines(mapImport);
+
 			MarkerWorkerTask task = new MarkerWorkerTask(mapImport, markerMap,
 					this, context);
 			task.execute(this.routePoints);
 
 		} else {
 
-			for (RoutePoint point : this.routePoints) {
-
-				polylineOptions_back.add(new LatLng(point.getLatitude(), point
-						.getLongitude()));
-				polylineOptions_top.add(new LatLng(point.getLatitude(), point
-						.getLongitude()));
-				MarkerOptions markerOpt = new MarkerOptions().position(
-						new LatLng(point.getLatitude(), point.getLongitude()))
-						.title(getRouteName());
-
-				Marker marker = mapImport.addMarker(markerOpt);
-				markerMap.put(point, marker);
-
-			}
-			mapImport.addPolyline(polylineOptions_top);
-			mapImport.addPolyline(polylineOptions_back);
+			addPolylines(mapImport);
 			setZoomAllMarkers(mapImport);
 
 		}
@@ -207,14 +147,9 @@ public class Route implements Parcelable {
 		// zoompoint
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-//		for (Map.Entry<RoutePoint, Marker> mapSet : markerMap.entrySet()) {
-//
-//			builder.include(mapSet.getValue().getPosition());
-//
-//		}
-		
-		//JETZT DIREKT ÜBER POLYLINES --> MAN MUSS NICHTMEHR ALLE MARKER speichern
-		for ( LatLng point : polylineOptions_top.getPoints() ) {
+		// JETZT DIREKT ÜBER POLYLINES --> MAN MUSS NICHTMEHR ALLE MARKER
+		// speichern
+		for (LatLng point : polylineOptions_top.getPoints()) {
 			builder.include(point);
 		}
 
@@ -242,7 +177,6 @@ public class Route implements Parcelable {
 			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 					bounds, 60);
 			map.moveCamera(camUpdate);
-			
 
 		}
 
@@ -328,6 +262,33 @@ public class Route implements Parcelable {
 		markerMap.clear();
 		markerMap = null;
 
+	}
+
+	public void addPolylines(GoogleMap map) {
+		polylineOptions_back = new PolylineOptions().width(3).color(
+				Color.rgb(123, 207, 168));
+		polylineOptions_top = new PolylineOptions().width(8).color(
+				Color.rgb(19, 88, 5));
+		for (RoutePoint point : this.routePoints) {
+			polylineOptions_back.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			polylineOptions_top.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+
+		}
+		map.addPolyline(polylineOptions_top);
+		map.addPolyline(polylineOptions_back);
+	}
+
+	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
+		//map darf nicht gecleared werden, da sonst Marker gelöscht werden
+		polylineOptions_back.add(new LatLng(point.getLatitude(), point
+				.getLongitude()));
+		polylineOptions_top.add(new LatLng(point.getLatitude(), point
+				.getLongitude()));
+		map.addPolyline(polylineOptions_top);
+		map.addPolyline(polylineOptions_back);
+		setZoomAllMarkers(map);
 	}
 
 }

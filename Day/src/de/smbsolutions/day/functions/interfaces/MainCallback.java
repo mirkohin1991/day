@@ -64,12 +64,11 @@ public interface MainCallback {
 	public void onTrackingIntervalChanged();
 
 	public void onTrackingTurnedOnOff();
-	
+
 	public void restartTracking(Route route);
-	
+
 	public boolean isServiceActive();
-	
-	public void onLocationChanged(Route route);
-	
+
+	public void onLocationChanged(Route route, RoutePoint point);
 
 }

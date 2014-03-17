@@ -283,7 +283,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 				location.getAltitude());
 		// No picture
 		route.addRoutePointDB(point);
-		mCallback.onLocationChanged(route);
+		mCallback.onLocationChanged(route, point);
 		// routeList.addRoute(route);
 
 		previousLocation = location;

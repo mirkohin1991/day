@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -28,6 +29,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
@@ -39,6 +43,7 @@ import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.objects.SliderMenu;
+import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 import de.smbsolutions.day.presentation.dialogs.CreateRouteDialog;
 import de.smbsolutions.day.presentation.dialogs.DeletePictureDialog;
 import de.smbsolutions.day.presentation.dialogs.DeleteRouteDialog;
@@ -61,7 +66,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private ActionBarDrawerToggle mDrawerToggle;
 	// nav drawer title
 	private CharSequence mDrawerTitle;
-
 	// used to store app title
 	private CharSequence mTitle;
 
@@ -311,10 +315,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onRouteStopped() {
 		MainFragment mainfrag = new MainFragment();
-		
+
 		getSupportFragmentManager().beginTransaction()
-		.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
-		.addToBackStack(TAG_MAINFRAGMENT).commit();
+				.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
+				.addToBackStack(TAG_MAINFRAGMENT).commit();
 		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 
 		// Stop service
@@ -322,8 +326,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			unbindService(mConnection);
 			mService = null;
 		}
-
-		
 
 	}
 
@@ -583,7 +585,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		// MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE
 		// GESTOPPT
-		// bundle.putParcelable("route", route);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -666,8 +667,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public Fragment getpreviousFragment() {
-		// TODO Auto-generated method stub
-		
 		Fragment previousFragment = getSupportFragmentManager().getFragments()
 				.get(getSupportFragmentManager().getFragments().size() - 2);
 		return previousFragment;
@@ -675,27 +674,31 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	public GoogleMap getCurrentMap() {
 		SupportMapFragment mapFragment;
-		Fragment frag = getSupportFragmentManager().findFragmentByTag(CURRENT_FRAGMENT);
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(
+				CURRENT_FRAGMENT);
 		if (frag instanceof MainFragment) {
-		return null;
+			return null;
 		} else {
 			mapFragment = (SupportMapFragment) getSupportFragmentManager()
-					.findFragmentByTag(CURRENT_FRAGMENT).getChildFragmentManager()
-					.findFragmentById(R.id.cr_map);
+					.findFragmentByTag(CURRENT_FRAGMENT)
+					.getChildFragmentManager().findFragmentById(R.id.cr_map);
 		}
-		
+
 		if (mapFragment != null) {
 			GoogleMap map = mapFragment.getMap();
 			return map;
-		} else return null;
-		
+		} else
+			return null;
+
 	}
 
 	@Override
-	public void onLocationChanged(Route route) {
+	public void onLocationChanged(Route route, RoutePoint point) {
 		GoogleMap map = getCurrentMap();
 		if (map != null) {
-			route.prepareMapPreview(map);
+			route.addPoint2Polyline(point, map);
 		}
+
 	}
+
 }

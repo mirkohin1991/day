@@ -273,7 +273,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	}
 
 	public void addPhotos2Gallery(LinearLayout myGallery) {
-
+		
 		myGallery.removeAllViews();
 		listBitmaps = new LinkedHashMap<Bitmap, Timestamp>();
 		task = new BmTask(listBitmaps, this);
