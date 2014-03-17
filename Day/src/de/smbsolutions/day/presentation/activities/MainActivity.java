@@ -345,12 +345,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			getSupportFragmentManager().popBackStack();
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.frame_container, frag, slidertag)
+					.add(R.id.frame_container, frag, slidertag)
 					.addToBackStack(slidertag).commit();
 			CURRENT_FRAGMENT = slidertag;
 		} else {
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.frame_container, frag, slidertag)
+					.add(R.id.frame_container, frag, slidertag)
 					.addToBackStack(slidertag).commit();
 			CURRENT_FRAGMENT = slidertag;
 		}

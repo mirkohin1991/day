@@ -1,11 +1,5 @@
 package de.smbsolutions.day.presentation.dialogs;
 
-import com.google.android.gms.internal.ac;
-
-import de.smbsolutions.day.functions.interfaces.FragmentCallback;
-import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.objects.RouteList;
-import de.smbsolutions.day.presentation.activities.MainActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +8,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import de.smbsolutions.day.functions.interfaces.FragmentCallback;
+import de.smbsolutions.day.functions.interfaces.MainCallback;
 
 
 public class PauseRouteDialog extends DialogFragment {
@@ -39,7 +35,6 @@ public class PauseRouteDialog extends DialogFragment {
 					public void onClick(DialogInterface dialog, int which) {
 						// The last route is always the active one
 						//routeList.getlastRoute().closeRoute();
-						dismiss();
 						//Call the communication interface to start the follow-on fragment
 						fragCallback.onRoutePaused();
 						mainCallback.onActiveRouteNoService();

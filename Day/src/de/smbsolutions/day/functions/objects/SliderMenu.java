@@ -19,6 +19,7 @@ import android.widget.TextView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
+import de.smbsolutions.day.presentation.fragments.settings.AboutFragment;
 import de.smbsolutions.day.presentation.fragments.settings.CameraFragment;
 import de.smbsolutions.day.presentation.fragments.settings.FacebookFragment;
 import de.smbsolutions.day.presentation.fragments.settings.GPSFragment;
@@ -263,6 +264,7 @@ public class SliderMenu {
 
 		case 7:
 			// Info
+			fragment = new AboutFragment();
 			break;
 
 		default:

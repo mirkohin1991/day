@@ -209,9 +209,10 @@ containing a value of this type.
         public static final int activity_horizontal_margin=0x7f090000;
         public static final int activity_vertical_margin=0x7f090001;
         public static final int h1=0x7f090002;
-        public static final int h2=0x7f090004;
-        public static final int margin_top_text_info_slider=0x7f090005;
-        public static final int text=0x7f090003;
+        public static final int h2=0x7f090003;
+        public static final int margin_top_text_info_slider=0x7f090006;
+        public static final int text=0x7f090004;
+        public static final int text_slider=0x7f090005;
     }
     public static final class drawable {
         public static final int ab_background_textured_appbasetheme=0x7f020000;

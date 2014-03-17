@@ -164,8 +164,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		} else {
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		}
-		
-		
+
 		// Refreshing the slider menu, so that no item is selected any longer
 		weakCallBack.get().refreshSliderMenu();
 
@@ -224,10 +223,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		}
 		if (tvAveSpeed == null) {
 			tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
-			tvAveSpeed.setText(String.valueOf("Durch. Gesch.: " + aveSpeed
+			tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed
 					+ " km/h"));
 		} else {
-			tvAveSpeed.setText(String.valueOf("Durch. Gesch.: " + aveSpeed
+			tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed
 					+ " km/h"));
 		}
 		if (flipperStartStop == null) {
@@ -277,7 +276,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	}
 
 	public void addPhotos2Gallery(LinearLayout myGallery) {
-		
+
 		myGallery.removeAllViews();
 		listBitmaps = new LinkedHashMap<Bitmap, Timestamp>();
 		task = new BmTask(listBitmaps, this);
@@ -537,7 +536,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		// Calculates the distance from km to meter
 		distanceKm = (double) Math.round(distanceTotal * 100.0) / 100.0;
 		aveSpeed = (double) Math
-				.round(((distanceAct / routeDuration) / 3600) * 100.0) / 100.0;
+				.round(((distanceAct / (routeDuration / 1000)) * 3.6) * 100.0) / 100.0;
 		duration = getDuration(routeDuration);
 
 	}

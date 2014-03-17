@@ -46,9 +46,10 @@ int color white 0x7f05000a
 int dimen activity_horizontal_margin 0x7f090000
 int dimen activity_vertical_margin 0x7f090001
 int dimen h1 0x7f090002
-int dimen h2 0x7f090004
-int dimen margin_top_text_info_slider 0x7f090005
-int dimen text 0x7f090003
+int dimen h2 0x7f090003
+int dimen margin_top_text_info_slider 0x7f090006
+int dimen text 0x7f090004
+int dimen text_slider 0x7f090005
 int drawable ab_background_textured_appbasetheme 0x7f020000
 int drawable ab_bottom_solid_appbasetheme 0x7f020001
 int drawable ab_solid_appbasetheme 0x7f020002

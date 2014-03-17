@@ -28,7 +28,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="@dimen/margin_top_text_info_slider"
         android:textColor="@color/Weiss"
-        android:textSize="@dimen/text" />
+        android:textSize="@dimen/text_slider" />
 
     <TextView
         android:id="@+id/tvDuration"
@@ -39,7 +39,7 @@
 
         android:layout_marginLeft="10dp"
         android:textColor="@color/Weiss"
-        android:textSize="@dimen/text" />
+        android:textSize="@dimen/text_slider" />
     
         <TextView
             android:id="@+id/tvAveSpeed"
@@ -50,6 +50,6 @@
 
             android:layout_marginLeft="10dp"
             android:textColor="@color/Weiss"
-            android:textSize="@dimen/text" />
+            android:textSize="@dimen/text_slider" />
 
 </RelativeLayout>

@@ -15,8 +15,7 @@
     <string name="camera_save_settings_description">Geben Sie an, ob die Bilder die Sie mit dieser App schießen auch in der Galerie App Ihres Smartphones erscheinen sollen.</string>
     <string name="camera_save_settings_note">Hinweis: Möglicherweise werden die Änderungen erst nach einem Neustart des Geräts wirksam.</string>
     <string name="aboutTheApp_developer">Hike wurde im Rahmen der Vorlesung Mobile Entwicklung an der DHBW Lörrach von Simon Kussmann, Mirko Hin und Bijan Röhrich entwickelt.</string>
-    <string name="aboutTheApp_description">Hike soll Menschen, die gerne an der frischen Luft sind helfen, schöne Momente bei Wanderrungen, Radtouren oder sonstigen aktivitäten in der Natur festzuhalten.
-	    						Hike hilft Ihnen dabei, Ihre Touren noch einmal revue passieren zu lassen und sich die schönsten Momente nocheinmal anzusehen.</string>
+    <string name="aboutTheApp_description">Hike ist eine Tracking Lösung für Sport und Freizeit Enthusiasten, die nicht nur exakt Ihren Standort bestimmt, sondern Ihnen auch zu jeder Zeit nützliche Informationen über Ihre aktuelle Tour liefert. Neben Informationen wie die zurückgelegte Strecke, die benötigte Zeit oder die Durchschnittsgeschwindigkeit bietet Ihnen Hike auch die Möglichkeit Fotos mit Ihrem Smartphone aufzunehmen und diese auf der aktuellen Route anzusehen.</string>
 
     <color name="Weiss">#ffff</color>
 
