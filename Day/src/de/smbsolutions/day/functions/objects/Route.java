@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -15,12 +14,14 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 
@@ -94,10 +95,10 @@ public class Route implements Parcelable {
 
 		mapImport.clear();
 
-		addPolylines(mapImport);
+		addPolylinesPreview(mapImport);
 		// Setting the zoom
 		setZoomAllMarkers(mapImport);
-		
+
 		return mapImport;
 
 	}
@@ -125,8 +126,8 @@ public class Route implements Parcelable {
 
 			}
 			mapImport.clear();
-			
-			addPolylines(mapImport);
+
+			addPolylinesDetail(mapImport);
 
 			MarkerWorkerTask task = new MarkerWorkerTask(mapImport, markerMap,
 					this, context);
@@ -134,7 +135,7 @@ public class Route implements Parcelable {
 
 		} else {
 
-			addPolylines(mapImport);
+			addPolylinesDetail(mapImport);
 			setZoomAllMarkers(mapImport);
 
 		}
@@ -264,7 +265,7 @@ public class Route implements Parcelable {
 
 	}
 
-	public void addPolylines(GoogleMap map) {
+	public void addPolylinesDetail(GoogleMap map) {
 		polylineOptions_back = new PolylineOptions().width(3).color(
 				Color.rgb(123, 207, 168));
 		polylineOptions_top = new PolylineOptions().width(8).color(
@@ -274,14 +275,106 @@ public class Route implements Parcelable {
 					.getLongitude()));
 			polylineOptions_top.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
+			// Erster RoutePoint --> Flagge
+			if (point == routePoints.get(0)) {
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+				Marker marker = map.addMarker(markerOpt);
+				markerMap.put(point, marker);
+				}
+
+			//Letzter Eintrag --> Flagge (
+			if (point == routePoints.get(routePoints.size()-1)){
+
+
+				//Nur wenn die Route schon beendet ist, soll das Finish Icon erscheinen
+				if( active == false) {
+
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+				Marker marker = map.addMarker(markerOpt);
+				markerMap.put(point, marker);
+
+				}
+
+			}
+			//Bild -> Marker mit Bild Icon 
+			if (point.getPicture() != null) {
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_image_placeholder_white));
+
+				Marker marker = map.addMarker(markerOpt);
+				 markerMap.put(point, marker);
+
+			}
 
 		}
 		map.addPolyline(polylineOptions_top);
 		map.addPolyline(polylineOptions_back);
+
+	}
+
+	public void addPolylinesPreview(GoogleMap map) {
+		polylineOptions_back = new PolylineOptions().width(3).color(
+				Color.rgb(123, 207, 168));
+		polylineOptions_top = new PolylineOptions().width(8).color(
+				Color.rgb(19, 88, 5));
+		for (RoutePoint point : this.routePoints) {
+			polylineOptions_back.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			polylineOptions_top.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			
+			// Erster RoutePoint --> Flagge
+			if (point == routePoints.get(0)) {
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+				Marker marker = map.addMarker(markerOpt);
+//				markerMap.put(point, marker);
+				}
+
+			//Letzter Eintrag --> Flagge (
+			if (point == routePoints.get(routePoints.size()-1)){
+
+
+				//Nur wenn die Route schon beendet ist, soll das Finish Icon erscheinen
+				if( active == false) {
+
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.start_stop_marker));
+
+				Marker marker = map.addMarker(markerOpt);
+//				markerMap.put(point, marker);
+
+				}
+
+			}
+			//Bild -> Marker mit Bild Icon 
+			if (point.getPicture() != null) {
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
+						.title(getRouteName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_image_placeholder_white));
+
+				Marker marker = map.addMarker(markerOpt);
+				// markerMap.put(point, marker);
+
+			}
+		}
+		map.addPolyline(polylineOptions_top);
+		map.addPolyline(polylineOptions_back);
+
 	}
 
 	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
-		//map darf nicht gecleared werden, da sonst Marker gelöscht werden
+		// map darf nicht gecleared werden, da sonst Marker gelöscht werden
 		polylineOptions_back.add(new LatLng(point.getLatitude(), point
 				.getLongitude()));
 		polylineOptions_top.add(new LatLng(point.getLatitude(), point

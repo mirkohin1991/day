@@ -164,6 +164,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		} else {
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		}
+		
+		
+		// Refreshing the slider menu, so that no item is selected any longer
+		weakCallBack.get().refreshSliderMenu();
 
 		initializeFragmentPortrait();
 

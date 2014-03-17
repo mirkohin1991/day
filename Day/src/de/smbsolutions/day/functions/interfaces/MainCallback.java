@@ -70,5 +70,6 @@ public interface MainCallback {
 	public boolean isServiceActive();
 
 	public void onLocationChanged(Route route, RoutePoint point);
-
+public void refreshSliderMenu();
+	
 }

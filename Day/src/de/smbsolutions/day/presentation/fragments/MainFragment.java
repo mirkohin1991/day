@@ -111,20 +111,24 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		}
 
 		initializeFragmentPortrait();
+		
+		
+		//Always refresh the selected item of the slider menu
+		mCallback.refreshSliderMenu();
 
 		if (routeList.isOpenRoute()) {
 
 			//a service for the route is running -> "Route is active"button
            if ( mCallback.isServiceActive()) {
         	   
-        	   ivPlayAnim.setImageResource(R.anim.anim_android);
+        	   ivPlayAnim.setVisibility(View.VISIBLE);
         	   animateRunningIcon(ivPlayAnim);
         	   
-        	 //no service for open route -> "Route is paused"button
            } else {
-        	   ivPlayAnim.setImageResource(R.drawable.icon_pause);
+        	   ivPlayAnim.setVisibility(View.INVISIBLE);
            }
-        	   
+        	
+           //Callback to start the service, because the route is still active
 			mCallback.onActiveRouteNoService();
 
 		}

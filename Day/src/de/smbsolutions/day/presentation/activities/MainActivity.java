@@ -700,5 +700,10 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
+	@Override
+	public void refreshSliderMenu() {
 
+       slidermenu.removeSelectedItem();
+		
+	}
 }
