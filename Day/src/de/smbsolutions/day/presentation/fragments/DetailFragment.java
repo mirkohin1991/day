@@ -231,7 +231,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		// Closed routes cannot generate a new picture and cannot pause a route
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
-			ibPauseRoute.setVisibility(View.INVISIBLE);
+			ibStopRoute.setVisibility(View.INVISIBLE);
 		flipperStartStop.setVisibility(View.INVISIBLE);
 	// route is active
 		} else {

@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.google.android.gms.internal.iv;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -53,6 +52,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private MainCallback mCallback;
 	private List<AllRoutesListElement> meineListe;
 
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -61,8 +61,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		// Configuration for device orientation and shit
 
 		view = inflater.inflate(R.layout.fragment_main, container, false);
-ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
-		animateRunningIcon(ivPlayAnim);
+
+		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
+//		animateRunningIcon(ivPlayAnim);
+
 		return view;
 	}
 
@@ -111,7 +113,7 @@ ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
 		initializeFragmentPortrait();
 
 		if (routeList.isOpenRoute()) {
-			
+
 			//a service for the route is running -> "Route is active"button
            if ( mCallback.isServiceActive()) {
         	   
@@ -138,8 +140,6 @@ ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
 			// view
 
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
-
-		
 
 			meineListView = (ListView) view.findViewById(R.id.listView1);
 
@@ -367,6 +367,7 @@ ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
 
 		super.onPause();
 	}
+
 	public void animateRunningIcon(ImageView animateImage) {
 		final AnimationDrawable tvAnimation = (AnimationDrawable) animateImage
 				.getDrawable();
@@ -378,4 +379,5 @@ ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
 			}
 		});
 	}
+
 }
