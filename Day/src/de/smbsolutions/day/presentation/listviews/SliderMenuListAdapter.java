@@ -64,7 +64,7 @@ public class SliderMenuListAdapter extends BaseAdapter {
 		imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
 		txtTitle.setText(navDrawerItems.get(position).getTitle());
 
-		if (position != 3 && position != 7 && position != 8) {
+		if (position != 3 && position != 6 && position != 7) {
 
 			divider.setBackgroundColor(Color.TRANSPARENT);
 
@@ -185,7 +185,7 @@ public class SliderMenuListAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 
 		// The settings text shall not be clickable
-		if (position == 3 || position == 8) {
+		if (position == 3 || position == 7) {
 			return false;
 		}
 		return super.isEnabled(position);

@@ -116,15 +116,13 @@ public class SliderMenu {
 		// Kamera
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[5], navMenuIcons
 				.getResourceId(5, -1)));
-		// Facebook
+
+		// App Info
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[6], navMenuIcons
 				.getResourceId(6, -1)));
-		// App Info
+
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[7], navMenuIcons
 				.getResourceId(7, -1)));
-
-		navDrawerItems.add(new SliderMenuItem(navMenuTitles[8], navMenuIcons
-				.getResourceId(8, -1)));
 		return navDrawerItems;
 	}
 
@@ -257,12 +255,9 @@ public class SliderMenu {
 			fragment = new CameraFragment();
 			break;
 
-		case 6:
-			fragment = new FacebookFragment();
-			break;
-		//
 
-		case 7:
+
+		case 6:
 			// Info
 			fragment = new AboutFragment();
 			break;

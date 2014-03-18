@@ -104,8 +104,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				LocalBinder binder = (LocalBinder) service;
 				mService = binder.getService();
-				Toast.makeText(getApplicationContext(), "Service angebunden",
-						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext(), "Service angebunden",
+						// Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -573,8 +573,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService.startLocationTrackingAndSaveFirst(route);
 
 		} else {
-			Toast.makeText(this, "Service wurde nicht gestartet",
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "Service wurde nicht gestartet",
+					// Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -586,7 +586,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService.addPictureLocation(route, fileUri, small_picture);
 
 		} else {
-			Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -680,8 +680,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
-			Toast.makeText(this, "MainActivity destroyed -> Service unbinded",
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "MainActivity destroyed -> Service unbinded",
+					// Toast.LENGTH_SHORT).show();
 		}
 
 	}

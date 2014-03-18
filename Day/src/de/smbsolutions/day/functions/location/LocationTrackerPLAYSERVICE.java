@@ -157,7 +157,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 				 */
 			} catch (IntentSender.SendIntentException e) {
 				// Log the error
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+//				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}
 		} else {
@@ -185,8 +185,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		// ONLOCATIONCHANGED
 
 		if (mLocationClient.isConnected()) {
-			Toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
-					.show();
+			// Toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
+//					.show();
 		}
 
 		// If the location shall only be tracked when taking a picture this
@@ -211,7 +211,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			}
 
 			// Display the connection status
-			Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
 
 			// Tracking aus --> kein locationlistener nötig
@@ -256,8 +256,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		mInProgress = false;
 		// Destroy the current location client
 		mLocationClient = null;
-		Toast.makeText(activity, "Disconnected. Please re-connect.",
-				Toast.LENGTH_SHORT).show();
+		// Toast.makeText(activity, "Disconnected. Please re-connect.",
+				// Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 //		if (previousLocation != null) {
 //			if (location.distanceTo(previousLocation) < Database
 //					.getSettingValue(Database.SETTINGS_TRACKING_METER)) {
-//				Toast.makeText(activity, "Zu nahe am letzten Punkt",
+//				// Toast.makeText(activity, "Zu nahe am letzten Punkt",
 //						Toast.LENGTH_SHORT).show();
 //				return;
 //			}
@@ -291,7 +291,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		String msg = "Updated Location: "
 				+ Double.toString(location.getLatitude()) + ","
 				+ Double.toString(location.getLongitude());
-		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+		// Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -379,16 +379,16 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			return true;
 		} else {
 
-			Toast.makeText(activity,
-					"ERROR: Google Play Services nicht verfügbar",
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(activity,
+//					"ERROR: Google Play Services nicht verfügbar",
+//					Toast.LENGTH_SHORT).show();
 
 			return false;
 		}
 	}
 
 	public void refreshTrackingInterval() {
-		Toast.makeText(this, "Interval refreshed", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "Interval refreshed", Toast.LENGTH_LONG).show();
 		// Changing the interval parameters
 		UPDATE_INTERVAL = Database
 				.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
@@ -400,7 +400,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		
        try {
 		mLocationClient.removeLocationUpdates(this);
-		Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
+		// Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
 
 		// Only when gps tracking is enabled the periodical tracking is started
 		if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {

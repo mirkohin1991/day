@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -197,9 +196,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			});
 
 		} catch (Exception e) {
-			Toast.makeText(getActivity(),
-					"Fehler Initialisierung Fragment: " + e.getMessage(),
-					Toast.LENGTH_LONG).show();
+			// Toast.makeText(getActivity(),
+//					"Fehler Initialisierung Fragment: " + e.getMessage(),
+//					Toast.LENGTH_LONG).show();
 		}
 		addListitemListender(meineListView);
 
