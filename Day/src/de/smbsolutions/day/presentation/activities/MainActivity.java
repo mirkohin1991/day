@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +22,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -59,6 +63,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private final String TAG_MAINFRAGMENT = "MAIN";
 	private final String TAG_PICTUREFRAGMENT = "PICTURE";
 	private static String CURRENT_FRAGMENT = null;
+	
+	private int NOTIFICATION_ID;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private int backstackcount;
@@ -84,10 +90,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
+		
 
 		// Get Singetons
 		Database.getInstance(this);
 		Device.getInstance(this);
+		
+		
 		// Service
 		mConnection = new ServiceConnection() {
 			@Override
@@ -747,6 +757,41 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			}
 			
          }
+         
+         
+         
+         
+//         NotificationCompat.Builder mBuilder =
+//        	        new NotificationCompat.Builder(this)
+//        	        .setSmallIcon(R.drawable.ic_launcher)
+//        	        .setContentTitle("Hike trackt")
+//        	        .setContentText(route.getRouteName() + " läuft gerade");
+//        	// Creates an explicit intent for an Activity in your app
+//        	Intent resultIntent = this.getIntent();
+//
+//        	// The stack builder object will contain an artificial back stack for the
+//        	// started Activity.
+//        	// This ensures that navigating backward from the Activity leads out of
+//        	// your application to the Home screen.
+//        	TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//        	// Adds the back stack for the Intent (but not the Intent itself)
+//        	stackBuilder.addParentStack(MainActivity.class);
+//        	// Adds the Intent that starts the Activity to the top of the stack
+//        	stackBuilder.addNextIntent(resultIntent);
+//        	PendingIntent resultPendingIntent =
+//        	        stackBuilder.getPendingIntent(
+//        	            0,
+//        	            PendingIntent.FLAG_UPDATE_CURRENT
+//        	        );
+//        	mBuilder.setContentIntent(resultPendingIntent);
+//        	NotificationManager mNotificationManager =
+//        	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        	// mId allows you to update the notification later on.
+//        
+//        	mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+//         
+         
+         
 
 		
 

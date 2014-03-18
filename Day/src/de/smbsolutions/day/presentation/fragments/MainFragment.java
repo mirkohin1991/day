@@ -239,10 +239,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 					try {
 						sel_Route = routeList.getlastRoute();
-
 					} catch (Exception e) {
 						// handle exception
-
 					}
 
 					// Getting the route object of the related row

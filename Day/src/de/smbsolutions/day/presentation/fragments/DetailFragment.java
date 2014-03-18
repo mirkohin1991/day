@@ -336,6 +336,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			// Getting the current timestamp
 
 			if (resultCode == -1) {
+				int test;
+				
+			test =	Device.getPictureScrollbarDensity();
 
 				File small_picture = BitmapManager
 						.savePreviewBitmapToStorage(fileUri);
@@ -343,7 +346,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				if (small_picture != null) {
 
 					Bitmap bitmap = BitmapManager.decodeSampledBitmapFromUri(
-							fileUri.getPath(), 250, 250);
+							fileUri.getPath(), test, test);
 
 					FileOutputStream fOut = null;
 					try {
