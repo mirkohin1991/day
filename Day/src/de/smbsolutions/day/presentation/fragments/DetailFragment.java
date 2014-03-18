@@ -16,8 +16,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,7 +53,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private View view;
 	private GoogleMap map;
 	private Route route;
-	private WeakReference<MainCallback> weakCallBack;
+	private MainCallback mCallback;
+
 	private LinkedHashMap<Bitmap, Timestamp> listBitmaps;
 	private ImageButton ibCamera;
 	private ImageButton ibInfoSliderIn;
@@ -97,16 +97,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			myGallery = (LinearLayout) view
 					.findViewById(R.id.LinearLayoutImage);
 			addPhotos2Gallery(myGallery);
+
 		}
 
 		return view;
 
-	}
-
-	@Override
-	public void onDestroyView() {
-
-		super.onDestroyView();
 	}
 
 	@Override
@@ -118,18 +113,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	}
 
 	@Override
-	public void onPause() {
-
-		super.onPause();
-	}
-
-	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-			MainCallback mCallback = (MainCallback) activity;
-			weakCallBack = new WeakReference<MainCallback>(mCallback);
+			mCallback = (MainCallback) activity;
 
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
@@ -165,7 +153,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		}
 
 		// Refreshing the slider menu, so that no item is selected any longer
-		weakCallBack.get().refreshSliderMenu();
+		mCallback.refreshSliderMenu();
 
 		initializeFragmentPortrait();
 
@@ -173,43 +161,24 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	public void initializeFragmentPortrait() {
 
-		if (ibCamera == null) {
-			ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
+		ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
 
-		}
+		ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
 
-		if (ibPauseRoute == null) {
-			ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
+		ibStopRoute = (ImageButton) view.findViewById(R.id.ibStopRoute);
+		addButtonClickListenerStopRoute(ibStopRoute);
 
-		}
+		ibRestartRoute = (ImageButton) view.findViewById(R.id.ibRestartRoute);
+		addButtonClickListenerRestartRoute(ibRestartRoute);
 
-		if (ibStopRoute == null) {
-			ibStopRoute = (ImageButton) view.findViewById(R.id.ibStopRoute);
-			addButtonClickListenerStopRoute(ibStopRoute);
-		}
+		ibInfoSliderIn = (ImageButton) view.findViewById(R.id.ibInfoSliderIn);
 
-		if (ibRestartRoute == null) {
-			ibRestartRoute = (ImageButton) view
-					.findViewById(R.id.ibRestartRoute);
-			addButtonClickListenerRestartRoute(ibRestartRoute);
-		}
-
-		if (ibInfoSliderIn == null) {
-			ibInfoSliderIn = (ImageButton) view
-					.findViewById(R.id.ibInfoSliderIn);
-
-		}
-		if (ibInfoSliderOut == null) {
-			ibInfoSliderOut = (ImageButton) view
-					.findViewById(R.id.ibInfoSliderOut);
-		}
+		ibInfoSliderOut = (ImageButton) view.findViewById(R.id.ibInfoSliderOut);
 
 		refreshInfoSlider();
-		
-		if (flipperStartStop == null) {
-			flipperStartStop = (ViewFlipper) view
-					.findViewById(R.id.flipperStartStop);
-		}
+
+		flipperStartStop = (ViewFlipper) view
+				.findViewById(R.id.flipperStartStop);
 
 		// Closed routes cannot generate a new picture and cannot pause a route
 		if (route.isActive() == false) {
@@ -224,6 +193,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			// because the service is connecting async.
 			// But getting to the detailfragment will always restart the route
 			flipperStartStop.setDisplayedChild(0);
+
 		}
 
 		view.post(new Runnable() {
@@ -237,7 +207,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 						// new marker!!! TODO
 						map = route.prepareMapDetails(map, getActivity());
 						mapPrepared = true;
+
 					}
+
 				}
 			}
 
@@ -268,13 +240,14 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			@Override
 			public void onClick(View v) {
 
-				weakCallBack.get().restartTracking(route);
+				mCallback.restartTracking(route);
 
 				ibCamera.setVisibility(View.VISIBLE);
 				flipperStartStop.setDisplayedChild(0);
+
 			}
 		});
-
+		Log.d("Test", "addButtonClickListenerRestartRoute gestartet");
 	}
 
 	public void addButtonClickListenerCamera(ImageButton imageButton) {
@@ -292,9 +265,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				// start camera activity
 				startActivityForResult(intent,
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
 			}
 		});
-
+		Log.d("Test", "addButtonClickListenerCamera gestartet");
 	}
 
 	public void addButtonClickListenerPauseRoute(ImageButton imageButton) {
@@ -303,11 +277,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			@Override
 			public void onClick(View v) {
 
-				weakCallBack.get().onOpenDialogPauseRoute(route);
+				mCallback.onOpenDialogPauseRoute(route);
 
 			}
 		});
-
+		Log.d("Test", "addButtonClickListenerPauseRoute gestartet");
 	}
 
 	public void addButtonClickListenerStopRoute(ImageButton imageButton) {
@@ -316,10 +290,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				weakCallBack.get().onOpenDialogStopRoute(route);
+
+				mCallback.onOpenDialogStopRoute("DETAIL", route);
+
 			}
 		});
-
+		Log.d("Test", "addButtonClickListenerStopRoute gestartet");
 	}
 
 	public void addButtonClickListenerSliderIn(ImageButton imageButton) {
@@ -334,7 +310,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				flipperInfo.showNext();
 			}
 		});
-
+		Log.d("Test", "addButtonClickListenerSliderIn gestartet");
 	}
 
 	public void addButtonClickListenerSliderOut(ImageButton imageButton) {
@@ -349,7 +325,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				flipperInfo.showNext();
 			}
 		});
-
+		Log.d("Test", "addButtonClickListenerSliderOut gestartet");
 	}
 
 	@Override
@@ -386,12 +362,15 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					bitmap = null;
 					fOut = null;
 
-					weakCallBack.get().onPictureTaken(route, fileUri,
-							small_picture);
+					mCallback.onPictureTaken(route, fileUri, small_picture);
 					small_picture = null;
-
-					// Distance and so on has to be calculated again
-					refreshInfoSlider();
+					// If no small picture could be created, NULL is stored
+				} else {
+					// SOll hier noch was passieren???
+					// route.addRoutePointDB(new RoutePoint(route.getId(),
+					// tsTemp,
+					// fileUri.getPath(), null, gps.getLatitude(), gps
+					// .getLongitude(), gps.getAltitude()));
 
 				}
 
@@ -406,7 +385,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 					// Vielleicht gibt es noch eine bessere Lösung.
 
-					weakCallBack.get().onShowRoute(route);
+					mCallback.onShowRoute(route);
 
 				} else {
 					// refresh the image view
@@ -574,27 +553,14 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					Timestamp tsClicked = (Timestamp) v.getTag();
 
 					if (tsClicked == point.getTimestamp()) {
-//						LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//						LatLng latlng = new LatLng(point.getLatitude(), point
-//								.getLongitude());
-//
-//						if (latlng != null) {
 
-//							builder.include(latlng);
-//
-//							LatLngBounds bounds = builder.build();
-//							CameraUpdate camUpdate = CameraUpdateFactory
-//									.newLatLngBounds(bounds, 60);
-//							map.animateCamera(camUpdate);
-
-							route.setZoomSpecificMarker(point, map);
-//						}
-
+						route.setZoomSpecificMarker(point, map);
 					}
 
 				}
 
 			}
+
 		});
 
 		imageView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -612,7 +578,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 						// Call the Callback interface to execute the required
 						// action
-						weakCallBack.get().onDeletePictureClick(route, point);
+						mCallback.onDeletePictureClick(route, point);
 
 						return true;
 
@@ -657,7 +623,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	public void onRouteStopped() {
 		// TODO Auto-generated method stub
 
-		weakCallBack.get().removeService();
+		mCallback.removeService();
 
 		ibCamera.setVisibility(View.INVISIBLE);
 		ibPauseRoute.setVisibility(View.INVISIBLE);
@@ -668,7 +634,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	@Override
 	public void onRoutePaused() {
 
-		weakCallBack.get().removeService();
+		mCallback.removeService();
 
 		ibCamera.setVisibility(View.INVISIBLE);
 		flipperStartStop.setDisplayedChild(1);
@@ -715,13 +681,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		tvDistance = null;
 		tvDuration = null;
 		tvAveSpeed = null;
-		weakCallBack = null;
+		mCallback = null;
 		view = null;
 		task = null;
 		fileUri = null;
 
 	}
-
 
 	public void refreshInfoSlider() {
 		// Method is called when a new routepoint was added
@@ -731,22 +696,19 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		if (tvDistance == null) {
 			tvDistance = (TextView) view.findViewById(R.id.tvDistance);
 		}
-	
-			tvDistance.setText(String.valueOf("Strecke: ca. " + distanceKm
-					+ " km"));
-	
+
+		tvDistance
+				.setText(String.valueOf("Strecke: ca. " + distanceKm + " km"));
 
 		if (tvDuration == null) {
 			tvDuration = (TextView) view.findViewById(R.id.tvDuration);
 		}
 		tvDuration.setText(String.valueOf("Dauer: " + duration));
-		
+
 		if (tvAveSpeed == null) {
 			tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
 		}
-			tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed + " km/h"));
-	
+		tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed + " km/h"));
 
 	}
-
 }

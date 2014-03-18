@@ -26,9 +26,9 @@ public interface MainCallback {
 	public void onRouteDeleted();
 
 	// Opens Dialog for stopping routes
-	public void onOpenDialogStopRoute(Route route);
+	public void onOpenDialogStopRoute(String fragmentFlag, Route route);
 
-	public void onRouteStopped();
+	public void onRouteStopped(String fragmentTag, Route route);
 
 	// Methods regarding the PictureScrollbar
 	// Opens Dialog for deleting picture

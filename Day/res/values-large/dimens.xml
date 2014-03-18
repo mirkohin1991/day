@@ -4,5 +4,6 @@
       <dimen name="h2">19dp</dimen>
       <dimen name="text">18dp</dimen>
       <dimen name="text_slider">16dp</dimen>
+      <dimen name="marginListElement">10dp</dimen>
       <dimen name="margin_top_text_info_slider">15dp</dimen>
 </resources>

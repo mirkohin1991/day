@@ -1,11 +1,5 @@
 package de.smbsolutions.day.presentation.dialogs;
 
-import de.smbsolutions.day.R;
-import de.smbsolutions.day.functions.interfaces.FragmentCallback;
-import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.objects.Route;
-import de.smbsolutions.day.presentation.fragments.DetailFragment;
-import de.smbsolutions.day.presentation.fragments.MainFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,14 +8,15 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
+import de.smbsolutions.day.functions.interfaces.FragmentCallback;
+import de.smbsolutions.day.functions.interfaces.MainCallback;
+import de.smbsolutions.day.functions.objects.Route;
 
 public class StopRouteDialog extends DialogFragment {
 
 	private Route route;
 	private Bundle bundle;
 	private MainCallback mainCallback;
-	private FragmentCallback fragCallback;
 	private String fragmenFlag;
 
 	@Override
@@ -47,13 +42,8 @@ public class StopRouteDialog extends DialogFragment {
 
 						// Call the communication interface to start the
 						// follow-on fragment
-						if (fragmenFlag.equals("MAIN")) {
-							mainCallback.onRouteStopped();
-						} else if (fragmenFlag.equals("DETAIL")) {
-							fragCallback.onRouteStopped();
-						} else {
-							Toast.makeText(getActivity(), "Anderes Fragment in Stopdialog", Toast.LENGTH_SHORT).show();
-						}
+
+						mainCallback.onRouteStopped(fragmenFlag, route);
 
 					}
 				}).create();
@@ -66,10 +56,6 @@ public class StopRouteDialog extends DialogFragment {
 		try {
 
 			mainCallback = (MainCallback) activity;
-
-			android.support.v4.app.FragmentActivity frag = (FragmentActivity) activity;
-			fragCallback = (FragmentCallback) frag.getSupportFragmentManager()
-					.findFragmentByTag("DETAIL");
 
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()

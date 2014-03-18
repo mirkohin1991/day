@@ -2,22 +2,21 @@ int anim anim_android 0x7f040000
 int array nav_drawer_icons 0x7f0b0001
 int array nav_drawer_items 0x7f0b0000
 int attr adSize 0x7f010000
-int attr adSizes 0x7f010001
-int attr adUnitId 0x7f010002
-int attr cameraBearing 0x7f010004
-int attr cameraTargetLat 0x7f010005
-int attr cameraTargetLng 0x7f010006
-int attr cameraTilt 0x7f010007
-int attr cameraZoom 0x7f010008
-int attr mapType 0x7f010003
-int attr uiCompass 0x7f010009
-int attr uiRotateGestures 0x7f01000a
-int attr uiScrollGestures 0x7f01000b
-int attr uiTiltGestures 0x7f01000c
-int attr uiZoomControls 0x7f01000d
-int attr uiZoomGestures 0x7f01000e
-int attr useViewLifecycle 0x7f01000f
-int attr zOrderOnTop 0x7f010010
+int attr adUnitId 0x7f010001
+int attr cameraBearing 0x7f010003
+int attr cameraTargetLat 0x7f010004
+int attr cameraTargetLng 0x7f010005
+int attr cameraTilt 0x7f010006
+int attr cameraZoom 0x7f010007
+int attr mapType 0x7f010002
+int attr uiCompass 0x7f010008
+int attr uiRotateGestures 0x7f010009
+int attr uiScrollGestures 0x7f01000a
+int attr uiTiltGestures 0x7f01000b
+int attr uiZoomControls 0x7f01000c
+int attr uiZoomGestures 0x7f01000d
+int attr useViewLifecycle 0x7f01000e
+int attr zOrderOnTop 0x7f01000f
 int bool isTablet 0x7f0a0000
 int color Weiss 0x7f050016
 int color common_action_bar_splitter 0x7f050009
@@ -48,7 +47,8 @@ int dimen activity_horizontal_margin 0x7f090000
 int dimen activity_vertical_margin 0x7f090001
 int dimen h1 0x7f090002
 int dimen h2 0x7f090003
-int dimen margin_top_text_info_slider 0x7f090006
+int dimen marginListElement 0x7f090006
+int dimen margin_top_text_info_slider 0x7f090007
 int dimen text 0x7f090004
 int dimen text_slider 0x7f090005
 int drawable ab_background_textured_appbasetheme 0x7f020000
@@ -248,6 +248,7 @@ int integer lengthRouteName 0x7f080006
 int integer weightDetailMap 0x7f080005
 int integer weightMainList 0x7f080002
 int integer weightMainMap 0x7f080001
+int integer weightMap 0x7f080007
 int integer weightPictureView 0x7f080004
 int integer weightTextBarMainMap 0x7f080003
 int layout activity_main 0x7f030000
@@ -322,11 +323,10 @@ int style PopupMenu_Appbasetheme 0x7f0c0004
 int style ProgressBar_Appbasetheme 0x7f0c0008
 int style Theme_Appbasetheme 0x7f0c0000
 int style Theme_Appbasetheme_Widget 0x7f0c000a
-int[] styleable AdsAttrs { 0x7f010000, 0x7f010001, 0x7f010002 }
+int[] styleable AdsAttrs { 0x7f010000, 0x7f010001 }
 int styleable AdsAttrs_adSize 0
-int styleable AdsAttrs_adSizes 1
-int styleable AdsAttrs_adUnitId 2
-int[] styleable MapAttrs { 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f, 0x7f010010 }
+int styleable AdsAttrs_adUnitId 1
+int[] styleable MapAttrs { 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f }
 int styleable MapAttrs_cameraBearing 1
 int styleable MapAttrs_cameraTargetLat 2
 int styleable MapAttrs_cameraTargetLng 3
