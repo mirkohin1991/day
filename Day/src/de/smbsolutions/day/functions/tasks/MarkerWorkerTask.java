@@ -4,25 +4,22 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,8 +30,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
@@ -43,12 +38,12 @@ import de.smbsolutions.day.functions.objects.RoutePoint;
 
 public class MarkerWorkerTask
 		extends
-		AsyncTask<ArrayList<RoutePoint>, Void, LinkedHashMap<RoutePoint, Bitmap>> {
+		AsyncTask<CopyOnWriteArrayList<RoutePoint>, Void, LinkedHashMap<RoutePoint, Bitmap>> {
 
 	private MainCallback mCallback;
 	private GoogleMap map;
 	private Context context;
-	private ArrayList<RoutePoint> routePoints;
+	private CopyOnWriteArrayList<RoutePoint> routePoints;
 	private Route route;
 
 	MarkerOptions markerOpt = new MarkerOptions();
@@ -84,7 +79,7 @@ public class MarkerWorkerTask
 	@Override
 	protected LinkedHashMap<RoutePoint, Bitmap> doInBackground(
 
-	ArrayList<RoutePoint>... params) {
+			CopyOnWriteArrayList<RoutePoint>... params) {
 
 		Bitmap bitmap = null;
 
@@ -175,12 +170,12 @@ public class MarkerWorkerTask
 
 			}
 			addMarkerClickListener(map);
-			
+
 			LatLngBounds bounds = builder.build();
 			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 					bounds, 60);
 			map.moveCamera(camUpdate);
-			
+
 		}
 		hashMapRef.clear();
 		// markerMap.clear();

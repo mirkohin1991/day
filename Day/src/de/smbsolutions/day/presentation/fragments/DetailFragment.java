@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,12 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
@@ -195,13 +190,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			flipperStartStop.setDisplayedChild(0);
 
 		}
-		addButtonClickListenerCamera(ibCamera);
-		addButtonClickListenerPauseRoute(ibPauseRoute);
-		addButtonClickListenerStopRoute(ibStopRoute);
-		addButtonClickListenerRestartRoute(ibRestartRoute);
-		addButtonClickListenerSliderIn(ibInfoSliderIn);
-		addButtonClickListenerSliderOut(ibInfoSliderOut);
-	
+
 		view.post(new Runnable() {
 
 			@Override
@@ -210,7 +199,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				if (route != null) {
 					if (mapPrepared == false) {
 						// if point added, only edit polyline and add
-						// new marker!!! TODO
+						// new marker!!!
 						map = route.prepareMapDetails(map, getActivity());
 						mapPrepared = true;
 
@@ -220,8 +209,14 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 
 		});
-		
+		addButtonClickListenerCamera(ibCamera);
+		addButtonClickListenerPauseRoute(ibPauseRoute);
+		addButtonClickListenerStopRoute(ibStopRoute);
+		addButtonClickListenerRestartRoute(ibRestartRoute);
+		addButtonClickListenerSliderIn(ibInfoSliderIn);
+		addButtonClickListenerSliderOut(ibInfoSliderOut);
 	}
+
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
 		myGallery.removeAllViews();
@@ -336,17 +331,17 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			// Getting the current timestamp
 
 			if (resultCode == -1) {
-				int test;
-				
-			test =	Device.getPictureScrollbarDensity();
+
+				int scrollbarHeight = Device.getPictureScrollbarDensity();
 
 				File small_picture = BitmapManager
 						.savePreviewBitmapToStorage(fileUri);
 
 				if (small_picture != null) {
 
-					Bitmap bitmap = BitmapManager.decodeSampledBitmapFromUri(
-							fileUri.getPath(), test, test);
+					Bitmap bitmap = BitmapManager
+							.decodeSampledBitmapFromUri(fileUri.getPath(),
+									scrollbarHeight, scrollbarHeight);
 
 					FileOutputStream fOut = null;
 					try {
@@ -355,10 +350,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 						fOut.flush();
 						fOut.close();
 					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					bitmap.recycle();
@@ -624,7 +617,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	@Override
 	public void onRouteStopped() {
-		// TODO Auto-generated method stub
 
 		mCallback.removeService();
 

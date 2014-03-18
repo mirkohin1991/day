@@ -71,7 +71,7 @@ public class Device {
 	//Berechnung wieviel Pixel der Picture Scroll View haben muss, damit das Bild genau reinpasst
 	double requiredPreviewDensity = (weightPictureView / (weightPictureView + weightMap) ) * displayDensity ;
 		
-	return	(int) requiredPreviewDensity;
+	return (int) requiredPreviewDensity;
 		
 	}
 

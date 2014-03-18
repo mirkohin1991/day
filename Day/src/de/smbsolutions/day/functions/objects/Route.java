@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -28,7 +29,7 @@ import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 public class Route implements Parcelable {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<RoutePoint> routePoints = new ArrayList<RoutePoint>();
+	private CopyOnWriteArrayList<RoutePoint> routePoints = new CopyOnWriteArrayList<RoutePoint>();
 	private String routeName;
 	private String date;
 	private boolean active;
@@ -79,7 +80,7 @@ public class Route implements Parcelable {
 
 			if (Database.addNewRoutePoint(point) == true) {
 
-				routePoints.add(point);
+			routePoints.add(point);
 
 			}
 
@@ -211,11 +212,11 @@ public class Route implements Parcelable {
 		this.id = id;
 	}
 
-	public ArrayList<RoutePoint> getRoutePoints() {
+	public CopyOnWriteArrayList<RoutePoint> getRoutePoints() {
 		return routePoints;
 	}
 
-	public void setRoutePoints(ArrayList<RoutePoint> routePoints) {
+	public void setRoutePoints(CopyOnWriteArrayList<RoutePoint> routePoints) {
 		this.routePoints = routePoints;
 	}
 
@@ -276,7 +277,6 @@ public class Route implements Parcelable {
 			polylineOptions_top.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
 
-			
 			if (hasPicturePoint() == false) {
 
 				// Erster RoutePoint --> Flagge
@@ -287,7 +287,7 @@ public class Route implements Parcelable {
 											.getLongitude()))
 							.title(getRouteName())
 							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.start_stop_marker));
+									.fromResource(R.drawable.start_stop_marker2));
 
 					Marker marker = map.addMarker(markerOpt);
 					markerMap.put(point, marker);
@@ -306,7 +306,7 @@ public class Route implements Parcelable {
 												.getLongitude()))
 								.title(getRouteName())
 								.icon(BitmapDescriptorFactory
-										.fromResource(R.drawable.start_stop_marker));
+										.fromResource(R.drawable.start_stop_marker2));
 
 						Marker marker = map.addMarker(markerOpt);
 						markerMap.put(point, marker);
@@ -341,7 +341,7 @@ public class Route implements Parcelable {
 										.getLongitude()))
 						.title(getRouteName())
 						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.start_stop_marker));
+								.fromResource(R.drawable.start_stop_marker2));
 
 				Marker marker = map.addMarker(markerOpt);
 				// markerMap.put(point, marker);
@@ -360,7 +360,7 @@ public class Route implements Parcelable {
 											.getLongitude()))
 							.title(getRouteName())
 							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.start_stop_marker));
+									.fromResource(R.drawable.start_stop_marker2));
 
 					Marker marker = map.addMarker(markerOpt);
 					// markerMap.put(point, marker);
@@ -368,7 +368,7 @@ public class Route implements Parcelable {
 				}
 
 			}
-			
+
 		}
 		map.addPolyline(polylineOptions_top);
 		map.addPolyline(polylineOptions_back);
@@ -376,9 +376,7 @@ public class Route implements Parcelable {
 	}
 
 	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
-		
-		
-	
+
 		// map darf nicht gecleared werden, da sonst Marker gelöscht werden
 		polylineOptions_back.add(new LatLng(point.getLatitude(), point
 				.getLongitude()));
@@ -386,8 +384,8 @@ public class Route implements Parcelable {
 				.getLongitude()));
 		map.addPolyline(polylineOptions_top);
 		map.addPolyline(polylineOptions_back);
-		setZoomAllMarkers(map);
-	
+		// setZoomAllMarkers(map);
+
 	}
 
 }
