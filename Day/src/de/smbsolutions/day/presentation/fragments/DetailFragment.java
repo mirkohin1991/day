@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,12 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
@@ -195,13 +190,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			flipperStartStop.setDisplayedChild(0);
 
 		}
-		addButtonClickListenerCamera(ibCamera);
-		addButtonClickListenerPauseRoute(ibPauseRoute);
-		addButtonClickListenerStopRoute(ibStopRoute);
-		addButtonClickListenerRestartRoute(ibRestartRoute);
-		addButtonClickListenerSliderIn(ibInfoSliderIn);
-		addButtonClickListenerSliderOut(ibInfoSliderOut);
-	
+
 		view.post(new Runnable() {
 
 			@Override
@@ -220,8 +209,14 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 
 		});
-		
+		addButtonClickListenerCamera(ibCamera);
+		addButtonClickListenerPauseRoute(ibPauseRoute);
+		addButtonClickListenerStopRoute(ibStopRoute);
+		addButtonClickListenerRestartRoute(ibRestartRoute);
+		addButtonClickListenerSliderIn(ibInfoSliderIn);
+		addButtonClickListenerSliderOut(ibInfoSliderOut);
 	}
+
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
 		myGallery.removeAllViews();

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.android.gms.internal.bi;
 
@@ -31,6 +32,7 @@ public class BmTask extends
 	protected LinkedHashMap<Bitmap, Timestamp> doInBackground(Route... params) {
 
 		Route route = params[0];
+
 		for (RoutePoint point : route.getRoutePoints()) {
 			if (point.getPicture() != null) {
 

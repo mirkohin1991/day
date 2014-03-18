@@ -1,7 +1,6 @@
 package de.smbsolutions.day.functions.location;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
 
 import android.app.Activity;
@@ -17,7 +16,6 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -29,7 +27,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.GoogleMap;
 
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
@@ -46,7 +43,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	private Activity activity;
 	private LocationClient mLocationClient;
 	private Route route;
-	private MainCallback mainCallback;
+	private MainCallback mCallback;
 	private Location previousLocation;
 
 	private static long UPDATE_INTERVAL;
@@ -71,15 +68,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	public void saveActivity(Activity activity) {
 		this.activity = activity;
-		
-		
-		try {
-			mainCallback = (MainCallback) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnButtonClick Interface");
-		}
-		
+		mCallback = (MainCallback) activity;
 		mLocationClient = new LocationClient(activity, this, this);
 	}
 
@@ -218,7 +207,7 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			previousLocation = location;
 
 			if (flag_first == true) {
-				mainCallback.onNewRouteStarted(route);
+				mCallback.onNewRouteStarted(route);
 			}
 
 			// Display the connection status
@@ -287,16 +276,16 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 //				return;
 //			}
 //		}
- 
+
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		RoutePoint point = new RoutePoint(route.getId(), timestamp, null, null, // No picture
-				location.getLatitude(), location.getLongitude(), 
+		RoutePoint point = new RoutePoint(route.getId(), timestamp, null, null,
+				location.getLatitude(), location.getLongitude(),
 				location.getAltitude());
-		
+		// No picture
 		route.addRoutePointDB(point);
-		
-		mainCallback.onLocationChanged(route, point);
-		
+		mCallback.onLocationChanged(route, point);
+		// routeList.addRoute(route);
+
 		previousLocation = location;
 
 		String msg = "Updated Location: "

@@ -106,6 +106,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 			map.getUiSettings().setZoomControlsEnabled(false);
 			map.setPadding(0, 70, 0, 0);
+			map.getUiSettings().setCompassEnabled(false);
 		} else {
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		}
