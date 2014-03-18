@@ -15,18 +15,19 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/new_route_icon" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:text="Neue Route"
-            android:textSize="@dimen/h1" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/h2" />
     </LinearLayout>
 
-    <EditText
+     <EditText
         android:id="@+id/routename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,5 +39,6 @@
         android:hint="Routenname"
         android:inputType="text"
         android:maxLength="@integer/lengthRouteName" />
+
 
 </LinearLayout>

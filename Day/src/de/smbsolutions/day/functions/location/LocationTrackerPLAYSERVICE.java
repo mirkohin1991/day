@@ -268,14 +268,14 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		// refreshing that the service is still alive
 		flag_serviceRunning = true;
 
-//		if (previousLocation != null) {
-//			if (location.distanceTo(previousLocation) < Database
-//					.getSettingValue(Database.SETTINGS_TRACKING_METER)) {
-//				// Toast.makeText(activity, "Zu nahe am letzten Punkt",
+		if (previousLocation != null) {
+			if (location.distanceTo(previousLocation) < Database
+					.getSettingValue(Database.SETTINGS_TRACKING_METER)) {
+				// Toast.makeText(activity, "Zu nahe am letzten Punkt",
 //						Toast.LENGTH_SHORT).show();
-//				return;
-//			}
-//		}
+				return;
+			}
+		}
 
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		RoutePoint point = new RoutePoint(route.getId(), timestamp, null, null,
@@ -316,6 +316,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		// Check if google play service is available
 		servicesAvailable = servicesConnected();
 
+		
+		
 	}
 
 	@Override

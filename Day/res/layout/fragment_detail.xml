@@ -62,8 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-
-
                 <ImageButton
                     android:id="@+id/ibStopRoute"
                     android:layout_width="50dp"
@@ -76,8 +74,8 @@
                     android:src="@drawable/icon_stop_detail"
                     android:text="Button"
                     android:textColor="@color/white" />
-                
-                  <ViewFlipper
+
+                <ViewFlipper
                     android:id="@+id/flipperStartStop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" >
@@ -108,7 +106,6 @@
                         android:text="Button"
                         android:textColor="@color/white" />
                 </ViewFlipper>
-                
             </LinearLayout>
 
             <FrameLayout
@@ -144,20 +141,20 @@
                             <include
                                 android:id="@+id/first"
                                 layout="@layout/detail_infobarempty" />
+
                             <include
                                 android:id="@+id/second"
                                 layout="@layout/detail_infobar" />
-                            
                         </ViewFlipper>
 
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_weight="2.5"
+                            android:layout_weight="15"
                             android:paddingBottom="11dp" >
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="fill_parent"
                                 android:layout_weight="20"
                                 android:paddingBottom="11dp" >

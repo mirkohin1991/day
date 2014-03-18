@@ -308,44 +308,45 @@ containing a value of this type.
         public static final int map_terrain=0x7f020059;
         public static final int menu_divider=0x7f02005a;
         public static final int menu_dropdown_panel_appbasetheme=0x7f02005b;
-        public static final int plus=0x7f02005c;
-        public static final int progress_bg_appbasetheme=0x7f02005d;
-        public static final int progress_horizontal_appbasetheme=0x7f02005e;
-        public static final int progress_primary_appbasetheme=0x7f02005f;
-        public static final int progress_secondary_appbasetheme=0x7f020060;
-        public static final int resizedbitmap_placeholder=0x7f020061;
-        public static final int selectable_background_appbasetheme=0x7f020062;
-        public static final int setting_camera=0x7f020063;
-        public static final int setting_facebook=0x7f020064;
-        public static final int setting_gps=0x7f020065;
-        public static final int setting_info=0x7f020066;
-        public static final int slr=0x7f020067;
-        public static final int slr_camera=0x7f020068;
-        public static final int spinner_ab_default_appbasetheme=0x7f020069;
-        public static final int spinner_ab_disabled_appbasetheme=0x7f02006a;
-        public static final int spinner_ab_focused_appbasetheme=0x7f02006b;
-        public static final int spinner_ab_pressed_appbasetheme=0x7f02006c;
-        public static final int spinner_background_ab_appbasetheme=0x7f02006d;
-        public static final int start_stop_marker=0x7f02006e;
-        public static final int start_stop_marker2=0x7f02006f;
-        public static final int stop_small=0x7f020070;
-        public static final int switch_bg_disabled_holo_light=0x7f020071;
-        public static final int switch_bg_focused_holo_light=0x7f020072;
-        public static final int switch_bg_holo_light=0x7f020073;
-        public static final int switch_control=0x7f020074;
-        public static final int switch_progress=0x7f020075;
-        public static final int switch_thumb_activated_holo_light=0x7f020076;
-        public static final int switch_thumb_disabled_holo_light=0x7f020077;
-        public static final int switch_thumb_holo_light=0x7f020078;
-        public static final int switch_thumb_pressed_holo_light=0x7f020079;
-        public static final int tab_indicator_ab_appbasetheme=0x7f02007a;
-        public static final int tab_selected_appbasetheme=0x7f02007b;
-        public static final int tab_selected_focused_appbasetheme=0x7f02007c;
-        public static final int tab_selected_pressed_appbasetheme=0x7f02007d;
-        public static final int tab_unselected_appbasetheme=0x7f02007e;
-        public static final int tab_unselected_focused_appbasetheme=0x7f02007f;
-        public static final int tab_unselected_pressed_appbasetheme=0x7f020080;
-        public static final int view_detailsneu=0x7f020081;
+        public static final int new_route_icon=0x7f02005c;
+        public static final int plus=0x7f02005d;
+        public static final int progress_bg_appbasetheme=0x7f02005e;
+        public static final int progress_horizontal_appbasetheme=0x7f02005f;
+        public static final int progress_primary_appbasetheme=0x7f020060;
+        public static final int progress_secondary_appbasetheme=0x7f020061;
+        public static final int resizedbitmap_placeholder=0x7f020062;
+        public static final int selectable_background_appbasetheme=0x7f020063;
+        public static final int setting_camera=0x7f020064;
+        public static final int setting_facebook=0x7f020065;
+        public static final int setting_gps=0x7f020066;
+        public static final int setting_info=0x7f020067;
+        public static final int slr=0x7f020068;
+        public static final int slr_camera=0x7f020069;
+        public static final int spinner_ab_default_appbasetheme=0x7f02006a;
+        public static final int spinner_ab_disabled_appbasetheme=0x7f02006b;
+        public static final int spinner_ab_focused_appbasetheme=0x7f02006c;
+        public static final int spinner_ab_pressed_appbasetheme=0x7f02006d;
+        public static final int spinner_background_ab_appbasetheme=0x7f02006e;
+        public static final int start_stop_marker=0x7f02006f;
+        public static final int start_stop_marker2=0x7f020070;
+        public static final int stop_small=0x7f020071;
+        public static final int switch_bg_disabled_holo_light=0x7f020072;
+        public static final int switch_bg_focused_holo_light=0x7f020073;
+        public static final int switch_bg_holo_light=0x7f020074;
+        public static final int switch_control=0x7f020075;
+        public static final int switch_progress=0x7f020076;
+        public static final int switch_thumb_activated_holo_light=0x7f020077;
+        public static final int switch_thumb_disabled_holo_light=0x7f020078;
+        public static final int switch_thumb_holo_light=0x7f020079;
+        public static final int switch_thumb_pressed_holo_light=0x7f02007a;
+        public static final int tab_indicator_ab_appbasetheme=0x7f02007b;
+        public static final int tab_selected_appbasetheme=0x7f02007c;
+        public static final int tab_selected_focused_appbasetheme=0x7f02007d;
+        public static final int tab_selected_pressed_appbasetheme=0x7f02007e;
+        public static final int tab_unselected_appbasetheme=0x7f02007f;
+        public static final int tab_unselected_focused_appbasetheme=0x7f020080;
+        public static final int tab_unselected_pressed_appbasetheme=0x7f020081;
+        public static final int view_detailsneu=0x7f020082;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f060028;
@@ -358,7 +359,7 @@ containing a value of this type.
         public static final int actSec=0x7f060038;
         public static final int cr_map=0x7f06001f;
         public static final int customMarker=0x7f060011;
-        public static final int divider=0x7f06003e;
+        public static final int divider=0x7f06003f;
         public static final int drawer_layout=0x7f060005;
         public static final int first=0x7f060025;
         public static final int flipperInfo=0x7f060024;
@@ -372,7 +373,7 @@ containing a value of this type.
         public static final int ibPauseRoute=0x7f060022;
         public static final int ibRestartRoute=0x7f060023;
         public static final int ibStopRoute=0x7f060020;
-        public static final int icon=0x7f06003c;
+        public static final int icon=0x7f06003d;
         public static final int imageViewFullPicture=0x7f060030;
         public static final int imagebuttonContinue=0x7f06000b;
         public static final int imagebuttonCreate=0x7f06000d;
@@ -380,7 +381,7 @@ containing a value of this type.
         public static final int includeCurrentElement=0x7f06002d;
         public static final int includeNewElement=0x7f06002c;
         public static final int ivPlayAnim=0x7f060009;
-        public static final int layout_slidermenu_item=0x7f06003b;
+        public static final int layout_slidermenu_item=0x7f06003c;
         public static final int linlayoutland=0x7f06002f;
         public static final int listView1=0x7f06002e;
         public static final int list_slidermenu=0x7f060007;
@@ -404,7 +405,8 @@ containing a value of this type.
         public static final int textRouteName=0x7f06000e;
         public static final int textRouteNameActive=0x7f060008;
         public static final int textView1=0x7f060033;
-        public static final int title=0x7f06003d;
+        public static final int textView2=0x7f06003b;
+        public static final int title=0x7f06003e;
         public static final int tvAveSpeed=0x7f060017;
         public static final int tvDistance=0x7f060015;
         public static final int tvDuration=0x7f060016;
@@ -443,8 +445,8 @@ containing a value of this type.
         public static final int slidermenu_list_item=0x7f030011;
     }
     public static final class string {
-        public static final int aboutTheApp_description=0x7f070028;
-        public static final int aboutTheApp_developer=0x7f070027;
+        public static final int aboutTheApp_description=0x7f070029;
+        public static final int aboutTheApp_developer=0x7f070028;
         public static final int action_settings=0x7f07001b;
         public static final int app_name=0x7f07001a;
         /**   Title for notification shown when GooglePlayServices needs to be
@@ -470,9 +472,9 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f070014;
-        public static final int camera_save_settings=0x7f070024;
-        public static final int camera_save_settings_description=0x7f070025;
-        public static final int camera_save_settings_note=0x7f070026;
+        public static final int camera_save_settings=0x7f070025;
+        public static final int camera_save_settings_description=0x7f070026;
+        public static final int camera_save_settings_note=0x7f070027;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -546,8 +548,9 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f070013;
         /**  Content Description 
          */
-        public static final int desc_list_item_icon=0x7f070029;
+        public static final int desc_list_item_icon=0x7f07002a;
         public static final int gps_settings_note=0x7f070023;
+        public static final int gps_settings_note2=0x7f070024;
         public static final int hello_world=0x7f07001c;
         public static final int kamera_oeffnen=0x7f07001f;
         public static final int karte_oeffnen=0x7f07001d;

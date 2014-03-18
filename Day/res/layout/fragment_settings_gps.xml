@@ -98,7 +98,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="30dp"
             android:layout_weight="10"
-            android:max="95"
+            android:max="90"
             android:progressDrawable="@drawable/green_scrubber_progress"
             android:thumb="@drawable/green_scrubber_control" />
 
@@ -123,6 +123,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/gps_settings_note"
+        android:textColor="@color/settings_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text"/>
+    
+    <TextView
+        android:paddingTop="10dp"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gps_settings_note2"
         android:textColor="@color/settings_text"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/text"/>

@@ -37,14 +37,12 @@ public class DeleteRouteDialog extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						try {
-
 							routeList.deleteRouteDB(index);
 						} catch (Exception e) {
 							Log.wtf("WTF", "Nullpointer routelist");
 						}
 
 						try {
-
 							mCallback.onRouteDeleted();
 						} catch (Exception e) {
 							Log.wtf("WTF", "Nullpointer callback");

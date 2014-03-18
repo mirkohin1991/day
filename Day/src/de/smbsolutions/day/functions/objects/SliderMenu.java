@@ -3,25 +3,19 @@ package de.smbsolutions.day.functions.objects;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.presentation.fragments.settings.AboutFragment;
 import de.smbsolutions.day.presentation.fragments.settings.CameraFragment;
-import de.smbsolutions.day.presentation.fragments.settings.FacebookFragment;
 import de.smbsolutions.day.presentation.fragments.settings.GPSFragment;
 import de.smbsolutions.day.presentation.listviews.SliderMenuItem;
 import de.smbsolutions.day.presentation.listviews.SliderMenuListAdapter;
@@ -116,7 +110,6 @@ public class SliderMenu {
 		// Kamera
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[5], navMenuIcons
 				.getResourceId(5, -1)));
-
 		// App Info
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[6], navMenuIcons
 				.getResourceId(6, -1)));
@@ -254,8 +247,6 @@ public class SliderMenu {
 			// Kamera
 			fragment = new CameraFragment();
 			break;
-
-
 
 		case 6:
 			// Info

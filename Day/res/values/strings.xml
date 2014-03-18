@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Hike</string>
@@ -10,12 +9,13 @@
     <string name="start_service">Service starten</string>
     <string name="stop_service">Service stoppen</string>
     <string name="new_route">Neue Route anlegen </string>
-    <string name="gps_settings_note">Je häufiger Sie die GPS Wiederholungsrate einstellen, desto genauer wird die Route abgebildet. Das gleiche gilt auch für die Entfernung. Kleinere Werte bedeuten eine bessere Darstellung auf der Karte</string>
+    <string name="gps_settings_note">Je niedriger Sie die GPS Wiederholungsrate einstellen, desto genauer wird die Route abgebildet. Das gleiche gilt auch für die Entfernung. Kleinere Werte bedeuten eine genauere Darstellung auf der Karte, können allerdings auch zu einem erhöhten Akkuverbrauch führen.</string>
+	<string name="gps_settings_note2">Wenn Sie das GPS ausschalten wird ihre Route nicht mehr automatisch aktualisiert, sondern nur wenn Sie ein Foto schießen.</string>
     <string name="camera_save_settings">Bilder anzeigen</string>
     <string name="camera_save_settings_description">Geben Sie an, ob die Bilder die Sie mit dieser App schießen auch in der Galerie App Ihres Smartphones erscheinen sollen.</string>
     <string name="camera_save_settings_note">Hinweis: Möglicherweise werden die Änderungen erst nach einem Neustart des Geräts wirksam.</string>
     <string name="aboutTheApp_developer">Hike wurde im Rahmen der Vorlesung Mobile Entwicklung an der DHBW Lörrach von Simon Kussmann, Mirko Hin und Bijan Röhrich entwickelt.</string>
-    <string name="aboutTheApp_description">Hike ist eine Tracking Lösung für Sport und Freizeit Enthusiasten, die nicht nur exakt Ihren Standort bestimmt, sondern Ihnen auch zu jeder Zeit nützliche Informationen über Ihre aktuelle Tour liefert. Neben Informationen wie die zurückgelegte Strecke, die benötigte Zeit oder die Durchschnittsgeschwindigkeit bietet Ihnen Hike auch die Möglichkeit Fotos mit Ihrem Smartphone aufzunehmen und diese auf der aktuellen Route anzusehen.</string>
+    <string name="aboutTheApp_description">Hike ist eine Trackinglösung für Sport und Freizeit Enthusiasten, die nicht nur exakt Ihren Standort bestimmt, sondern Ihnen auch zu jeder Zeit nützliche Informationen über Ihre aktuelle Tour liefert. Neben Informationen wie die zurückgelegte Strecke, die benötigte Zeit oder die Durchschnittsgeschwindigkeit bietet Ihnen Hike auch die Möglichkeit Fotos mit Ihrem Smartphone aufzunehmen und diese auf der aktuellen Route anzusehen.</string>
 
     <color name="Weiss">#ffff</color>
 
