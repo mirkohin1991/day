@@ -210,7 +210,8 @@ containing a value of this type.
         public static final int activity_vertical_margin=0x7f090001;
         public static final int h1=0x7f090002;
         public static final int h2=0x7f090003;
-        public static final int margin_top_text_info_slider=0x7f090006;
+        public static final int marginListElement=0x7f090006;
+        public static final int margin_top_text_info_slider=0x7f090007;
         public static final int text=0x7f090004;
         public static final int text_slider=0x7f090005;
     }
@@ -416,6 +417,7 @@ containing a value of this type.
         public static final int weightDetailMap=0x7f080005;
         public static final int weightMainList=0x7f080002;
         public static final int weightMainMap=0x7f080001;
+        public static final int weightMap=0x7f080007;
         public static final int weightPictureView=0x7f080004;
         public static final int weightTextBarMainMap=0x7f080003;
     }

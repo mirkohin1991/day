@@ -4,8 +4,9 @@
     <integer name="weightMainMap">2</integer>
     <integer name="weightMainList">3</integer>
     <integer name="weightTextBarMainMap">2</integer>
-    <integer name ="weightDetailMap">5</integer>
+    <integer name="weightDetailMap">5</integer>
     <integer name="weightPictureView">2</integer>
+    <integer name="weightMap">4</integer>
     <integer name="lengthRouteName"> 15</integer>
 
 </resources>

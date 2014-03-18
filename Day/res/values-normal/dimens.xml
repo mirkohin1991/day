@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-      <dimen name="h1">20dp</dimen>
-      <dimen name="h2">18dp</dimen>
-      <dimen name="text">14dp</dimen>
-      <dimen name="text_slider">12dp</dimen>
-            <dimen name="margin_top_text_info_slider">8dp</dimen>
-</resources>
 
+    <dimen name="h1">20dp</dimen>
+    <dimen name="h2">18dp</dimen>
+    <dimen name="text">14dp</dimen>
+    <dimen name="text_slider">12dp</dimen>
+    <dimen name="marginListElement">7dp</dimen>
+    <dimen name="margin_top_text_info_slider">8dp</dimen>
+
+</resources>

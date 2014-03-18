@@ -129,7 +129,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onNewRouteStarted(Route route) {
-
+		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
 		DetailFragment crFrag = new DetailFragment();
 		Bundle bundle = new Bundle();
 		// Übergabe Routenliste
@@ -139,7 +139,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		crFrag.setArguments(bundle);
 		ft.replace(R.id.frame_container, crFrag, TAG_DETAILFRAGMENT)
 				.addToBackStack(TAG_DETAILFRAGMENT).commit();
-		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+
 		fragmentCount++;
 		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
 
@@ -188,14 +188,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		detail_frag.setArguments(bundle);
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		int cpount = getSupportFragmentManager().getBackStackEntryCount();
 
+		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
 		ft.replace(R.id.frame_container, detail_frag, TAG_DETAILFRAGMENT);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.addToBackStack(TAG_DETAILFRAGMENT);
 		ft.commit();
 		fragmentCount++;
-		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+
 		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
 
 	}
@@ -249,12 +249,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	}
 
 	@Override
-	public void onOpenDialogStopRoute(Route route) {
+	public void onOpenDialogStopRoute(String fragmentFlag, Route route) {
 
 		StopRouteDialog dialog = new StopRouteDialog();
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
-		bundle.putString("fragmentFlag", CURRENT_FRAGMENT);
+		bundle.putString("fragmentFlag", fragmentFlag);
 		dialog.setArguments(bundle);
 		// Showing the popup / Second Parameter: Unique Name, that is
 		// used
@@ -265,19 +265,18 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onRouteDeleted() {
-
+		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 		MainFragment mainfrag = new MainFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
 				.addToBackStack(TAG_MAINFRAGMENT).commit();
-		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 
 	}
 
 	// GLEICH WIE SHOWROUTE
 	@Override
 	public void onDeletePicture(Route route) {
-
+		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
 		// fragment avaiable?
 		DetailFragment crFrag = new DetailFragment();
 
@@ -290,7 +289,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		ft.replace(R.id.frame_container, crFrag, TAG_DETAILFRAGMENT)
 				.addToBackStack(TAG_DETAILFRAGMENT).commit();
 		fragmentCount++;
-		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+
 		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
 
 	}
@@ -313,18 +312,59 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	// GLEICH WIE DELETE ROUTE
 	@Override
-	public void onRouteStopped() {
-		MainFragment mainfrag = new MainFragment();
+	public void onRouteStopped(String fragmentTag, Route route) {
 
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
-				.addToBackStack(TAG_MAINFRAGMENT).commit();
-		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+		if (getSupportFragmentManager()
+				.getBackStackEntryAt(
+						getSupportFragmentManager().getBackStackEntryCount() - 1)
+				.getName().equals(TAG_DETAILFRAGMENT)
+				|| getSupportFragmentManager()
+						.getBackStackEntryAt(
+								getSupportFragmentManager()
+										.getBackStackEntryCount() - 1)
+						.getName().equals(TAG_MAINFRAGMENT)) {
+			Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(
+					getSupportFragmentManager().getBackStackEntryAt(
+							getSupportFragmentManager()
+									.getBackStackEntryCount() - 1).getName());
+			getSupportFragmentManager().beginTransaction().remove(oldFrag)
+					.commit();
 
-		// Stop service
-		if (mService != null) {
-			unbindService(mConnection);
-			mService = null;
+			getSupportFragmentManager().popBackStack();
+
+		}
+
+		if (fragmentTag.equals(TAG_MAINFRAGMENT)) {
+			CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
+
+			MainFragment mainfrag = new MainFragment();
+
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
+					.addToBackStack(TAG_MAINFRAGMENT).commit();
+
+			if (mService != null) {
+				unbindService(mConnection);
+				mService = null;
+			}
+		} else if (fragmentTag.equals(TAG_DETAILFRAGMENT)) {
+			CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+
+			Bundle bundle = new Bundle();
+			bundle.putParcelable("route", route);
+			DetailFragment detailfrag = new DetailFragment();
+			detailfrag.setArguments(bundle);
+
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.frame_container, detailfrag,
+							TAG_DETAILFRAGMENT)
+					.addToBackStack(TAG_DETAILFRAGMENT).commit();
+
+			if (mService != null) {
+				unbindService(mConnection);
+				mService = null;
+			}
 		}
 
 	}
@@ -333,7 +373,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onSliderClick(Fragment frag) {
 
 		String slidertag = frag.getClass().getName();
-
+		CURRENT_FRAGMENT = slidertag;
 		String name = getSupportFragmentManager().getBackStackEntryAt(
 				getSupportFragmentManager().getBackStackEntryCount() - 1)
 				.getName();
@@ -345,21 +385,22 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			getSupportFragmentManager().popBackStack();
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.frame_container, frag, slidertag)
+					.replace(R.id.frame_container, frag, slidertag)
 					.addToBackStack(slidertag).commit();
-			CURRENT_FRAGMENT = slidertag;
+
 		} else {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.frame_container, frag, slidertag)
-					.addToBackStack(slidertag).commit();
 			CURRENT_FRAGMENT = slidertag;
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.frame_container, frag, slidertag)
+					.addToBackStack(slidertag).commit();
+
 		}
 
 	}
 
 	@Override
 	public void onCamStart(Route route) {
-
+		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
 		DetailFragment crFrag = new DetailFragment();
 
 		Bundle bundle = new Bundle();
@@ -371,7 +412,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		ft.replace(R.id.frame_container, crFrag, TAG_DETAILFRAGMENT)
 				.addToBackStack(TAG_DETAILFRAGMENT).commit();
 		fragmentCount++;
-		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+
 		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
 
 	}
@@ -419,7 +460,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onPictureClick(Route route, RoutePoint point) {
-
+		CURRENT_FRAGMENT = TAG_PICTUREFRAGMENT;
 		// fragment avaiable?
 		PictureFragment pictureFrag = new PictureFragment();
 
@@ -430,15 +471,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		pictureFrag.setArguments(bundle);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-		ft.add(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
+		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
 				.addToBackStack(TAG_PICTUREFRAGMENT).commit();
-		CURRENT_FRAGMENT = TAG_PICTUREFRAGMENT;
-	}
 
-	@Override
-	public void onAttachFragment(Fragment fragment) {
-
-		super.onAttachFragment(fragment);
 	}
 
 	@Override
@@ -700,10 +735,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
+
 	@Override
 	public void refreshSliderMenu() {
 
-       slidermenu.removeSelectedItem();
-		
+		slidermenu.removeSelectedItem();
+
 	}
 }

@@ -47,7 +47,8 @@ int dimen activity_horizontal_margin 0x7f090000
 int dimen activity_vertical_margin 0x7f090001
 int dimen h1 0x7f090002
 int dimen h2 0x7f090003
-int dimen margin_top_text_info_slider 0x7f090006
+int dimen marginListElement 0x7f090006
+int dimen margin_top_text_info_slider 0x7f090007
 int dimen text 0x7f090004
 int dimen text_slider 0x7f090005
 int drawable ab_background_textured_appbasetheme 0x7f020000
@@ -247,6 +248,7 @@ int integer lengthRouteName 0x7f080006
 int integer weightDetailMap 0x7f080005
 int integer weightMainList 0x7f080002
 int integer weightMainMap 0x7f080001
+int integer weightMap 0x7f080007
 int integer weightPictureView 0x7f080004
 int integer weightTextBarMainMap 0x7f080003
 int layout activity_main 0x7f030000
