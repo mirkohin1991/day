@@ -195,7 +195,13 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			flipperStartStop.setDisplayedChild(0);
 
 		}
-
+		addButtonClickListenerCamera(ibCamera);
+		addButtonClickListenerPauseRoute(ibPauseRoute);
+		addButtonClickListenerStopRoute(ibStopRoute);
+		addButtonClickListenerRestartRoute(ibRestartRoute);
+		addButtonClickListenerSliderIn(ibInfoSliderIn);
+		addButtonClickListenerSliderOut(ibInfoSliderOut);
+	
 		view.post(new Runnable() {
 
 			@Override
@@ -214,14 +220,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 
 		});
-		addButtonClickListenerCamera(ibCamera);
-		addButtonClickListenerPauseRoute(ibPauseRoute);
-		addButtonClickListenerStopRoute(ibStopRoute);
-		addButtonClickListenerRestartRoute(ibRestartRoute);
-		addButtonClickListenerSliderIn(ibInfoSliderIn);
-		addButtonClickListenerSliderOut(ibInfoSliderOut);
+		
 	}
-
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
 		myGallery.removeAllViews();
