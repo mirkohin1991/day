@@ -24,7 +24,6 @@ public class AllRoutesListElement {
 
 	}
 	
-
 	
 	//observers can call to register for data change notifications:
 	public void setAdapter(BaseAdapter adapter) {
@@ -32,25 +31,19 @@ public class AllRoutesListElement {
 	}
 
 
-
-
 	public String getTextName() {
 		return textName;
 	}
 	
-
 
 	public String getTextDate() {
 		return textDate;
 	}
 	
 	
-	
 	public Drawable getIcon() {
 		return icon;
 	}
-
-
 
 	public Route getRoute() {
 		return route;

@@ -235,7 +235,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				// SOLLTE ABER EIGENTLICH IMMER OFFEN SEIN, NUR DANN WIRD
 				// NÄMLICH DER LISTENER GESETZT
 				if (routeList.isOpenRoute()) {
-					// A route is active -> user wants to stop it
+				
 
 					try {
 						sel_Route = routeList.getlastRoute();
@@ -248,6 +248,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					// Getting the route object of the related row
 					// Transfering it to the interface in order to call the
 					// detailed map view
+					
+					//Der Mainactivity wird mitgeteilt, dass die geöffnete Route eine aktive ist
+					mCallback.onRouteOpenend(true);
+					
+					//Anzeigen der Route
 					mCallback.onShowRoute(sel_Route);
 
 				}

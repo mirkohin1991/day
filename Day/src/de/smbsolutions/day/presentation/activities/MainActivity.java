@@ -76,6 +76,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private LocationTrackerPLAYSERVICE mService = null;
 	// wird in onStart() und onStop() verwendet
 	private ServiceConnection mConnection;
+	
+	private boolean activeRouteisOpened = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -694,16 +696,47 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onLocationChanged(Route route, RoutePoint point) {
-		GoogleMap map = getCurrentMap();
-		if (map != null) {
-			route.addPoint2Polyline(point, map);
+
+		SupportMapFragment mapFragment;
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(
+				CURRENT_FRAGMENT);
+		if (frag instanceof DetailFragment) {
+			((DetailFragment) frag).refreshInfoSlider();
 		}
 
+		  // Nur wenn eine aktive Route im Detailmodus angezeigt wird, sollen die Polylines ergänzt werden
+		  // Sonst würden diese auch der nichtaktiven Route hinzugefügt werden
+         if (activeRouteisOpened == true) {
+			GoogleMap map = getCurrentMap();
+			if (map != null) {
+				route.addPoint2Polyline(point, map);
+			}
+			
+         }
+
+		
+
 	}
+
 	@Override
 	public void refreshSliderMenu() {
 
-       slidermenu.removeSelectedItem();
+		slidermenu.removeSelectedItem();
+
+	}
+
+	@Override
+	public void onRouteOpenend(boolean active) {
+	
+		// Globales Flag um zu wissen, ob gerade eine aktive Route im Detailview geöffnet ist
+		if (active == true) {
+			
+			activeRouteisOpened = true;
+			
+		} else {
+			activeRouteisOpened = false;
+			
+		}
 		
 	}
 }

@@ -177,7 +177,7 @@ public class Route implements Parcelable {
 			LatLngBounds bounds = builder.build();
 			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 					bounds, 60);
-			map.moveCamera(camUpdate);
+			map.animateCamera(camUpdate);
 
 		}
 
@@ -376,6 +376,9 @@ public class Route implements Parcelable {
 	}
 
 	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
+		
+		
+	
 		// map darf nicht gecleared werden, da sonst Marker gelöscht werden
 		polylineOptions_back.add(new LatLng(point.getLatitude(), point
 				.getLongitude()));
@@ -384,6 +387,7 @@ public class Route implements Parcelable {
 		map.addPolyline(polylineOptions_top);
 		map.addPolyline(polylineOptions_back);
 		setZoomAllMarkers(map);
+	
 	}
 
 }

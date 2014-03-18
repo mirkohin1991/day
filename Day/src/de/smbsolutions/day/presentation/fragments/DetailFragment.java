@@ -97,7 +97,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			myGallery = (LinearLayout) view
 					.findViewById(R.id.LinearLayoutImage);
 			addPhotos2Gallery(myGallery);
-
 		}
 
 		return view;
@@ -203,32 +202,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		if (ibInfoSliderOut == null) {
 			ibInfoSliderOut = (ImageButton) view
 					.findViewById(R.id.ibInfoSliderOut);
-
 		}
 
-		calcRouteFacts(route);
-		if (tvDistance == null) {
-			tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-			tvDistance.setText(String.valueOf("Strecke: ca. " + distanceKm
-					+ " km"));
-		} else {
-			tvDistance.setText(String.valueOf("Strecke: ca. " + distanceKm
-					+ " km"));
-		}
-		if (tvDuration == null) {
-			tvDuration = (TextView) view.findViewById(R.id.tvDuration);
-			tvDuration.setText(String.valueOf("Dauer: " + duration));
-		} else {
-			tvDuration.setText(String.valueOf("Dauer: " + duration));
-		}
-		if (tvAveSpeed == null) {
-			tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
-			tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed
-					+ " km/h"));
-		} else {
-			tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed
-					+ " km/h"));
-		}
+		refreshInfoSlider();
+		
 		if (flipperStartStop == null) {
 			flipperStartStop = (ViewFlipper) view
 					.findViewById(R.id.flipperStartStop);
@@ -247,7 +224,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			// because the service is connecting async.
 			// But getting to the detailfragment will always restart the route
 			flipperStartStop.setDisplayedChild(0);
-
 		}
 
 		view.post(new Runnable() {
@@ -262,7 +238,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 						map = route.prepareMapDetails(map, getActivity());
 						mapPrepared = true;
 					}
-
 				}
 			}
 
@@ -297,7 +272,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 				ibCamera.setVisibility(View.VISIBLE);
 				flipperStartStop.setDisplayedChild(0);
-
 			}
 		});
 
@@ -318,7 +292,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				// start camera activity
 				startActivityForResult(intent,
 						CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-
 			}
 		});
 
@@ -343,9 +316,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			@Override
 			public void onClick(View v) {
-
 				weakCallBack.get().onOpenDialogStopRoute(route);
-
 			}
 		});
 
@@ -418,13 +389,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					weakCallBack.get().onPictureTaken(route, fileUri,
 							small_picture);
 					small_picture = null;
-					// If no small picture could be created, NULL is stored
-				} else {
-					// SOll hier noch was passieren???
-					// route.addRoutePointDB(new RoutePoint(route.getId(),
-					// tsTemp,
-					// fileUri.getPath(), null, gps.getLatitude(), gps
-					// .getLongitude(), gps.getAltitude()));
+
+					// Distance and so on has to be calculated again
+					refreshInfoSlider();
 
 				}
 
@@ -607,20 +574,21 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 					Timestamp tsClicked = (Timestamp) v.getTag();
 
 					if (tsClicked == point.getTimestamp()) {
-						LatLngBounds.Builder builder = new LatLngBounds.Builder();
-						LatLng latlng = new LatLng(point.getLatitude(), point
-								.getLongitude());
+//						LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//						LatLng latlng = new LatLng(point.getLatitude(), point
+//								.getLongitude());
+//
+//						if (latlng != null) {
 
-						if (latlng != null) {
+//							builder.include(latlng);
+//
+//							LatLngBounds bounds = builder.build();
+//							CameraUpdate camUpdate = CameraUpdateFactory
+//									.newLatLngBounds(bounds, 60);
+//							map.animateCamera(camUpdate);
 
-							builder.include(latlng);
-
-							LatLngBounds bounds = builder.build();
-							CameraUpdate camUpdate = CameraUpdateFactory
-									.newLatLngBounds(bounds, 60);
-							map.animateCamera(camUpdate);
-
-						}
+							route.setZoomSpecificMarker(point, map);
+//						}
 
 					}
 
@@ -751,6 +719,33 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		view = null;
 		task = null;
 		fileUri = null;
+
+	}
+
+
+	public void refreshInfoSlider() {
+		// Method is called when a new routepoint was added
+		// Therefore, the fact slider has to be refreshed
+		calcRouteFacts(route);
+
+		if (tvDistance == null) {
+			tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+		}
+	
+			tvDistance.setText(String.valueOf("Strecke: ca. " + distanceKm
+					+ " km"));
+	
+
+		if (tvDuration == null) {
+			tvDuration = (TextView) view.findViewById(R.id.tvDuration);
+		}
+		tvDuration.setText(String.valueOf("Dauer: " + duration));
+		
+		if (tvAveSpeed == null) {
+			tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
+		}
+			tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed + " km/h"));
+	
 
 	}
 

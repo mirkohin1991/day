@@ -87,8 +87,12 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 					// Getting the route object of the related row
 					// Transfering it to the interface in order to call the
 					// detailed map view
-					mCallback
-							.onShowRoute(listElements.get(position).getRoute());
+					
+					
+					//Der Mainactivity wird mitgeteilt, dass es sich bei der geöffneten Route um eine bereits 
+					//abgeschlossene handelt (Active = false);
+					mCallback.onRouteOpenend(false);
+					mCallback.onShowRoute(listElements.get(position).getRoute());
 
 				}
 
