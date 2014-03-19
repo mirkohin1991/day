@@ -35,7 +35,7 @@ public class CameraFragment extends android.support.v4.app.Fragment {
 		final File path = new File(
 				Environment
 						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"Hike App");
+				"Hike");
 
 		if (switchShowInGal == null) {
 			switchShowInGal = (Switch) view.findViewById(R.id.switchShowInGal);
@@ -69,27 +69,24 @@ public class CameraFragment extends android.support.v4.app.Fragment {
 									// directory to hide pictures taken with
 									// this app from the standard gallery app
 									// Images should be hidden
+									
 									String nomediaFile = path.toString()
 											+ "/.nomedia";
 									File file = new File(nomediaFile);
-									file = null;
+									boolean deleted = file.delete();
+//									file = null;
+									// Toast.makeText(getActivity(), "An", Toast.LENGTH_SHORT).show();
 
 								} else {
 
 									Database.changeSettingValue(
 											Database.SETTINGS_SHOW_IN_GAL, 0);
+									
+									// Toast.makeText(getActivity(), "Aus", Toast.LENGTH_SHORT).show();
 
-									// Deletes the file wich indicates the
-									// availability in the gallery app.
-									// Images should be shown
-									// File path = new
-									// File(Environment.getExternalStoragePublicDirectory(
-									// Environment.DIRECTORY_PICTURES),
-									// "MyCameraApp");
+
 									try {
-										FileWriter fileWriter = new FileWriter(
-												path + "/.nomedia");
-
+										FileWriter fileWriter = new FileWriter(path + "/.nomedia");
 										fileWriter.close();
 										fileWriter = null;
 									} catch (IOException e) {
