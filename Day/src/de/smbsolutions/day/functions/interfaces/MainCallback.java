@@ -70,9 +70,9 @@ public interface MainCallback {
 	public boolean isServiceActive();
 
 	public void onLocationChanged(Route route, RoutePoint point);
-	
-public void refreshSliderMenu();
 
-   public void onRouteOpenend(boolean active);
-	
+	public void refreshSliderMenu();
+
+	public void onRouteOpenend(boolean active);
+
 }

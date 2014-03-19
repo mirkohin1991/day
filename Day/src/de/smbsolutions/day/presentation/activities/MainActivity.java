@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private final String TAG_MAINFRAGMENT = "MAIN";
 	private final String TAG_PICTUREFRAGMENT = "PICTURE";
 	private static String CURRENT_FRAGMENT = null;
-	
+
 	private int NOTIFICATION_ID;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -82,7 +82,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	private LocationTrackerPLAYSERVICE mService = null;
 	// wird in onStart() und onStop() verwendet
 	private ServiceConnection mConnection;
-		private boolean activeRouteisOpened = false;
+	private boolean activeRouteisOpened = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -90,14 +90,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-		
 
 		// Get Singetons
 		Database.getInstance(this);
 		Device.getInstance(this);
-		
-		
+
 		// Service
 		mConnection = new ServiceConnection() {
 			@Override
@@ -105,7 +102,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				LocalBinder binder = (LocalBinder) service;
 				mService = binder.getService();
 				// Toast.makeText(getApplicationContext(), "Service angebunden",
-						// Toast.LENGTH_SHORT).show();
+				// Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -276,6 +273,22 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onRouteDeleted() {
+
+		if (getSupportFragmentManager()
+				.getBackStackEntryAt(
+						getSupportFragmentManager().getBackStackEntryCount() - 1)
+				.getName().equals(TAG_MAINFRAGMENT)) {
+			Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(
+					getSupportFragmentManager().getBackStackEntryAt(
+							getSupportFragmentManager()
+									.getBackStackEntryCount() - 1).getName());
+			getSupportFragmentManager().beginTransaction().remove(oldFrag)
+					.commit();
+
+			getSupportFragmentManager().popBackStack();
+
+		}
+
 		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 		MainFragment mainfrag = new MainFragment();
 		getSupportFragmentManager().beginTransaction()
@@ -574,7 +587,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		} else {
 			// Toast.makeText(this, "Service wurde nicht gestartet",
-					// Toast.LENGTH_SHORT).show();
+			// Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -586,7 +599,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			mService.addPictureLocation(route, fileUri, small_picture);
 
 		} else {
-			// Toast.makeText(this, "Service ist null", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "Service ist null",
+			// Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -680,8 +694,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
-			// Toast.makeText(this, "MainActivity destroyed -> Service unbinded",
-					// Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this,
+			// "MainActivity destroyed -> Service unbinded",
+			// Toast.LENGTH_SHORT).show();
 		}
 
 	}
@@ -738,7 +753,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	}
 
-@Override
+	@Override
 	public void onLocationChanged(Route route, RoutePoint point) {
 
 		SupportMapFragment mapFragment;
@@ -748,52 +763,48 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			((DetailFragment) frag).refreshInfoSlider();
 		}
 
-		  // Nur wenn eine aktive Route im Detailmodus angezeigt wird, sollen die Polylines ergänzt werden
-		  // Sonst würden diese auch der nichtaktiven Route hinzugefügt werden
-         if (activeRouteisOpened == true) {
+		// Nur wenn eine aktive Route im Detailmodus angezeigt wird, sollen die
+		// Polylines ergänzt werden
+		// Sonst würden diese auch der nichtaktiven Route hinzugefügt werden
+		if (activeRouteisOpened == true) {
 			GoogleMap map = getCurrentMap();
 			if (map != null) {
 				route.addPoint2Polyline(point, map);
 			}
-			
-         }
-         
-         
-         
-         
-//         NotificationCompat.Builder mBuilder =
-//        	        new NotificationCompat.Builder(this)
-//        	        .setSmallIcon(R.drawable.ic_launcher)
-//        	        .setContentTitle("Hike trackt")
-//        	        .setContentText(route.getRouteName() + " läuft gerade");
-//        	// Creates an explicit intent for an Activity in your app
-//        	Intent resultIntent = this.getIntent();
-//
-//        	// The stack builder object will contain an artificial back stack for the
-//        	// started Activity.
-//        	// This ensures that navigating backward from the Activity leads out of
-//        	// your application to the Home screen.
-//        	TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//        	// Adds the back stack for the Intent (but not the Intent itself)
-//        	stackBuilder.addParentStack(MainActivity.class);
-//        	// Adds the Intent that starts the Activity to the top of the stack
-//        	stackBuilder.addNextIntent(resultIntent);
-//        	PendingIntent resultPendingIntent =
-//        	        stackBuilder.getPendingIntent(
-//        	            0,
-//        	            PendingIntent.FLAG_UPDATE_CURRENT
-//        	        );
-//        	mBuilder.setContentIntent(resultPendingIntent);
-//        	NotificationManager mNotificationManager =
-//        	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        	// mId allows you to update the notification later on.
-//        
-//        	mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-//         
-         
-         
 
-		
+		}
+
+		// NotificationCompat.Builder mBuilder =
+		// new NotificationCompat.Builder(this)
+		// .setSmallIcon(R.drawable.ic_launcher)
+		// .setContentTitle("Hike trackt")
+		// .setContentText(route.getRouteName() + " läuft gerade");
+		// // Creates an explicit intent for an Activity in your app
+		// Intent resultIntent = this.getIntent();
+		//
+		// // The stack builder object will contain an artificial back stack for
+		// the
+		// // started Activity.
+		// // This ensures that navigating backward from the Activity leads out
+		// of
+		// // your application to the Home screen.
+		// TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// // Adds the back stack for the Intent (but not the Intent itself)
+		// stackBuilder.addParentStack(MainActivity.class);
+		// // Adds the Intent that starts the Activity to the top of the stack
+		// stackBuilder.addNextIntent(resultIntent);
+		// PendingIntent resultPendingIntent =
+		// stackBuilder.getPendingIntent(
+		// 0,
+		// PendingIntent.FLAG_UPDATE_CURRENT
+		// );
+		// mBuilder.setContentIntent(resultPendingIntent);
+		// NotificationManager mNotificationManager =
+		// (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// // mId allows you to update the notification later on.
+		//
+		// mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+		//
 
 	}
 
@@ -806,16 +817,17 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onRouteOpenend(boolean active) {
-	
-		// Globales Flag um zu wissen, ob gerade eine aktive Route im Detailview geöffnet ist
+
+		// Globales Flag um zu wissen, ob gerade eine aktive Route im Detailview
+		// geöffnet ist
 		if (active == true) {
-			
+
 			activeRouteisOpened = true;
-			
+
 		} else {
 			activeRouteisOpened = false;
-			
+
 		}
-		
+
 	}
 }
