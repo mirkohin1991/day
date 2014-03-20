@@ -75,7 +75,7 @@ public class DeletePictureDialog extends DialogFragment {
 
 						} catch (Exception e) {
 
-							Log.wtf(getTag(), e.getMessage());
+							Log.d(getTag(), e.getMessage());
 						}
 
 					}

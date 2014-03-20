@@ -4,13 +4,14 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <!-- Definiert die minimale Android Version  -->
+    <!-- Definiert die minimale Android Version -->
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />
 
-     <!-- Legt die Zugriffsrechte der App fest. -->
+    <!-- Legt die Zugriffsrechte der App fest. -->
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -22,25 +23,24 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-     <!-- Legt das Icon, App Name und das App Theme der App fest. -->
+    <!-- Legt das Icon, App Name und das App Theme der App fest. -->
     <application
-       
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Appbasetheme" >
 
         <!-- Simon: AIzaSyB8LSEa5JoTGxnd1bfg9HE2FkmIadcZD_0 -->
-        <!--  Mirko: AIzaSyCQEqd_ENlCU2hN6vr__HAbOja2GUSgdIQ -->
-        
+        <!-- Mirko: AIzaSyCQEqd_ENlCU2hN6vr__HAbOja2GUSgdIQ -->
+        <!-- Bijan: AIzaSyBxJ55c4tfCj8ijdmLSsheogpUXN_e0k70 -->
         <!-- Legt den Google Maps Key fest. -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBxJ55c4tfCj8ijdmLSsheogpUXN_e0k70" />
+            android:value="AIzaSyB8LSEa5JoTGxnd1bfg9HE2FkmIadcZD_0" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        
+
         <activity
             android:name="de.smbsolutions.day.presentation.activities.MainActivity"
             android:label="@string/app_name" >
@@ -49,14 +49,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="de.smbsolutions.day.presentation.activities.KameraActivity" >
-        </activity>
-        <activity android:name="de.smbsolutions.day.presentation.activities.MapActivity" >
-        </activity>
-        <activity android:name="de.smbsolutions.day.presentation.activities.PictureActivity" >
-        </activity>
-        <activity android:name=".presentation.activities.currentRouteActivity" >
         </activity>
 
         <service android:name=".functions.location.LocationTrackerPLAYSERVICE" >

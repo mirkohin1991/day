@@ -169,8 +169,7 @@ public class Route implements Parcelable {
 			for (RoutePoint point : this.routePoints) {
 
 				MarkerOptions markerOpt = new MarkerOptions().position(
-						new LatLng(point.getLatitude(), point.getLongitude()))
-						.title(getRouteName());
+						new LatLng(point.getLatitude(), point.getLongitude()));
 
 				Marker marker = mapImport.addMarker(markerOpt);
 				markerMap.put(point, marker);
@@ -286,7 +285,6 @@ public class Route implements Parcelable {
 							.position(
 									new LatLng(point.getLatitude(), point
 											.getLongitude()))
-							.title(getRouteName())
 							.icon(BitmapDescriptorFactory
 									.fromResource(R.drawable.start_marker));
 
@@ -305,7 +303,6 @@ public class Route implements Parcelable {
 								.position(
 										new LatLng(point.getLatitude(), point
 												.getLongitude()))
-								.title(getRouteName())
 								.icon(BitmapDescriptorFactory
 										.fromResource(R.drawable.stop_marker));
 
@@ -347,7 +344,6 @@ public class Route implements Parcelable {
 						.position(
 								new LatLng(point.getLatitude(), point
 										.getLongitude()))
-						.title(getRouteName())
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.start_marker));
 
@@ -366,7 +362,6 @@ public class Route implements Parcelable {
 							.position(
 									new LatLng(point.getLatitude(), point
 											.getLongitude()))
-							.title(getRouteName())
 							.icon(BitmapDescriptorFactory
 									.fromResource(R.drawable.stop_marker));
 

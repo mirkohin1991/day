@@ -45,17 +45,10 @@ public class DeleteRouteDialog extends DialogFragment {
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						try {
-							routeList.deleteRouteDB(routeIndex);
-						} catch (Exception e) {
-							Log.wtf("WTF", "Nullpointer routelist");
-						}
-
-						try {
+						
+							routeList.deleteRouteDB(routeIndex);					
 							mainCallback.onRouteDeleted();
-						} catch (Exception e) {
-							Log.wtf("WTF", "Nullpointer callback");
-						}
+						
 						dismiss();
 					}
 				}).create();

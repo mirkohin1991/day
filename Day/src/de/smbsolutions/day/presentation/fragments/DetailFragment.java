@@ -49,7 +49,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private GoogleMap map;
 	private Route route;
 	private MainCallback mCallback;
-
 	private LinkedHashMap<Bitmap, Timestamp> listBitmaps;
 	private ImageButton ibCamera;
 	private ImageButton ibInfoSliderIn;
@@ -674,10 +673,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		ibStopRoute.setImageBitmap(null);
 		ibStopRoute = null;
 
-		if (flipperInfo != null) {
-			flipperInfo.removeAllViews();
-			flipperInfo = null;
-		}
 		if (mapFragment != null) {
 			mapFragment = null;
 		}

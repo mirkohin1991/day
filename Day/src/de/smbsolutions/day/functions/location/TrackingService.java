@@ -29,13 +29,14 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
-/* Diese Klasse kümmert sich um das dynamische Tracken der Geo-Location
- * Dynamisch, da das Intervall und der Abstand zwischen den einzelnen Punkten vom Benutzer zur Laufzeit
- * eingestellt wird.
- * Eigenschaften: - Background Service
- *                - LocationListener
+/**
+ * Diese Klasse kümmert sich um das dynamische Tracken der Geo-Location
+ * Dynamisch, da das Intervall und der Abstand zwischen den einzelnen Punkten
+ * vom Benutzer zur Laufzeit eingestellt wird. Eigenschaften: - Background
+ * Service - LocationListener
  */
-public class LocationTrackerPLAYSERVICE extends Service implements
+
+public class TrackingService extends Service implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 
@@ -70,17 +71,17 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	private Route route;
 
 	/**
-	 *  Methode zur Speicherung aller benötigen Objekte
+	 * Methode zur Speicherung aller benötigen Objekte
 	 */
 	public void saveActivity(Activity activity) {
 		this.activity = activity;
 		mCallback = (MainCallback) activity;
 		locationClient = new LocationClient(activity, this, this);
 	}
-	
-	
+
 	/**
-	 * Interfaceschnittstelle für die Kommunikation von außerhalb mit dem Service
+	 * Interfaceschnittstelle für die Kommunikation von außerhalb mit dem
+	 * Service
 	 */
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -92,11 +93,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	 */
 	public class LocalBinder extends Binder {
 
-		public LocationTrackerPLAYSERVICE getService() {
-			return LocationTrackerPLAYSERVICE.this;
+		public TrackingService getService() {
+			return TrackingService.this;
 		}
 	}
-	
 
 	/**
 	 * Wenn diese Methode aufgerufen wird, soll ein Bilder zur aktuellen Route
@@ -137,7 +137,6 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 			// If already requested, start periodic updates
 		}
 	}
-	
 
 	/**
 	 * Methode, die aufgerufen wird wenn eine neue Route angelegt wird und diese
@@ -150,7 +149,6 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		startLocationTracking();
 
 	}
-	
 
 	/**
 	 * Methode, die aufgerufen wird wenn eine bereits angelegte Route
@@ -163,13 +161,11 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		this.flag_first = false;
 		startLocationTracking();
 	}
-	
 
 	private void startLocationTracking() {
 		// Connect the client.
 		locationClient.connect();
 	}
-	
 
 	private void stopLocationTracking() {
 		// Disconnecting the client invalidates it.
@@ -326,10 +322,10 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 				+ Double.toString(location.getLongitude());
 		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
 	}
-	
-	
+
 	/**
-	 * Diese Methode wird aufgerufen, wenn der Benutzer Änderungen an den Tracking-Einstellungen vorgenommen hat
+	 * Diese Methode wird aufgerufen, wenn der Benutzer Änderungen an den
+	 * Tracking-Einstellungen vorgenommen hat
 	 */
 	public void refreshTrackingInterval() {
 		Toast.makeText(this, "Interval refreshed", Toast.LENGTH_LONG).show();
@@ -341,23 +337,25 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 	}
 
 	/**
-	 * Sofern das Intervall des Services durch den Benutzer geändert wurde, muss der locationClient neu gestartet werden, um mit den neuen 
-	 * Parametern weiterzuarbeiten
+	 * Sofern das Intervall des Services durch den Benutzer geändert wurde, muss
+	 * der locationClient neu gestartet werden, um mit den neuen Parametern
+	 * weiterzuarbeiten
 	 */
 	public void restartLocationTracker() {
 
 		try {
-			
-			//Alle bisherigen Updates werden gelöscht
+
+			// Alle bisherigen Updates werden gelöscht
 			locationClient.removeLocationUpdates(this);
-			
+
 			Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
 
 			// Nur wenn GPS Tracking aktiviert wurde, soll auch getrackt werden
 			if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
 
-				//Die neuen Abstände werden angepasst
-				//(Dazu wird zuvor immer die Methode refreshTrackingIntervall aufgerufen
+				// Die neuen Abstände werden angepasst
+				// (Dazu wird zuvor immer die Methode refreshTrackingIntervall
+				// aufgerufen
 				mLocationRequest.setInterval(UPDATE_INTERVAL);
 				mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
@@ -371,12 +369,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		}
 
 	}
-	
 
-	
-
-	
-	/** 
+	/**
 	 * Methode, die aufgerufen wird wenn das Serviceobjekt selbst erstellt wurde
 	 */
 	@Override
@@ -391,20 +385,20 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 
 	}
 
-	
 	/**
-	 * Wenn das Objekt komplett geschlossen wird, werden entsprechende Einstellungen zurückgesetzt
+	 * Wenn das Objekt komplett geschlossen wird, werden entsprechende
+	 * Einstellungen zurückgesetzt
 	 */
 	@Override
 	public void onDestroy() {
 
 		flag_serviceRunning = false;
 		flag_inProgress = false;
-		
-		//Wenn Playservices verfügbar und der Client noch nicht gelöscht wurde
+
+		// Wenn Playservices verfügbar und der Client noch nicht gelöscht wurde
 		if (flag_servicesAvailable && locationClient != null) {
-			
-			//Das Tracking wird beendet
+
+			// Das Tracking wird beendet
 			locationClient.removeLocationUpdates(this);
 			stopLocationTracking();
 
@@ -439,24 +433,22 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		return START_STICKY;
 	}
 
-
-  /**
-   * Methode, zur Überprüfung, ob Google Play Services verfügbar sind
-   */
+	/**
+	 * Methode, zur Überprüfung, ob Google Play Services verfügbar sind
+	 */
 	private boolean servicesConnected() {
 
 		int resultCode = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(this);
 
-		//Wenn google play services verfügbar
+		// Wenn google play services verfügbar
 		if (ConnectionResult.SUCCESS == resultCode) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	
+
 	/**
 	 * Methode zum Überprüfen ob der Service noch läuft
 	 */
@@ -464,16 +456,16 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 		return flag_serviceRunning;
 	}
 
-
 	/**
-	 * Methode, die ein Popup erzeugt, in welchem der Benutzer seine Standorteinstellungen ändern kann
+	 * Methode, die ein Popup erzeugt, in welchem der Benutzer seine
+	 * Standorteinstellungen ändern kann
 	 */
 	private void showPopUpEnableSettings() {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
-	
 		alertDialog.setTitle("Standort Einstellungen");
-		alertDialog.setMessage("Mit den aktuellen Einstellungen, kann der Standort nicht bestimmt werden. Bedingt durch einen Betriebssystemfehler ist in manchen Fällen leider auch ein kompletter Neustart nötig ");
+		alertDialog
+				.setMessage("Mit den aktuellen Einstellungen, kann der Standort nicht bestimmt werden. Bedingt durch einen Betriebssystemfehler ist in manchen Fällen leider auch ein kompletter Neustart nötig ");
 
 		// Wenn der Benutzer seine Einstellungen ändern will
 		alertDialog.setPositiveButton("Einstellungen ändern",
@@ -493,9 +485,8 @@ public class LocationTrackerPLAYSERVICE extends Service implements
 					}
 				});
 
-		//Dialog wird angezeigt
+		// Dialog wird angezeigt
 		alertDialog.show();
 	}
-
 
 }

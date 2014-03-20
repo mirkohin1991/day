@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,8 +21,8 @@ import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
 
 /**
- * Diese Klasse beschäftigt sich mit dem PictureView. Auf diesem wird ein Bild
- * in Großansicht angezeigt und kann geteilt sowie gelöscht werden.
+ * Diese Klasse beschï¿½ftigt sich mit dem PictureView. Auf diesem wird ein Bild
+ * in Groï¿½ansicht angezeigt und kann geteilt sowie gelï¿½scht werden.
  */
 public class PictureFragment extends android.support.v4.app.Fragment {
 
@@ -45,7 +46,7 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		route = (Route) data.getParcelable("route");
 		routePoint = (RoutePoint) data.getParcelable("point");
 		
-        //Benötigte Views des layouts werden ausgelesen
+        //Benï¿½tigte Views des layouts werden ausgelesen
 		view = inflater.inflate(R.layout.fragment_picture, container, false);
 		pictureView = (ImageView) view.findViewById(R.id.imageViewFullPicture);
 		btnSharePicture = (ImageButton) view
@@ -112,33 +113,38 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	
 
 	/**
-	 * Methode, die dem View das jeweilige Bild hinzufügt
+	 * Methode, die dem View das jeweilige Bild hinzufï¿½gt
 	 */
 	public void initializeFragmentPortrait() {
 
-		pictureFile = new File(routePoint.getPicture());
-		Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
-				pictureFile.getPath(), 220, 220);// richtige größe?
+		try {
+			pictureFile = new File(routePoint.getPicture());
+			Bitmap bm = BitmapManager.decodeSampledBitmapFromUri(
+					pictureFile.getPath(), 1000, 1000);// richtige gre?
 
-		if (bm != null) {
-			pictureView.setImageBitmap(bm);
+			if (bm != null) {
+				pictureView.setImageBitmap(bm);
+			}
+		} catch (Exception e) {
+			Log.d("PictureFrag / Loading Picture", "Error loading Bitmap");
 		}
+
 	}
 	
 	
 	 /**
-     * ButtonClick Listener für Share- und Lösch-Funktionalität
+     * ButtonClick Listener fï¿½r Share- und Lï¿½sch-Funktionalitï¿½t
      */
 	private void addButtonClickListener() {
 		
 
-		//Wenn auf den ShareButton geklickt wird, wird dem Benutzer ein Dialog mit möglichen Share-Funktionen seines Smartphones angezeigt
+		//Wenn auf den ShareButton geklickt wird, wird dem Benutzer ein Dialog mit mï¿½glichen Share-Funktionen seines Smartphones angezeigt
 		btnSharePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				// Ein Dialog mit entsprechenden Sharemöglichkeiten wird geöffnet
+				// Ein Dialog mit entsprechenden Sharemï¿½glichkeiten wird geï¿½ffnet
 				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 				sharingIntent.setType("image/*");
 				sharingIntent.putExtra(Intent.EXTRA_TEXT,
@@ -151,7 +157,7 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		});
 
 		
-		//Löschen eines Fotos
+		//Lï¿½schen eines Fotos
 		btnDeletePicture.setOnClickListener(new OnClickListener() {
 
 			@Override

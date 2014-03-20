@@ -301,17 +301,16 @@ int string new_route 0x7f070022
 int string start_service 0x7f070020
 int string stop_service 0x7f070021
 int style ActionBar_Solid_Appbasetheme 0x7f0c0001
-int style ActionBar_Transparent_Appbasetheme 0x7f0c0003
-int style ActionBarTabStyle_Appbasetheme 0x7f0c0006
-int style ActionButton_CloseMode_Appbasetheme 0x7f0c0009
-int style AppBaseTheme 0x7f0c000b
-int style DropDownListView_Appbasetheme 0x7f0c0005
-int style DropDownNav_Appbasetheme 0x7f0c0007
-int style MyTheme_ActionBar_TitleTextStyle 0x7f0c0002
-int style PopupMenu_Appbasetheme 0x7f0c0004
-int style ProgressBar_Appbasetheme 0x7f0c0008
+int style ActionBar_Transparent_Appbasetheme 0x7f0c0002
+int style ActionBarTabStyle_Appbasetheme 0x7f0c0005
+int style ActionButton_CloseMode_Appbasetheme 0x7f0c0008
+int style AppBaseTheme 0x7f0c000a
+int style DropDownListView_Appbasetheme 0x7f0c0004
+int style DropDownNav_Appbasetheme 0x7f0c0006
+int style PopupMenu_Appbasetheme 0x7f0c0003
+int style ProgressBar_Appbasetheme 0x7f0c0007
 int style Theme_Appbasetheme 0x7f0c0000
-int style Theme_Appbasetheme_Widget 0x7f0c000a
+int style Theme_Appbasetheme_Widget 0x7f0c0009
 int[] styleable AdsAttrs { 0x7f010000, 0x7f010001 }
 int styleable AdsAttrs_adSize 0
 int styleable AdsAttrs_adUnitId 1

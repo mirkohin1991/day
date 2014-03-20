@@ -1,102 +1,97 @@
 package de.smbsolutions.day.presentation.activities;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import org.focuser.sendmelogs.LogCollector;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
-import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE;
-import de.smbsolutions.day.functions.location.LocationTrackerPLAYSERVICE.LocalBinder;
+import de.smbsolutions.day.functions.location.TrackingService;
+import de.smbsolutions.day.functions.location.TrackingService.LocalBinder;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.objects.SliderMenu;
-import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
+import de.smbsolutions.day.functions.tasks.CheckForceCloseTask;
 import de.smbsolutions.day.presentation.dialogs.CreateRouteDialog;
 import de.smbsolutions.day.presentation.dialogs.DeletePictureDialog;
 import de.smbsolutions.day.presentation.dialogs.DeleteRouteDialog;
+import de.smbsolutions.day.presentation.dialogs.DumpDetectionDialog;
 import de.smbsolutions.day.presentation.dialogs.PauseRouteDialog;
 import de.smbsolutions.day.presentation.dialogs.StopRouteDialog;
 import de.smbsolutions.day.presentation.fragments.DetailFragment;
 import de.smbsolutions.day.presentation.fragments.MainFragment;
 import de.smbsolutions.day.presentation.fragments.PictureFragment;
 
+/**
+ * 
+ * Die MainActivity stellt das zentrale Grundgerüst der App dar. Von hier aus
+ * werden alle Fragments gesteurert und angesprochen. Über das implementierte
+ * Interface "MainCallback" findet die gesamte Kommunikation statt.
+ * 
+ */
 public class MainActivity extends FragmentActivity implements MainCallback {
-
+	// Tags, um Fragments voneinander unterscheiden zu können
 	private final String TAG_DETAILFRAGMENT = "DETAIL";
 	private final String TAG_MAINFRAGMENT = "MAIN";
 	private final String TAG_PICTUREFRAGMENT = "PICTURE";
 	private static String CURRENT_FRAGMENT = null;
-
-	private int NOTIFICATION_ID;
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private int backstackcount;
-	private int fragmentCount = 0;
-	private ActionBarDrawerToggle mDrawerToggle;
-	// nav drawer title
+	// Nav Drawer Titel
 	private CharSequence mDrawerTitle;
-	// used to store app title
+	// wird genutzt um den App-Titel zu speichern
 	private CharSequence mTitle;
-
-	// slide menu items
+	// Slidermenu
+	private SliderMenu slidermenu;
+	// Slider Menu Items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
-	private SliderMenu slidermenu;
-	private LocationTrackerPLAYSERVICE mService = null;
+	// Der zentrale TrackingService
+	private TrackingService mService = null;
+	// Baut Verbindung mit Service auf
 	// wird in onStart() und onStop() verwendet
 	private ServiceConnection mConnection;
+	// Flag: Überprüfung, ob eine Route aktiv ist
 	private boolean activeRouteisOpened = false;
+	// Sammelt LogInformationen
+	private LogCollector mLogCollector;
 
-	/** Called when the activity is first created. */
+	/** Wird aufgerufen wenn die Activity das erste Mal aufgerufen wird. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	
 		setContentView(R.layout.activity_main);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		// Initiert den Logcollector und startet den CheckForceCloseTask
+		// Dieser überprüft, ob die App zuletzt korrekt geschlossen wurde.
+		mLogCollector = new LogCollector(this);
+		CheckForceCloseTask task = new CheckForceCloseTask(mLogCollector, this);
+		task.execute();
 
-		// Get Singetons
+		// Erstellen der Singletons, damit diese zur Laufzeit der App überall
+		// zur Verfügung stehen.
 		Database.getInstance(this);
 		Device.getInstance(this);
 
-		// Service
+		// Initiiert den TrackingService und bindet ihn an die Activity, sobald
+		// onServiceConnected() aufgerufen wird.
 		mConnection = new ServiceConnection() {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
@@ -111,20 +106,21 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				mService = null;
 			}
 		};
-
+		// Füllt den App Titel
 		mTitle = mDrawerTitle = getTitle();
-		// load slide menu items
+		// Läd alle Slidermenu Items
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-		// nav drawer icons from resources
+		// Läd die Slidermenu Icons
 		navMenuIcons = getResources()
 				.obtainTypedArray(R.array.nav_drawer_icons);
-		// Menu
+		// Initialisiert das Slidermenu
 		slidermenu = new SliderMenu(this, savedInstanceState);
 		slidermenu.getNavDrawerItems();
 		slidermenu.getAdapter();
 		slidermenu.getActionBarDrawerToggle();
-		
-	if (savedInstanceState == null) {
+
+		if (savedInstanceState == null) {
+			// Fügt der Activity das initiale Fragment hinzu.
 			MainFragment main_frag = new MainFragment();
 
 			FragmentTransaction ft = getSupportFragmentManager()
@@ -136,6 +132,43 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	}
 
+	/*
+	 * SliderMenu-Methoden:
+	 */
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		slidermenu.getActionBarDrawerToggle().syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggls
+		slidermenu.getActionBarDrawerToggle().onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// toggle nav drawer on selecting action bar app icon/title
+		if (slidermenu.getActionBarDrawerToggle().onOptionsItemSelected(item)) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/*
+	 * Callback-Methoden:
+	 * 
+	 * Genauer Informationen zu den Methoden stehen im Callback Interface.
+	 */
 	@Override
 	public void onNewRouteStarted(Route route) {
 		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
@@ -149,14 +182,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		ft.replace(R.id.frame_container, crFrag, TAG_DETAILFRAGMENT)
 				.addToBackStack(TAG_DETAILFRAGMENT).commit();
 
-		fragmentCount++;
-		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
-
 	}
 
 	@Override
 	public void onShowRoute(Route route) {
 
+		/*
+		 * Löscht doppelte Fragments
+		 */
 		Fragment detfrag = getSupportFragmentManager().findFragmentByTag(
 				TAG_DETAILFRAGMENT);
 		Fragment picfrag = getSupportFragmentManager().findFragmentByTag(
@@ -172,72 +205,54 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 					.commit();
 			getSupportFragmentManager().popBackStack();
 		}
-
+		// Erstellt DetailFragment
 		DetailFragment detail_frag = new DetailFragment();
 
-		// // Only if tracking via service is enabled
-		// if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
-
+		// Wenn die Route aktiv ist, muss der Service überprüft werden
 		if (route.isActive()) {
 
-			// Active route should always have an active service
-			// --> If not, the app was closed meanwhile,
+			// Wenn der Service nicht erstellt ist , muss er neugestartet werden
 			if (mService == null) {
 				restartTracking(route);
 
-				// Service has been created, but is not active any longer
-				// Some error occured -> try it again
+				// Auch wenn er erstellt ist, aber nicht läuft, muss er
+				// neugestartet werden
 			} else if (mService.isServiceRunning() == false) {
 				restartTracking(route);
 			}
-
 		}
+
+		// Parameterübertragung
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		detail_frag.setArguments(bundle);
 
+		// Detailfragment wird gestartet
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
 		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
 		ft.replace(R.id.frame_container, detail_frag, TAG_DETAILFRAGMENT);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ft.addToBackStack(TAG_DETAILFRAGMENT);
 		ft.commit();
-		fragmentCount++;
 
-		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
-
-	}
-
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
 	}
 
 	@Override
 	public void onOpenDialogNewRoute(RouteList routeList) {
-		CreateRouteDialog dialog = new CreateRouteDialog();
-		Bundle bundle = new Bundle();
 
+		CreateRouteDialog dialog = new CreateRouteDialog();
+
+		Bundle bundle = new Bundle();
 		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
 
-		// AUS PERFORMANCEGRÜNDEN SERVICE SCHONMAL STARTEN
-
-		// WENN BENUTZER DEN DIALOG VERNEINT MUSS ER WIEDER BEENDET WERDEN
-		Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+		// Schon bevor der Benutzer die Route bestätigt, wird hier der Service
+		// gestartet
+		// Dies ist aus Laufzeitgründen nötig
+		Intent intent = new Intent(this, TrackingService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-		// Showing the popup / Second Parameter: Unique Name, that is
-		// used
-		// to identify the dialog
+		// Dialog wird angezeigt
 		dialog.show(getSupportFragmentManager(), "NameDialog");
 
 	}
@@ -246,13 +261,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onOpenDialogDeleteRoute(RouteList routeList, int index) {
 
 		DeleteRouteDialog dialog = new DeleteRouteDialog();
+
 		Bundle bundle = new Bundle();
 		bundle.putInt("routeIndex", index);
 		bundle.putParcelable("routeList", routeList);
 		dialog.setArguments(bundle);
-		// Showing the popup / Second Parameter: Unique Name, that is
-		// used
-		// to identify the dialog
+
 		dialog.show(getSupportFragmentManager(), "DeleteDialog");
 
 	}
@@ -261,13 +275,12 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onOpenDialogStopRoute(String fragmentFlag, Route route) {
 
 		StopRouteDialog dialog = new StopRouteDialog();
+
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		bundle.putString("fragmentFlag", fragmentFlag);
 		dialog.setArguments(bundle);
-		// Showing the popup / Second Parameter: Unique Name, that is
-		// used
-		// to identify the dialog
+
 		dialog.show(getSupportFragmentManager(), "StopRouteDialog");
 
 	}
@@ -275,6 +288,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onRouteDeleted() {
 
+		// Löscht altes Mainfragment
 		if (getSupportFragmentManager()
 				.getBackStackEntryAt(
 						getSupportFragmentManager().getBackStackEntryCount() - 1)
@@ -290,6 +304,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		}
 
+		// Fügt das neue Mainfragment hinzu
 		CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 		MainFragment mainfrag = new MainFragment();
 		getSupportFragmentManager().beginTransaction()
@@ -298,24 +313,20 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	}
 
-	// GLEICH WIE SHOWROUTE
 	@Override
 	public void onDeletePicture(Route route) {
+
 		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
-		// fragment avaiable?
 		DetailFragment crFrag = new DetailFragment();
 
 		Bundle bundle = new Bundle();
 		// Übergabe Routenliste
 		bundle.putParcelable("route", route);
 		crFrag.setArguments(bundle);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.frame_container, crFrag, TAG_DETAILFRAGMENT)
 				.addToBackStack(TAG_DETAILFRAGMENT).commit();
-		fragmentCount++;
-
-		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
 
 	}
 
@@ -323,22 +334,23 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onDeletePictureClick(Route route, RoutePoint point) {
 
 		DeletePictureDialog deletePictureDialog = new DeletePictureDialog();
+
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("route", route);
 		bundle.putParcelable("point", point);
 		deletePictureDialog.setArguments(bundle);
-		// Showing the popup / Second Parameter: Unique Name, that is
-		// used
-		// to identify the dialog
+
 		deletePictureDialog.show(getSupportFragmentManager(),
 				"DeletePictureDialog");
 
 	}
 
-	// GLEICH WIE DELETE ROUTE
 	@Override
 	public void onRouteStopped(String fragmentTag, Route route) {
 
+		// Überpüfung ob ob das aktuelle Fragment ein Detail oder Mainfragment
+		// ist.
+		// Falls ja, wird es gelöscht
 		if (getSupportFragmentManager()
 				.getBackStackEntryAt(
 						getSupportFragmentManager().getBackStackEntryCount() - 1)
@@ -354,11 +366,13 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 									.getBackStackEntryCount() - 1).getName());
 			getSupportFragmentManager().beginTransaction().remove(oldFrag)
 					.commit();
-
 			getSupportFragmentManager().popBackStack();
 
 		}
 
+		/*
+		 * Hinzufügen des richtigen Fragments
+		 */
 		if (fragmentTag.equals(TAG_MAINFRAGMENT)) {
 			CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 
@@ -368,6 +382,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 					.replace(R.id.frame_container, mainfrag, TAG_MAINFRAGMENT)
 					.addToBackStack(TAG_MAINFRAGMENT).commit();
 
+			// Wenn die Route gestoppt wurde, muss der Service beendet werden
 			if (mService != null) {
 				unbindService(mConnection);
 				mService = null;
@@ -386,6 +401,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 							TAG_DETAILFRAGMENT)
 					.addToBackStack(TAG_DETAILFRAGMENT).commit();
 
+			// Wenn die Route gestoppt wurde, muss der Service beendet werden
 			if (mService != null) {
 				unbindService(mConnection);
 				mService = null;
@@ -402,7 +418,13 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		String name = getSupportFragmentManager().getBackStackEntryAt(
 				getSupportFragmentManager().getBackStackEntryCount() - 1)
 				.getName();
+
+		// Wenn es sich unter einen Einstellungsfragment noch ein
+		// Einstellungsfragment befindet, wird dieses vom Stack gelöscht.
+		// Somit gelangt der Benutzer wieder direkt auf Main/Detailfragment
+		// zurück
 		if (!name.equals(TAG_DETAILFRAGMENT) && !name.equals(TAG_MAINFRAGMENT)) {
+
 			Fragment oldFrag = getSupportFragmentManager().findFragmentByTag(
 					name);
 			getSupportFragmentManager().beginTransaction().remove(oldFrag)
@@ -426,67 +448,24 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	@Override
 	public void onCamStart(Route route) {
 		CURRENT_FRAGMENT = TAG_DETAILFRAGMENT;
+		// Detailfragment wird neugestartet
 		DetailFragment crFrag = new DetailFragment();
 
 		Bundle bundle = new Bundle();
 		// Übergabe Routenliste
 		bundle.putParcelable("route", route);
 		crFrag.setArguments(bundle);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.frame_container, crFrag, TAG_DETAILFRAGMENT)
 				.addToBackStack(TAG_DETAILFRAGMENT).commit();
-		fragmentCount++;
 
-		Log.wtf("fragCount", "Anzahl Aufrufe: " + String.valueOf(fragmentCount));
-
-	}
-
-	@Override
-	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getActionBar().setTitle(mTitle);
-	}
-
-	/**
-	 * When using the ActionBarDrawerToggle, you must call it during
-	 * onPostCreate() and onConfigurationChanged()...
-	 */
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		slidermenu.getActionBarDrawerToggle().syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		// Pass any configuration change to the drawer toggls
-		slidermenu.getActionBarDrawerToggle().onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// toggle nav drawer on selecting action bar app icon/title
-		if (slidermenu.getActionBarDrawerToggle().onOptionsItemSelected(item)) {
-			return true;
-		}
-
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onPictureClick(Route route, RoutePoint point) {
+
 		CURRENT_FRAGMENT = TAG_PICTUREFRAGMENT;
-		// fragment avaiable?
 		PictureFragment pictureFrag = new PictureFragment();
 
 		Bundle bundle = new Bundle();
@@ -494,22 +473,34 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		bundle.putParcelable("route", route);
 		bundle.putParcelable("point", point);
 		pictureFrag.setArguments(bundle);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.frame_container, pictureFrag, TAG_PICTUREFRAGMENT)
 				.addToBackStack(TAG_PICTUREFRAGMENT).commit();
 
 	}
 
+	/**
+	 * Wird aufgerufen wenn der Benutzer den Zurück-Button betätigt
+	 */
 	@Override
 	public void onBackPressed() {
-		// change current_fragment to right on for changing the map type
+
+		// Alle Fragments in eine Liste
 		List<Fragment> list = getSupportFragmentManager().getFragments();
 
+		// Abfrage wieviel fragments es gibt,
+		// weil auch null Objekte vorhanden sein könnten
 		int count = 0;
 		for (Fragment fragment : list) {
 			count++;
 		}
+
+		/*
+		 * 
+		 * Der folgende Block garantiert, dass im CURRENT_FRAGMENT tag immer der
+		 * Tag des aktuellen Fragments steht
+		 */
 
 		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 			moveTaskToBack(true);
@@ -541,10 +532,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 					CURRENT_FRAGMENT = TAG_MAINFRAGMENT;
 				}
 			}
-
 			super.onBackPressed();
 		}
-
 	}
 
 	@Override
@@ -575,67 +564,53 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 				}
 			}
 		}
-
 	}
 
 	@Override
 	public void onStartTrackingService(Route route) {
 
 		if (mService != null) {
+
 			mService.saveActivity(this);
-			// Warum liste und route übergeben??
 			mService.startLocationTrackingAndSaveFirst(route);
-
-		} else {
-			// Toast.makeText(this, "Service wurde nicht gestartet",
-			// Toast.LENGTH_SHORT).show();
 		}
-
 	}
 
 	@Override
 	public void onPictureTaken(Route route, Uri fileUri, File small_picture) {
+
 		if (mService != null) {
-
 			mService.addPictureLocation(route, fileUri, small_picture);
-
-		} else {
-			// Toast.makeText(this, "Service ist null",
-			// Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	@Override
 	public void removeService() {
 
-		// Stop service, because it has been started when the user pressed the
-		// create route button
-		// -> But now he decided to cancel to process
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
 		}
-
 	}
 
 	@Override
 	public void onActiveRouteNoService() {
 
-		// Active route should always have an active service
-		// --> If not, the app was closed meanwhile,
+		// Aktive Routen sollten immer einen aktiven Service haben
+		// Wenn nicht, wurde die App bespielsweise beendet. DAnn wird der
+		// Service jetzt neu gestartet
 		if (mService == null) {
-			// Start service again
-			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			
+			// Service neu gestartet
+			Intent intent = new Intent(this, TrackingService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-			// Service has been created, but is not active any longer
-			// Some error occured -> try it again
+			//Auch ist es möglich, dass der Service erstellt wurde, 
+			//aber nicht mehr läuft
 		} else if (mService.isServiceRunning() == false) {
-			Intent intent = new Intent(this, LocationTrackerPLAYSERVICE.class);
+			Intent intent = new Intent(this, TrackingService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
 		}
-
 	}
 
 	@Override
@@ -643,33 +618,26 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 		PauseRouteDialog dialog = new PauseRouteDialog();
 		Bundle bundle = new Bundle();
-
-		// MOMENTAN WIRD AN DER ROUTE SELBST JA GARNICHTS GEÄNDERT; NUR SERVICE
-		// GESTOPPT
 		dialog.setArguments(bundle);
-		// Showing the popup / Second Parameter: Unique Name, that is
-		// used
-		// to identify the dialog
-		dialog.show(getSupportFragmentManager(), "PauseRouteDialog");
 
+		dialog.show(getSupportFragmentManager(), "PauseRouteDialog");
 	}
 
 	@Override
 	public void onTrackingIntervalChanged() {
 
 		if (mService != null) {
-
-			// Always refresh the values
+			
+			// Der Benutzer hat die Werte geändert, also muss der Service angepasst werden
 			mService.refreshTrackingInterval();
 
 			if (mService.isServiceRunning()) {
 
-				// Restart tacker only when really running
+		// Neustarten des Services mit den neuen Werten
 				mService.restartLocationTracker();
-
+				
 			}
 		}
-
 	}
 
 	@Override
@@ -680,27 +648,14 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			if (mService.isServiceRunning()) {
 
-				// Restart tacker only when really running
+				// Neustarten des Services mit dem neuen Wert
 				mService.restartLocationTracker();
 
 			}
 		}
-
 	}
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		if (mService != null) {
-			unbindService(mConnection);
-			mService = null;
-			// Toast.makeText(this,
-			// "MainActivity destroyed -> Service unbinded",
-			// Toast.LENGTH_SHORT).show();
-		}
 
-	}
 
 	@Override
 	public boolean isServiceActive() {
@@ -708,9 +663,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		if (mService != null) {
 
 			if (mService.isServiceRunning()) {
-
 				return true;
-
+				
 			} else {
 				return false;
 			}
@@ -734,32 +688,17 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		return previousFragment;
 	}
 
-	public GoogleMap getCurrentMap() {
-		SupportMapFragment mapFragment;
-		Fragment frag = getSupportFragmentManager().findFragmentByTag(
-				CURRENT_FRAGMENT);
-		if (frag instanceof MainFragment) {
-			return null;
-		} else {
-			mapFragment = (SupportMapFragment) getSupportFragmentManager()
-					.findFragmentByTag(CURRENT_FRAGMENT)
-					.getChildFragmentManager().findFragmentById(R.id.cr_map);
-		}
+	
+	
 
-		if (mapFragment != null) {
-			GoogleMap map = mapFragment.getMap();
-			return map;
-		} else
-			return null;
-
-	}
 
 	@Override
 	public void onLocationChanged(Route route, RoutePoint point) {
 
-		SupportMapFragment mapFragment;
+
 		Fragment frag = getSupportFragmentManager().findFragmentByTag(
 				CURRENT_FRAGMENT);
+		//Wenn es sich um das Detailfragment handelt, wird der InfoSlider refresht
 		if (frag instanceof DetailFragment) {
 			((DetailFragment) frag).refreshInfoSlider();
 		}
@@ -768,14 +707,11 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// Polylines ergänzt werden
 		// Sonst würden diese auch der nichtaktiven Route hinzugefügt werden
 		if (activeRouteisOpened == true) {
-			GoogleMap map = getCurrentMap();
+			GoogleMap map = getMapForRefresh();
 			if (map != null) {
 				route.addPoint2Polyline(point, map);
 			}
-
 		}
-		
-
 	}
 
 	@Override
@@ -791,12 +727,65 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// Globales Flag um zu wissen, ob gerade eine aktive Route im Detailview
 		// geöffnet ist
 		if (active == true) {
-
 			activeRouteisOpened = true;
 
 		} else {
 			activeRouteisOpened = false;
+		}
 
+	}
+	
+
+	@Override
+	public void onDumpDetected() {
+		mLogCollector.sendLog("kussmann.simon@gmail.com", "Log",
+				"Folgender Log wurde gespeichert:");
+
+	}
+
+	@Override
+	public void onDumpDialogShow() {
+		DumpDetectionDialog dumpDialog = new DumpDetectionDialog();
+		dumpDialog.show(getSupportFragmentManager(), "DUMPDIALOG");
+
+	}
+
+	/*
+	 * Returned - wenn vorhanden - die aktuelle Map
+	 */
+	private GoogleMap getMapForRefresh() {
+		SupportMapFragment mapFragment;
+		Fragment frag = getSupportFragmentManager().findFragmentByTag(
+				CURRENT_FRAGMENT);
+		
+		//Wenn das Mainfragment geöffnet ist, wird null zurück gegeben.
+		//Denn dieses darf durch den Service nicht aktualisiert werden
+		if (frag instanceof MainFragment) {
+			return null;
+		} else {
+			mapFragment = (SupportMapFragment) getSupportFragmentManager()
+					.findFragmentByTag(CURRENT_FRAGMENT)
+					.getChildFragmentManager().findFragmentById(R.id.cr_map);
+		}
+
+		if (mapFragment != null) {
+			GoogleMap map = mapFragment.getMap();
+			return map;
+		} else
+			return null;
+
+	}
+	
+	@Override
+	protected void onDestroy() {
+
+		super.onDestroy();
+		
+		//Wenn App beendet wird, muss auch der Service beendet werden
+		if (mService != null) {
+			unbindService(mConnection);
+			mService = null;
+			
 		}
 
 	}

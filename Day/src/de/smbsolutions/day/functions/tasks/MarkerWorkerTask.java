@@ -20,6 +20,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +37,15 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 
+/**
+ * 
+ * Der MarkerWorkertask erstellt Marker mit Bildervorschau und platziert Sie auf
+ * der Map.
+ * 
+ * Diese Tasks sind notwendig, um den Main-UI-Thread nicht zu beeinflussen, und
+ * der User keine unnötigen Wartezeiten verspürt.
+ * 
+ */
 public class MarkerWorkerTask
 		extends
 		AsyncTask<CopyOnWriteArrayList<RoutePoint>, Void, LinkedHashMap<RoutePoint, Bitmap>> {
@@ -43,13 +53,16 @@ public class MarkerWorkerTask
 	private MainCallback mCallback;
 	private GoogleMap map;
 	private Context context;
+	// CopyOnWirteArrayList um ConcurrentModifcations zu verhinden.
 	private CopyOnWriteArrayList<RoutePoint> routePoints;
 	private Route route;
 
 	MarkerOptions markerOpt = new MarkerOptions();
+	// Weakreference um den GarbageCollector zu sagen, dass die Hashmap wieder
+	// schnell collected werden kann
 	private final WeakReference<LinkedHashMap<RoutePoint, Marker>> hashMapRef;
 	private WeakReference<Bitmap> weakBM;
-	// Necessary to save connect timestamp and marker
+	// Wichtig um Timestamp und Marker zu speichern
 	LinkedHashMap<RoutePoint, Bitmap> bitmapMap = new LinkedHashMap<RoutePoint, Bitmap>();
 	LinkedHashMap<RoutePoint, Marker> markerMap;
 
@@ -62,11 +75,8 @@ public class MarkerWorkerTask
 		this.context = context;
 		this.map = map;
 		this.route = route;
-
-		// Saving the markermap. Necessary, because the route object shall get
-		// the changes!
 		this.markerMap = markerMap;
-
+		// Initialisierung des Callbacks
 		try {
 			mCallback = (MainCallback) context;
 		} catch (ClassCastException e) {
@@ -76,41 +86,51 @@ public class MarkerWorkerTask
 
 	}
 
+	/**
+	 * Hintergrundmethode zur Erstelllung der Bitmaps und der Marker
+	 */
 	@Override
 	protected LinkedHashMap<RoutePoint, Bitmap> doInBackground(
-
 			CopyOnWriteArrayList<RoutePoint>... params) {
 
 		Bitmap bitmap = null;
-
+		// get RoutePoints to check for Images
 		routePoints = params[0];
-
+		// Durchlaufen aller Punkte
 		for (RoutePoint point : routePoints) {
+			// Hat der Punkt ein Bild?
 			if (point.getPicturePreview() != null) {
+				try {
+					File pic = new File(point.getPicturePreview());
+					Uri uri = Uri.fromFile(pic);
 
-				File pic = new File(point.getPicturePreview());
-				Uri uri = Uri.fromFile(pic);
+					/*
+					 * Hier werden die Bitmaps erstellt und abgerundet.
+					 */
+					Bitmap resizedBitmap_Placeholder = BitmapFactory
+							.decodeResource(context.getResources(),
+									R.drawable.resizedbitmap_placeholder);
 
-				// vielleicht eierverursacher!!!
-				Bitmap resizedBitmap_Placeholder = BitmapFactory
-						.decodeResource(context.getResources(),
-								R.drawable.resizedbitmap_placeholder);
+					int bgwidth = resizedBitmap_Placeholder.getWidth();
+					int bgheight = resizedBitmap_Placeholder.getHeight();
+					bitmap = BitmapManager.decodeSampledBitmapFromUri(
+							uri.getPath(), bgwidth, bgheight);
 
-				int bgwidth = resizedBitmap_Placeholder.getWidth();
-				int bgheight = resizedBitmap_Placeholder.getHeight();
-				bitmap = BitmapManager.decodeSampledBitmapFromUri(
-						uri.getPath(), bgwidth, bgheight);
+					if (bitmap != null) {
+						bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
 
-				if (bitmap != null) {
-					bitmap = getResizedBitmap(bitmap, bgheight, bgwidth);
-
-					bitmap = getRoundedCornerBitmap(
-							getResizedBitmap(bitmap, bgheight, bgwidth), 220);
-					weakBM = new WeakReference<Bitmap>(bitmap);
-
-					bitmapMap.put(point, weakBM.get());
-					weakBM.clear();
-
+						bitmap = getRoundedCornerBitmap(
+								getResizedBitmap(bitmap, bgheight, bgwidth),
+								220);
+						// Speichert Bitmap in WeakReference (für GC)
+						weakBM = new WeakReference<Bitmap>(bitmap);
+						// Fügt Referenz der Hashmap hinzu
+						bitmapMap.put(point, weakBM.get());
+						// Leert die Referenz wieder
+						weakBM.clear();
+					}
+				} catch (Exception e) {
+					Log.d("MarkerWorkertask", "Fehler beim Laden der Bilder");
 				}
 
 			}
@@ -120,6 +140,10 @@ public class MarkerWorkerTask
 		return bitmapMap;
 	}
 
+	/**
+	 * Wird ausgeführt wenn der Hintergrundtask beendet wurde und erstellt die
+	 * Marker.
+	 */
 	@Override
 	protected void onPostExecute(LinkedHashMap<RoutePoint, Bitmap> result) {
 		// TODO Auto-generated method stub
@@ -145,19 +169,17 @@ public class MarkerWorkerTask
 					Bitmap resizedBitmap_Placeholder = BitmapFactory
 							.decodeResource(context.getResources(),
 									R.drawable.resizedbitmap_placeholder);
-
-					markerOpt = new MarkerOptions()
-							.position(
-									new LatLng(mapSet.getKey().getLatitude(),
-											mapSet.getKey().getLongitude()))
-							.icon(BitmapDescriptorFactory.fromBitmap(this
-									.overlay(background,
-											resizedBitmap_Placeholder,
-											bitmapSaved)))
-							.title("Ihr aktueller Standort");
-
+					// Initialisiert Markeroptiones und fügt die Bitmaps hinzu
+					markerOpt = new MarkerOptions().position(
+							new LatLng(mapSet.getKey().getLatitude(), mapSet
+									.getKey().getLongitude())).icon(
+							BitmapDescriptorFactory.fromBitmap(this.overlay(
+									background, resizedBitmap_Placeholder,
+									bitmapSaved)));
+					// Speichert den Marker in der markerMap
 					mapSet.setValue(map.addMarker(markerOpt));
-
+					// Bitmaps werden wieder recylce um Speicherprobleme zu
+					// vermeiden
 					bitmapSaved.recycle();
 					background.recycle();
 					resizedBitmap_Placeholder.recycle();
@@ -177,27 +199,30 @@ public class MarkerWorkerTask
 			map.moveCamera(camUpdate);
 
 		}
+
+		// Leeren der Hashmaps
 		hashMapRef.clear();
-		// markerMap.clear();
 		bitmapMap.clear();
 		context = null;
 
 	}
 
+	/**
+	 * Fügt den Makern den Clicklistener hinzu. Wenn darauf geklickt wird,
+	 * öffnet sich die Detailansicht des Bildes.
+	 */
 	private void addMarkerClickListener(GoogleMap map) {
-		// TODO Auto-generated method stub
-
 		map.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-
+				// Iteration über MarkerMap
 				for (Map.Entry<RoutePoint, Marker> mapSet : markerMap
 						.entrySet()) {
 
 					Marker markerSaved = mapSet.getValue();
 					if (markerSaved.hashCode() == marker.hashCode()) {
-
+						// Öffnet die Detailansicht des Bildes
 						mCallback.onPictureClick(route, mapSet.getKey());
 
 					}
@@ -211,6 +236,10 @@ public class MarkerWorkerTask
 
 	}
 
+	/**
+	 * 
+	 * Skaliert ein Bitmap und gibt dieses zurück.
+	 */
 	public static Bitmap getResizedBitmap(Bitmap image, int bgheight,
 			int bgwidth) {
 
@@ -219,22 +248,25 @@ public class MarkerWorkerTask
 		int newWidth = bgwidth;
 		int newHeight = bgheight;
 
-		// calculate the scale
+		// kalkuliert die skalierte Größe
 		float scaleWidth = ((float) newWidth) / width;
 		float scaleHeight = ((float) newHeight) / height;
 
-		// create matrix for the manipulation
+		// erstellt Matrix zur Manipulation
 		Matrix matrix = new Matrix();
 
-		// resize the bit map
+		// Verkleinert das Bitmap
 		matrix.postScale(scaleWidth, scaleHeight);
 
-		// recreate the new Bitmap
-
+		// Erstellt es neu und gibt es zurück
 		return Bitmap.createBitmap(image, 0, 0, width, height, matrix, true);
 
 	}
 
+	/**
+	 * 
+	 * Erstellt ein Bitmap mit abgerundeten Ecken.
+	 */
 	public static Bitmap getRoundedCornerBitmap(Bitmap resizedBitmap, int pixels) {
 		Bitmap roundedBitmap = Bitmap.createBitmap(resizedBitmap.getWidth(),
 				resizedBitmap.getHeight(), Config.ARGB_8888);
@@ -258,6 +290,9 @@ public class MarkerWorkerTask
 		return roundedBitmap;
 	}
 
+	/**
+	 * Erstellt das Overlay für den Marker.
+	 */
 	public static Bitmap overlay(Bitmap background,
 			Bitmap resizedBitmap_Placeholder, Bitmap roundedBitmap) {
 		Bitmap bmOverlay = Bitmap.createBitmap(background.getWidth(),

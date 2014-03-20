@@ -112,9 +112,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 		// Always refresh the selected item of the slider menu
 		mCallback.refreshSliderMenu();
-		
-		
-		//Wenn garkeine Route vorhandne ist, schlägt ein Zugriff auf die Liste fehl
+
+//Wenn garkeine Route vorhandne ist, schlägt ein Zugriff auf die Liste fehl
 		if (!(routeList.getListRoutes().isEmpty())) {
 
 		if (routeList.isOpenRoute()) {
@@ -134,7 +133,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 		}
 		}
-
 	}
 
 	public void initializeFragmentPortrait() {
@@ -164,7 +162,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			meineListView.setItemChecked(index, true);
 
-			// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
+			// get views from fragment
+
+		// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
 			// werden
 			if (!(routeList.getListRoutes().isEmpty())) {
 
@@ -236,7 +236,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			}
 		});
 	}
-
 	public void addButtonClickListenerContinue(Button button) {
 		button.setOnClickListener(new OnClickListener() {
 
@@ -279,10 +278,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 
+				// Route not active -> start new one
+			    mCallback.onOpenDialogNewRoute(routeList);
 
-					// Route not active -> start new one
-					mCallback.onOpenDialogNewRoute(routeList);
-			
 			}
 		});
 

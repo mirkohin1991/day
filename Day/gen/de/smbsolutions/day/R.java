@@ -549,9 +549,9 @@ containing a value of this type.
     }
     public static final class style {
         public static final int ActionBar_Solid_Appbasetheme=0x7f0c0001;
-        public static final int ActionBar_Transparent_Appbasetheme=0x7f0c0003;
-        public static final int ActionBarTabStyle_Appbasetheme=0x7f0c0006;
-        public static final int ActionButton_CloseMode_Appbasetheme=0x7f0c0009;
+        public static final int ActionBar_Transparent_Appbasetheme=0x7f0c0002;
+        public static final int ActionBarTabStyle_Appbasetheme=0x7f0c0005;
+        public static final int ActionButton_CloseMode_Appbasetheme=0x7f0c0008;
         /** 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
@@ -564,16 +564,15 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0c000b;
-        public static final int DropDownListView_Appbasetheme=0x7f0c0005;
-        public static final int DropDownNav_Appbasetheme=0x7f0c0007;
-        public static final int MyTheme_ActionBar_TitleTextStyle=0x7f0c0002;
-        public static final int PopupMenu_Appbasetheme=0x7f0c0004;
-        public static final int ProgressBar_Appbasetheme=0x7f0c0008;
+        public static final int AppBaseTheme=0x7f0c000a;
+        public static final int DropDownListView_Appbasetheme=0x7f0c0004;
+        public static final int DropDownNav_Appbasetheme=0x7f0c0006;
+        public static final int PopupMenu_Appbasetheme=0x7f0c0003;
+        public static final int ProgressBar_Appbasetheme=0x7f0c0007;
         public static final int Theme_Appbasetheme=0x7f0c0000;
         /**  this style is only referenced in a Light.DarkActionBar based theme 
          */
-        public static final int Theme_Appbasetheme_Widget=0x7f0c000a;
+        public static final int Theme_Appbasetheme_Widget=0x7f0c0009;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.
