@@ -736,7 +736,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onDumpDetected() {
-		mLogCollector.sendLog("kussmann.simon@gmail.com", "Log",
+		mLogCollector.sendLog("hikelogging@gmail.com", "Log",
 				"Folgender Log wurde gespeichert:");
 
 	}

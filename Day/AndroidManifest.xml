@@ -33,10 +33,11 @@
         <!-- Simon: AIzaSyB8LSEa5JoTGxnd1bfg9HE2FkmIadcZD_0 -->
         <!-- Mirko: AIzaSyCQEqd_ENlCU2hN6vr__HAbOja2GUSgdIQ -->
         <!-- Bijan: AIzaSyBxJ55c4tfCj8ijdmLSsheogpUXN_e0k70 -->
+        <!-- Release: AIzaSyAssuITfMpUMpqIJadjA4NPPOdcnbvQKrk -->
         <!-- Legt den Google Maps Key fest. -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyB8LSEa5JoTGxnd1bfg9HE2FkmIadcZD_0" />
+            android:value="AIzaSyAssuITfMpUMpqIJadjA4NPPOdcnbvQKrk" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
