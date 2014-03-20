@@ -89,10 +89,8 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 
 		//Layout wird aufgebaut
 		initializeFragmentPortrait();
-
 	}
 	
-
 	@Override
 	public void onDestroy() {
 
@@ -109,8 +107,6 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		pictureFile = null;
 
 	}
-
-	
 
 	/**
 	 * Methode, die dem View das jeweilige Bild hinzuf�gt

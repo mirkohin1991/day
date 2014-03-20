@@ -642,7 +642,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onTrackingTurnedOnOff() {
-		// TODO Auto-generated method stub
 
 		if (mService != null) {
 
@@ -650,7 +649,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 				// Neustarten des Services mit dem neuen Wert
 				mService.restartLocationTracker();
-
 			}
 		}
 	}

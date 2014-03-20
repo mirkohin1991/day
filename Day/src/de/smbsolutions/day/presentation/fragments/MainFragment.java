@@ -45,7 +45,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private Button btnContinueRoute;
 	private Button btnCreateRoute;
 	private ViewFlipper vfNewOrCurrent;
-	// private ViewFlipper vfPauseOrRun;
 	private Route sel_Route;
 	private int index = 0;
 	private MainCallback mCallback;
