@@ -17,11 +17,12 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Appbasetheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_appbasetheme</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Appbasetheme</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Appbasetheme</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Appbasetheme</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Appbasetheme</item>
@@ -30,14 +31,22 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_appbasetheme</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Appbasetheme</item>
         
-        
     </style>
+
+    
+        
+
 
     <style name="ActionBar.Solid.Appbasetheme" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
         <item name="android:background">@drawable/ab_solid_appbasetheme</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_appbasetheme</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_appbasetheme</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Appbasetheme</item>
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+    </style>
+    
+    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="ActionBar.Transparent.Appbasetheme" parent="@android:style/Widget.Holo.Light.ActionBar">
