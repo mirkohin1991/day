@@ -10,43 +10,54 @@ import android.support.v4.app.DialogFragment;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 
+/**
+ * Dialog zum Stoppen einer Route
+ */
 public class StopRouteDialog extends DialogFragment {
 
 	private Route route;
 	private Bundle bundle;
 	private MainCallback mainCallback;
-	private String fragmenFlag;
+	
+	private String fragmentFlag;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+		//Übergebene Params werden ausgelesen
 		bundle = this.getArguments();
 		route = (Route) bundle.getParcelable("route");
-		fragmenFlag = (String) bundle.getString("fragmentFlag");
+		//fragmentFlag enthällt ein Kennzeichen woher der Aufruf kam
+		//Denn der StopDialog kann aus MainFrag und DetailFrag erfolgen
+		fragmentFlag = (String) bundle.getString("fragmentFlag");
+		
 		return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")
 				.setMessage("Möchten Sie die Route wirklich beenden?")
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// do nothing (will close dialog)
+						// Dialog wird automatisch geschlossen
 					}
 				})
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// The last route is always the active one
+						
+						//Schließen der übergebenen Route
 						route.closeRoute();
 						dismiss();
 
-						// Call the communication interface to start the
-						// follow-on fragment
-
-						mainCallback.onRouteStopped(fragmenFlag, route);
+						//MainActivity kümmert sich um alle Folgeprozesse
+						mainCallback.onRouteStopped(fragmentFlag, route);
 
 					}
 				}).create();
 	}
 
+	
+	/**
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 */
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -57,7 +68,7 @@ public class StopRouteDialog extends DialogFragment {
 
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnButtonClick Interface");
+					+ " muss MainCallback Inteface implementieren");
 		}
 	}
 }

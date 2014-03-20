@@ -26,96 +26,146 @@ import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 import de.smbsolutions.day.functions.tasks.MarkerWorkerTask;
 
+/**
+ * Diese Klasse bildet eine ganze Route ab. Damit bildet sie einen Satz an
+ * RoutePoints zur entsprechenden Route in dieser Klasse als Liste ab
+ * Letzendlich wird durch diese Klasse ein Mapping DB<->Objektorientierung
+ * vorgenommen. ï¿½nderungen werden dem Objekt ï¿½ber Methoden mitgeben und durch
+ * dieses an die Datenbank weitergegeben. Die Klasse implementiert Parcable, um
+ * Objekte von Ihr mit einem Bundle zu ï¿½bertragen
+ */
 public class Route implements Parcelable {
 
 	private static final long serialVersionUID = 1L;
+
+	// Liste aller vorhandener RoutePoints. Muss vom Type CopyOnWriteArrayList
+	// sein, weil dadurch gewï¿½hrleistet wird, dass bei synchronen Zugriffen auf
+	// die Liste keine Fehler auftreten.
 	private CopyOnWriteArrayList<RoutePoint> routePoints = new CopyOnWriteArrayList<RoutePoint>();
+
+	// ï¿½bergreifende Eingenschaften zur Route
 	private String routeName;
 	private String date;
 	private boolean active;
 	private int id;
 
+	// Hier werden spï¿½ter die Polyline Punkte eingefï¿½gt, damit auf der Karte die
+	// Verbindungen erscheinen
 	PolylineOptions polylineOptions_back;
 	PolylineOptions polylineOptions_top;
 
+	// Notwendige Hashmap, um bei einem Klick auf einen Marker spï¿½ter zu
+	// erkennen welcher Routenpunkt sich dahinter verbirgt.
 	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
-	// Constructor for routes that have already been created
+	/**
+	 * Leerer Konstruktur fï¿½r Routen, die schon angelegt wurden
+	 */
 	public Route() {
-
 	}
 
-	// constructor for new routes
-	// --> routeName and date are required
+	/**
+	 * Konstruktor fï¿½r neue Routen
+	 */
 	public Route(String routeName) {
 
 		Date currentDate = Calendar.getInstance().getTime();
 		String today = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
 		this.routeName = routeName;
-		// Get the last route id and 1 to get the new id
+		// Die letzte Id in der Datenbank wird um eins erhï¿½ht, um die neue ID zu
+		// bekommen
 		id = Database.getlastRouteID() + 1;
-
 		date = today;
 		active = true;
 
-		// If the Database insert fails, the active flag is deleted
+		// Anlegen der Route. Wenn fehlerhaft wird das Active Flag wieder
+		// entfernt
 		if (Database.createNewRoute(this) != true) {
 			this.active = false;
 		}
 
 	}
 
+	/**
+	 * Schlieï¿½en der Route
+	 */
 	public void closeRoute() {
 
+		// Schlieï¿½en der Route. Nur wenn erfolgreich wird flag auf false gesetzt
 		if (Database.closeRoute(id) == true) {
 			active = false;
 		}
 
 	}
 
+	/**
+	 * Hinzufï¿½gen eines einzelnen RoutePoints zur Datenkbank
+	 */
 	public void addRoutePointDB(RoutePoint point) {
 
+		// Nur wenn die Route aktiv ist, ist es mï¿½glich Punkte hinzuzufï¿½gen
 		if (active == true) {
 
+			// Wenn der DB Insert geklappt hat, wird die Route auch der internen
+			// Liste hinzugefï¿½gt
 			if (Database.addNewRoutePoint(point) == true) {
 
-			routePoints.add(point);
-
+				routePoints.add(point);
 			}
-
 		}
 
 	}
 
+	/**
+	 * Hinzufï¿½gen eines Routenpunktes zur internen Liste, nicht aber zur
+	 * Datenbank. Dies wird beispielsweise beim Auslesen der vorhandenen routen
+	 * aus der Datenbank benutzt
+	 */
 	public void addRoutePoint(RoutePoint point) {
 		routePoints.add(point);
 	}
 
+	/**
+	 * Methode, um der mitgegebenen Map alle zur Route vorhanden Punkte
+	 * hinzufï¿½gen Preview bedeutet, dass hier eine spezielle Vorgehensweise fï¿½r
+	 * die Vorschau auf dem Hauptfragment benutzt wird
+	 */
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
 
 		mapImport.clear();
 
 		addPolylinesPreview(mapImport);
-		// Setting the zoom
+
 		setZoomAllMarkers(mapImport);
 
 		return mapImport;
 
 	}
 
+	/**
+	 * Methode, um der mitgegebenen Map alle zur Route vorhanden Punkte
+	 * hinzufï¿½gen Details bedeutet, dass es sich hier um die Map der
+	 * Detailansicht zur Route handelt. In diesem Fall mï¿½ssen weit aus mehr
+	 * Dinge angezeigt werden als beim Preview
+	 */
 	public GoogleMap prepareMapDetails(final GoogleMap mapImport,
 			Context context) {
 
-		// Necessary to save connect timestamp and marker
+		// Refreshen der markerMap
 		if (markerMap != null) {
 			markerMap.clear();
 		} else {
 			markerMap = new LinkedHashMap<RoutePoint, Marker>();
 		}
 
-		// add markers to map
+		// Wenn die Route Bilder besitzt, werden diese in einem eigenen Task
+		// geladem
+		// Dadurch kann eine enorme Performancesteigerung erreicht werden
 		if (hasPicturePoint()) {
+
+			// Zunï¿½chst werden die normalen Marker erstellt, um diese spï¿½ter
+			// dann im Task mit den Bildern zu ersetzen
 			for (RoutePoint point : this.routePoints) {
 
 				MarkerOptions markerOpt = new MarkerOptions().position(
@@ -124,19 +174,25 @@ public class Route implements Parcelable {
 
 				Marker marker = mapImport.addMarker(markerOpt);
 				markerMap.put(point, marker);
-
 			}
+
+			// Die Map wird von alten Markern befreit
 			mapImport.clear();
 
+			// Die Polylines kï¿½nnen auch schon hinzugefï¿½gt werden
 			addPolylinesDetail(mapImport);
 
+			// Anschlieï¿½end werden jetzt alle Marker, die mit Bildern angezeigt
+			// werden sollen, eingefï¿½gt.
 			MarkerWorkerTask task = new MarkerWorkerTask(mapImport, markerMap,
 					this, context);
 			task.execute(this.routePoints);
 
+			// Wenn die Route keine Bilder besitzt, kann normal vorgegangen
+			// werden
 		} else {
-
 			addPolylinesDetail(mapImport);
+
 			setZoomAllMarkers(mapImport);
 
 		}
@@ -144,37 +200,42 @@ public class Route implements Parcelable {
 
 	}
 
-	// PERPARE MAP HAS TO BE CALLED BEFORE!
+	/**
+	 * Methode die bei der mitgegebenen Map dafï¿½r sorgt, dass der Zoom alle
+	 * Punkte umschlieï¿½t
+	 */
 	private void setZoomAllMarkers(GoogleMap map) {
-		// zoompoint
+
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		// JETZT DIREKT ÜBER POLYLINES --> MAN MUSS NICHTMEHR ALLE MARKER
-		// speichern
+		// Locations der Polylines werden dem Builder hingefï¿½gt
 		for (LatLng point : polylineOptions_top.getPoints()) {
 			builder.include(point);
 		}
 
+		// Die Kamera wird so animiert, dass alle Bounds angezeigt werden
 		LatLngBounds bounds = builder.build();
 		CameraUpdate camUpdate = CameraUpdateFactory
 				.newLatLngBounds(bounds, 60);
-
 		map.animateCamera(camUpdate);
 	}
 
-	// Method to set the zoom of the map to a certain point
+	/**
+	 * Methode, die den Zoom der mitgegeben Map auf einen bestimmten Punkt
+	 * setzt, der der Methode ebenfalls ï¿½bergeben wird
+	 */
 	public void setZoomSpecificMarker(RoutePoint point, GoogleMap map) {
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		// Getting the marker for the routepoint
-		// There is no way to access the KEY via VALUE directly
-
+		// Aus der Hashmap kann ï¿½ber den Routepunkt die Position ermittelt
+		// werden
 		LatLng latlng = markerMap.get(point).getPosition();
 
 		if (latlng != null) {
 
+			// Die Kamera wird so animiert, der eine Punkt zentriert und mit
+			// richtigem Zoom angezeigt wird
 			builder.include(latlng);
-
 			LatLngBounds bounds = builder.build();
 			CameraUpdate camUpdate = CameraUpdateFactory.newLatLngBounds(
 					bounds, 60);
@@ -184,16 +245,173 @@ public class Route implements Parcelable {
 
 	}
 
+	/**
+	 * Methoden zum Lï¿½schen einzelner Bilder aus der Datenbank und anschlieï¿½end
+	 * aus der internen Liste
+	 */
+	public void deletePictureDB(RoutePoint deletePoint) {
+
+		// Nur wenn DB Delete erfolgreich wird die interne Liste geleert
+		if (Database.deletePicturePath(deletePoint) == true) {
+			routePoints.remove(deletePoint);
+		}
+
+	}
+
+	/**
+	 * Methode, die der Map auf der Detailansichtsseite die Polylines pro Punkt
+	 * hinzufï¿½gt. Zudem werden Start und Ziel Flaggen angezeigt
+	 */
+	private void addPolylinesDetail(GoogleMap map) {
+
+		polylineOptions_back = new PolylineOptions().width(3).color(
+				Color.rgb(123, 207, 168));
+		polylineOptions_top = new PolylineOptions().width(8).color(
+				Color.rgb(19, 88, 5));
+
+		for (RoutePoint point : this.routePoints) {
+			// Der Punkt wird der Polyline hinzugefï¿½gt
+			polylineOptions_back.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			polylineOptions_top.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+
+			// Wenn die Route keine Bilder enthï¿½lt, werden Start (und Ziel)
+			// Flagge gesetzt
+			if (hasPicturePoint() == false) {
+
+				// Erster RoutePoint --> Start Flagge
+				if (point == routePoints.get(0)) {
+					MarkerOptions markerOpt = new MarkerOptions()
+							.position(
+									new LatLng(point.getLatitude(), point
+											.getLongitude()))
+							.title(getRouteName())
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.start_marker));
+
+					// Speichern des Markers in der Hashmap
+					Marker marker = map.addMarker(markerOpt);
+					markerMap.put(point, marker);
+				}
+
+				// Letzter Eintrag --> Finish Flagge
+				if (point == routePoints.get(routePoints.size() - 1)) {
+
+					// Aber nur wenn die Route schon beendet ist
+					if (active == false) {
+
+						MarkerOptions markerOpt = new MarkerOptions()
+								.position(
+										new LatLng(point.getLatitude(), point
+												.getLongitude()))
+								.title(getRouteName())
+								.icon(BitmapDescriptorFactory
+										.fromResource(R.drawable.stop_marker));
+
+						// Speichern des Markers in der Hashmap
+						Marker marker = map.addMarker(markerOpt);
+						markerMap.put(point, marker);
+
+					}
+				}
+			}
+		}
+
+		// Zum Schluss werden alle Poylines auf der Map eingezeichnet
+		map.addPolyline(polylineOptions_top);
+		map.addPolyline(polylineOptions_back);
+
+	}
+
+	/**
+	 * Methode, die der Vorschaumap auf der Hauptansichtsseite die Polylines pro
+	 * Punkt hinzufï¿½gt. Zudem werden Start und Ziel Flaggen angezeigt.
+	 */
+	private void addPolylinesPreview(GoogleMap map) {
+
+		polylineOptions_back = new PolylineOptions().width(3).color(
+				Color.rgb(123, 207, 168));
+		polylineOptions_top = new PolylineOptions().width(8).color(
+				Color.rgb(19, 88, 5));
+
+		for (RoutePoint point : this.routePoints) {
+			polylineOptions_back.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+			polylineOptions_top.add(new LatLng(point.getLatitude(), point
+					.getLongitude()));
+
+			// Erster RoutePoint --> Start-Flagge
+			if (point == routePoints.get(0)) {
+				MarkerOptions markerOpt = new MarkerOptions()
+						.position(
+								new LatLng(point.getLatitude(), point
+										.getLongitude()))
+						.title(getRouteName())
+						.icon(BitmapDescriptorFactory
+								.fromResource(R.drawable.start_marker));
+
+				// Der Marker wird der map hinzugefï¿½gt
+				map.addMarker(markerOpt);
+
+			}
+
+			// Letzter Eintrag --> Finish-Flagge (
+			if (point == routePoints.get(routePoints.size() - 1)) {
+
+				// Aber nur wenn die Route schon beendet ist
+				if (active == false) {
+
+					MarkerOptions markerOpt = new MarkerOptions()
+							.position(
+									new LatLng(point.getLatitude(), point
+											.getLongitude()))
+							.title(getRouteName())
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.stop_marker));
+
+					map.addMarker(markerOpt);
+
+				}
+			}
+		}
+
+		// Zum Schluss werden alle Poylines auf der Map eingezeichnet
+		map.addPolyline(polylineOptions_top);
+		map.addPolyline(polylineOptions_back);
+
+	}
+	
+
+	/**
+	 * Methode, um einer vorhanden Polyline-Kombination einen weiteren Punkt
+	 * hinzuzufï¿½gen. Wird verwendet wenn Service oder Benutzer zur Laufzeit
+	 * einen Punkt hinzufï¿½gen
+	 */
+	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
+
+		polylineOptions_back.add(new LatLng(point.getLatitude(), point
+				.getLongitude()));
+		polylineOptions_top.add(new LatLng(point.getLatitude(), point
+				.getLongitude()));
+		map.addPolyline(polylineOptions_top);
+		map.addPolyline(polylineOptions_back);
+	}
+
+	/**
+	 * Methode, die die Information zurï¿½ckliefert, ob es Punkte in der Route
+	 * gibt, die ein Bild enthalten
+	 */
 	public boolean hasPicturePoint() {
 
 		for (RoutePoint point : routePoints) {
-			// As soon as one point contains a picture path, true is returned
+
+			// Sobald ein Punkt ein bild enthï¿½lt wird true returned
 			if ((point.getPicture() != null)) {
 				return true;
 			}
 		}
 		return false;
-
 	}
 
 	public String getDate() {
@@ -216,10 +434,6 @@ public class Route implements Parcelable {
 		return routePoints;
 	}
 
-	public void setRoutePoints(CopyOnWriteArrayList<RoutePoint> routePoints) {
-		this.routePoints = routePoints;
-	}
-
 	public String getRouteName() {
 		return routeName;
 	}
@@ -237,154 +451,21 @@ public class Route implements Parcelable {
 
 	}
 
+	/**
+	 * Nï¿½tig, weil die Klasse Parcable implementiert
+	 */
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	/**
+	 * Nï¿½tig, weil die Klasse Parcable implementiert
+	 */
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
-
-	}
-
-	public void deletePictureDB(RoutePoint deletePoint) {
-
-		if (Database.deletePicturePath(deletePoint) == true) {
-			routePoints.remove(deletePoint);
-		}
-
-	}
-
-	public void freeObjects() {
-
-		routePoints.clear();
-		routePoints = null;
-		markerMap.clear();
-		markerMap = null;
-
-	}
-
-	public void addPolylinesDetail(GoogleMap map) {
-		polylineOptions_back = new PolylineOptions().width(3).color(
-				Color.rgb(123, 207, 168));
-		polylineOptions_top = new PolylineOptions().width(8).color(
-				Color.rgb(19, 88, 5));
-		for (RoutePoint point : this.routePoints) {
-			polylineOptions_back.add(new LatLng(point.getLatitude(), point
-					.getLongitude()));
-			polylineOptions_top.add(new LatLng(point.getLatitude(), point
-					.getLongitude()));
-
-			if (hasPicturePoint() == false) {
-
-				// Erster RoutePoint --> Flagge
-				if (point == routePoints.get(0)) {
-					MarkerOptions markerOpt = new MarkerOptions()
-							.position(
-									new LatLng(point.getLatitude(), point
-											.getLongitude()))
-							.title(getRouteName())
-							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.start_stop_marker2));
-
-					Marker marker = map.addMarker(markerOpt);
-					markerMap.put(point, marker);
-				}
-
-				// Letzter Eintrag --> Flagge (
-				if (point == routePoints.get(routePoints.size() - 1)) {
-
-					// Nur wenn die Route schon beendet ist, soll das Finish
-					// Icon erscheinen
-					if (active == false) {
-
-						MarkerOptions markerOpt = new MarkerOptions()
-								.position(
-										new LatLng(point.getLatitude(), point
-												.getLongitude()))
-								.title(getRouteName())
-								.icon(BitmapDescriptorFactory
-										.fromResource(R.drawable.start_stop_marker2));
-
-						Marker marker = map.addMarker(markerOpt);
-						markerMap.put(point, marker);
-
-					}
-
-				}
-			}
-
-		}
-		map.addPolyline(polylineOptions_top);
-		map.addPolyline(polylineOptions_back);
-
-	}
-
-	public void addPolylinesPreview(GoogleMap map) {
-		polylineOptions_back = new PolylineOptions().width(3).color(
-				Color.rgb(123, 207, 168));
-		polylineOptions_top = new PolylineOptions().width(8).color(
-				Color.rgb(19, 88, 5));
-		for (RoutePoint point : this.routePoints) {
-			polylineOptions_back.add(new LatLng(point.getLatitude(), point
-					.getLongitude()));
-			polylineOptions_top.add(new LatLng(point.getLatitude(), point
-					.getLongitude()));
-
-			// Erster RoutePoint --> Flagge
-			if (point == routePoints.get(0)) {
-				MarkerOptions markerOpt = new MarkerOptions()
-						.position(
-								new LatLng(point.getLatitude(), point
-										.getLongitude()))
-						.title(getRouteName())
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.start_stop_marker2));
-
-				Marker marker = map.addMarker(markerOpt);
-				// markerMap.put(point, marker);
-			}
-
-			// Letzter Eintrag --> Flagge (
-			if (point == routePoints.get(routePoints.size() - 1)) {
-
-				// Nur wenn die Route schon beendet ist, soll das Finish Icon
-				// erscheinen
-				if (active == false) {
-
-					MarkerOptions markerOpt = new MarkerOptions()
-							.position(
-									new LatLng(point.getLatitude(), point
-											.getLongitude()))
-							.title(getRouteName())
-							.icon(BitmapDescriptorFactory
-									.fromResource(R.drawable.start_stop_marker2));
-
-					Marker marker = map.addMarker(markerOpt);
-					// markerMap.put(point, marker);
-
-				}
-
-			}
-
-		}
-		map.addPolyline(polylineOptions_top);
-		map.addPolyline(polylineOptions_back);
-
-	}
-
-	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
-
-		// map darf nicht gecleared werden, da sonst Marker gelöscht werden
-		polylineOptions_back.add(new LatLng(point.getLatitude(), point
-				.getLongitude()));
-		polylineOptions_top.add(new LatLng(point.getLatitude(), point
-				.getLongitude()));
-		map.addPolyline(polylineOptions_top);
-		map.addPolyline(polylineOptions_back);
-		// setZoomAllMarkers(map);
 
 	}
 

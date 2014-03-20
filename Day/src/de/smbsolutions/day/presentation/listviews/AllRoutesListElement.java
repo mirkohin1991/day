@@ -6,6 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.widget.BaseAdapter;
 
 
+/**
+ * Repr‰sentation eines Elementes der Liste aller Routen auf dem Mainfragment
+ */
 public class AllRoutesListElement {
 	
 	private Drawable icon;
@@ -17,15 +20,17 @@ public class AllRoutesListElement {
 	
 	public AllRoutesListElement( Route route) {
 		super();
-		this.route = route;
 		
+		//Die Route wird gespeichert, damit von auﬂerhalb auf sie zugegriffen werden kann
+		//(Z.B. bei einem onLongClick Event in die eigentliche Liste
+		this.route = route;
 		textName = route.getRouteName();
 		textDate = route.getDate();
 
 	}
 	
 	
-	//observers can call to register for data change notifications:
+	//registrieren des Adapters
 	public void setAdapter(BaseAdapter adapter) {
 		this.adapter = adapter;
 	}

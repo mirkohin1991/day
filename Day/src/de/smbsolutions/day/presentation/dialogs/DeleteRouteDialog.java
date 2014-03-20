@@ -11,39 +11,48 @@ import android.util.Log;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.RouteList;
 
+
+/**
+ * Dialog zum Löschen einer ganzen Route
+ */
 public class DeleteRouteDialog extends DialogFragment {
 
 	private RouteList routeList;
 	private Bundle bundle;
-	private int index;
-	private MainCallback mCallback;
+	private int routeIndex;
+	private MainCallback mainCallback;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+		//Beschaffen der mitgegebenen Parameter
 		bundle = this.getArguments();
 		routeList = (RouteList) bundle.getParcelable("routeList");
-		index = bundle.getInt("routeIndex");
+		routeIndex = bundle.getInt("routeIndex");
 
+		//Erstellen des Dialoges
 		return new AlertDialog.Builder(getActivity()).setTitle("Route löschen")
 				.setMessage("Möchten Sie die Route wirklich löschen?")
+				
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// do nothing (will close dialog)
+						// Nichts muss getan werden, Dialog wird automatisch beendet
 					}
 				})
+				
+				//Wenn JA geklickt wurde, wird die Route gelöscht und das Callbackinterface aufgerufen
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						try {
-							routeList.deleteRouteDB(index);
+							routeList.deleteRouteDB(routeIndex);
 						} catch (Exception e) {
 							Log.wtf("WTF", "Nullpointer routelist");
 						}
 
 						try {
-							mCallback.onRouteDeleted();
+							mainCallback.onRouteDeleted();
 						} catch (Exception e) {
 							Log.wtf("WTF", "Nullpointer callback");
 						}
@@ -52,15 +61,18 @@ public class DeleteRouteDialog extends DialogFragment {
 				}).create();
 	}
 
+	/**
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 */
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
 		try {
-			mCallback = (MainCallback) activity;
+			mainCallback = (MainCallback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnButtonClick Interface");
+					+ " muss MainCallback Inteface implementieren");
 		}
 	}
 }

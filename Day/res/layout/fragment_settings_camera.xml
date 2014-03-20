@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/camera_save_settings"
-            android:textColor="@color/settings_text"
+            android:textColor="@color/white"
             android:textSize="@dimen/h1" />
 
         <Switch
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/camera_save_settings_description"
-            android:textColor="@color/settings_text"
+            android:textColor="@color/white"
             android:textSize="@dimen/text" />
     
         <TextView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/camera_save_settings_note"
-            android:textColor="@color/settings_text"
+            android:textColor="@color/white"
             android:textSize="@dimen/text" />
  
 </LinearLayout>

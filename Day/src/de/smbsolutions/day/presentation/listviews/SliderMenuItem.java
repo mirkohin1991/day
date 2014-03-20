@@ -1,5 +1,6 @@
 package de.smbsolutions.day.presentation.listviews;
 
+
 public class SliderMenuItem {
 	
 	private String title;
@@ -20,7 +21,7 @@ public class SliderMenuItem {
 		return this.icon;
 	}
 
-	
+
 	public void setTitle(String title){
 		this.title = title;
 	}

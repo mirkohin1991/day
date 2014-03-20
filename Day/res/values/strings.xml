@@ -8,7 +8,11 @@
     <string name="kamera_oeffnen">Öffne Kamera</string>
     <string name="start_service">Service starten</string>
     <string name="stop_service">Service stoppen</string>
-    <string name="new_route">Neue Route anlegen </string>
+    <string name="new_route">Neue Route anlegen</string>
+    <string name="dialog_new_route">Neue Route</string>
+    <string name="dialog_new_route_hint">Routenname</string>
+    <string name="gps_frequency">GPS Wiederholungsrate</string>
+    <string name="gps_min_distance">Minimale Entfernung in Metern</string>
     <string name="gps_settings_note">Je niedriger Sie die GPS Wiederholungsrate einstellen, desto genauer wird die Route abgebildet. Das gleiche gilt auch für die Entfernung. Kleinere Werte bedeuten eine genauere Darstellung auf der Karte, können allerdings auch zu einem erhöhten Akkuverbrauch führen.</string>
 	<string name="gps_settings_note2">Wenn Sie das GPS ausschalten wird ihre Route nicht mehr automatisch aktualisiert, sondern nur wenn Sie ein Foto schießen.</string>
     <string name="camera_save_settings">Bilder anzeigen</string>
@@ -51,5 +55,6 @@
     <!-- Content Description -->
 
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="gpsOnOff">GPS Tracking</string>
 
 </resources>

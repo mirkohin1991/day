@@ -44,7 +44,7 @@
                         android:layout_weight="1"
                         android:maxLines="1"
                         android:paddingLeft="10dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="@dimen/h1" />
 
@@ -55,8 +55,8 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:background="#00000000"
-                        android:text="Button"
+                        android:background="@color/transparent"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="@dimen/h1" />
                 </LinearLayout>
@@ -104,7 +104,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:drawSelectorOnTop="false"
-                android:listSelector="#e6e6e6"
+                android:listSelector="@color/lightgrey"
                 android:longClickable="true" >
             </ListView>
         </LinearLayout>

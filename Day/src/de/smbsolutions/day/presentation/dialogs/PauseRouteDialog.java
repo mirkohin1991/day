@@ -11,7 +11,9 @@ import android.support.v4.app.FragmentActivity;
 import de.smbsolutions.day.functions.interfaces.FragmentCallback;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 
-
+/**
+ * Dialog zum Pausieren einer Route
+ */
 public class PauseRouteDialog extends DialogFragment {
 
 	private FragmentCallback fragCallback;
@@ -20,28 +22,33 @@ public class PauseRouteDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		
-
+        //Dialog wird erstellt
 		return new AlertDialog.Builder(getActivity()).setTitle("Route anhalten")
 				.setMessage("Wenn Sie die Route pausieren, werden keine neuen Standortdaten gespeichert bis Sie die Route das nächste Mal aufrufen.")
+				
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// do nothing (will close dialog)
+						// Dialog wird automatisch beendet
 					}
 				})
+				
+				// JA wurde geklickt
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// The last route is always the active one
-						//routeList.getlastRoute().closeRoute();
-						//Call the communication interface to start the follow-on fragment
+						
+						//Das Detailfragment wird aktualisiert
 						fragCallback.onRoutePaused();
+						//Der Service wird gestoppt
 						mainCallback.onActiveRouteNoService();
 					}
 				}).create();
 	}
 
+	/**
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 */
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -52,7 +59,7 @@ public class PauseRouteDialog extends DialogFragment {
 			mainCallback = (MainCallback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnButtonClick Interface");
+					+ " muss MainCallback Inteface implementieren");
 		}
 	}
 }

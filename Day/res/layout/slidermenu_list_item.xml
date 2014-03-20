@@ -23,12 +23,12 @@
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingRight="40dp"
-        android:shadowColor="#7F000000"
+        android:shadowColor="@color/text_shadow"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="1.5"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@color/list_item_title" />
+        android:textColor="@color/white" />
 
     <View
         android:id="@+id/divider"
@@ -36,6 +36,6 @@
         android:layout_height="0.1dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="#FFFFFFFF" />
+        android:background="@color/white" />
 
 </RelativeLayout>

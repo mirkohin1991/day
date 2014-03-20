@@ -16,42 +16,44 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RouteList;
 
+/**
+ * Dialog, der aufgerufen wird wenn der Benutzer eine neue Route anlegen will
+ */
 public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 
+	
 	private RouteList routeList;
 	private Bundle bundle;
 	private MainCallback mCallback;
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		// Use the Builder class for convenient dialog construction
+		// Aufbauen des Dialoges
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		
+		//Mitgegebene RouteList abrufen
 		bundle = this.getArguments();
 		routeList = (RouteList) bundle.getParcelable("routeList");
 
-		// Getting the LocationTrackerService
-		// locationTracker =
-		// LocationTrackerPLAYSERVICE.getInstance(getActivity());
 
-		// Get the layout inflater
+		// Das eigene Dialoglayout wird eingebunden
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-
-		final View nameView = inflater.inflate(R.layout.dialog_createroute,
+		 View nameView = inflater.inflate(R.layout.dialog_createroute,
 				null);
-		// Adding the customized popup layout
 		builder.setView(nameView);
 
+		//Hinzufügen des Anlegen-Buttons. Der Hanlder wird später selbst gesetzt und überschreibt die Standard-Logik
 		builder.setPositiveButton("Anlegen", null
 
+		//Hinfügen des Abbrechen Buttons. Wenn dieser gedrückt wird, muss der zuvor gestartete Service wieder beendet werden		
 		).setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
 				mCallback.removeService();
 			}
 		});
-		// Create the AlertDialog object and return it
-
-		final AlertDialog dialog = builder.create();
 		
+		// Der AlertDialog wird erstellt und zurückgegeben
+		final AlertDialog dialog = builder.create();
 		
 		
 		//Eigener ShowDialog Listener, um die ButtonClick events selbst zu definieren
@@ -60,33 +62,32 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 			
 			@Override
 			public void onShow(DialogInterface dialog) {
-				// TODO Auto-generated method stub
 				
-				Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-				button.setOnClickListener(new View.OnClickListener() {
+				Button btnPositive = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+				btnPositive.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
 						
-						// tracker = LocationTracker.getInstance(getActivity());
-						// New Route shall be craeted
+                        //Eigegebener Name wird ausgelesen
 						EditText nameText = (EditText) getDialog().findViewById(
 								R.id.routename);
 						String routeName = nameText.getText().toString();
 
+						//Wenn der Name leer ist, erscheint eine Errormessage als Hinweis
 						if (routeName.isEmpty()) {
 
                           nameText.setHint("Bitte Namen eingeben");
                           nameText.setHintTextColor(Color.RED);
 
+                         // Wenn alles gut ging, wird die neue Route angelegt 
 						} else {
 
+							//Dialog soll beendet werden
 							dismiss();
-							// Calling the db
+							
 							Route route = new Route(routeName);
-
 							routeList.addRoute(route);
-
 							mCallback.onStartTrackingService(route);
 						}
 						
@@ -100,6 +101,9 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 		return dialog;
 	}
 
+	/**
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 */
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -107,7 +111,7 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 			mCallback = (MainCallback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnButtonClick Interface");
+					+ " muss MainCallback Inteface implementieren");
 		}
 	}
 

@@ -20,6 +20,12 @@ import de.smbsolutions.day.presentation.fragments.settings.GPSFragment;
 import de.smbsolutions.day.presentation.listviews.SliderMenuItem;
 import de.smbsolutions.day.presentation.listviews.SliderMenuListAdapter;
 
+/**
+ * Einstellungen für das SliderMenu.
+ * Legt die Listeinträge mit Anzeigenamen und Icons an.
+ * Je nach geklicktem Item wird das entsprechende Fragment aufgerufen, oder der Kartentyp geändert.
+ */
+
 public class SliderMenu {
 
 	private DrawerLayout mDrawerLayout;
@@ -27,13 +33,13 @@ public class SliderMenu {
 	private MainCallback mCallback;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	// nav drawer title
+	// nav drawer Titel
 	private CharSequence mDrawerTitle;
 
-	// used to store app title
+	// App Titel
 	private CharSequence mTitle;
 
-	// slide menu items
+	//Slider Menu Items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
 
@@ -62,7 +68,6 @@ public class SliderMenu {
 	
 	
 	public void removeSelectedItem() {
-		
 		mDrawerList.clearChoices();
 		mDrawerList.requestLayout();
 	}
@@ -76,21 +81,24 @@ public class SliderMenu {
 		return mDrawerList;
 	}
 
+	/**
+	 * Fügt dem Slider Menu die Einträge hinzu.
+	 * Name und Icon jeden Eintrags werde in der string.xml festgelegt
+	 */
 	public ArrayList<SliderMenuItem> getNavDrawerItems() {
 
 		mTitle = mDrawerTitle = context.getTitle();
 
-		// load slide menu items
+		// Lade Slider Menu Items
 		navMenuTitles = context.getResources().getStringArray(
 				R.array.nav_drawer_items);
 
-		// nav drawer icons from resources
 		navMenuIcons = context.getResources().obtainTypedArray(
 				R.array.nav_drawer_icons);
 
 		navDrawerItems = new ArrayList<SliderMenuItem>();
 
-		// adding nav drawer items to array
+		// Nav Drawer Items dem Array hinzufügen
 		// Landkarte
 		navDrawerItems.add(new SliderMenuItem(navMenuTitles[0], navMenuIcons
 				.getResourceId(0, -1)));
@@ -121,40 +129,44 @@ public class SliderMenu {
 
 	public SliderMenuListAdapter getAdapter() {
 
-		// Recycle the typed array
+		// Array leeren
 		navMenuIcons.recycle();
 
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
 
-		// setting the nav drawer list adapter
 		adapter = new SliderMenuListAdapter(context.getApplicationContext(),
 				navDrawerItems);
 		mDrawerList.setAdapter(adapter);
-		
 
-		// enabling action bar app icon and behaving it as toggle button
-
+//		Toggle Button zum öffnen des Menus einstellen
 		context.getActionBar().setDisplayHomeAsUpEnabled(true);
 		context.getActionBar().setHomeButtonEnabled(true);
 
 		return adapter;
 	}
 
+	/**
+	 * Einstellungen fuer das SliderMenu.
+	 * Icon, Anzeigename beim Oeffnen bzw. schliessen des SliderMenus
+	 */
 	public ActionBarDrawerToggle getActionBarDrawerToggle() {
-
 		mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
 				R.drawable.ic_drawer, // nav menu toggle icon
-				R.string.app_name, // nav drawer open - description for
-									// accessibility
-				R.string.app_name // nav drawer close - description for
-									// accessibility
+				R.string.app_name, // nav drawer Anzeigename beim öffnen.
+				R.string.app_name // nav drawer Anzeigename beim schließen.
 		) {
+			/**
+			 * Einstellungen die gelten wenn das SliderMenu geschlossen wird.
+			 */
 			public void onDrawerClosed(View view) {
 				context.getActionBar().setTitle(mTitle);
-				// calling onPrepareOptionsMenu() to show action bar icons
+				// aufruf onPrepareOptionsMenu() um items anzuzeigen
 				context.invalidateOptionsMenu();
 			}
 
+			/**
+			 * Einstellungen die gelten wenn das SliderMenu geöffnet wird.
+			 */
 			public void onDrawerOpened(View drawerView) {
 				context.getActionBar().setTitle(mDrawerTitle);
 				// calling onPrepareOptionsMenu() to hide action bar icons
@@ -175,32 +187,27 @@ public class SliderMenu {
 	//
 	//
 	/**
-	 * Slide menu item click listener
+	 * SliderMenu Item Click Listener
 	 * */
 	private class SlideMenuClickListener implements
 			ListView.OnItemClickListener {
 
-		// Hier werden die Sachen nicht gefunden.
-
+		/**
+		 * Positionsbestimmung des geklickten Items
+		 */
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// display view for selected nav drawer item
-
 			displayView(position);
-			
 			view.setTag("selected");
 
 		}
 	}
 
-	//
 
-	//
-
-	// /**
-	// * Diplaying fragment view for selected nav drawer list item
-	// * */
+	 /**
+	 * Anzeige des Entsprechenden Fragments, bzw. zuweisung des Kartentyps
+	 * */
 	private void displayView(int position) {
 		// update the main content by replacing fragments
 		android.support.v4.app.Fragment fragment = null;
@@ -222,48 +229,43 @@ public class SliderMenu {
 			mDrawerList.setSelection(position);
 			mDrawerLayout.closeDrawer(mDrawerList);			
 			mCallback.onRefreshMap();
-
 			break;
 		case 2:
 			// MapType: Terrain
-
 			Device.getAPP_SETTINGS().setMapType(3);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			mDrawerLayout.closeDrawer(mDrawerList);
 			mCallback.onRefreshMap();
 			break;
-
 		case 3:
-			// Einstellungen
+			// Einstellungen Ueberschrift
+			// Nicht klickbar
 			break;
 
 		case 4:
-			// GPS
+			// GPS Fragment öffnen
 			fragment = new GPSFragment();
 			break;
 
 		case 5:
-			// Kamera
+			// Kamera Fragment öffnen
 			fragment = new CameraFragment();
 			break;
 
 		case 6:
-			// Info
+			// Info Fragment öffnen
 			fragment = new AboutFragment();
 			break;
-
 		default:
 			break;
 		}
 		if (fragment != null) {
-
 			mCallback.onSliderClick(fragment);
 			mDrawerList.setItemChecked(position, true);
 			mDrawerList.setSelection(position);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		} else {
-			// error in creating fragment
 			Log.d("MainActivity", "MapType changed");
 		}
 

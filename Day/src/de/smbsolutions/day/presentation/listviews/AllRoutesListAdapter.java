@@ -13,35 +13,50 @@ import android.widget.TextView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 
+/**
+ * Adapter für die Liste aller vorhandenen Routen auf dem MainFragment
+ */
 public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 
 	private List<AllRoutesListElement> listElements;
 	private Context context;
-	private MainCallback mCallback;
+	private MainCallback mainCallback;
 
+	
+	
+	/**
+	 * Konstruktor
+	 * @param context
+	 * @param resourceId
+	 * @param listElements
+	 * @param mCallback
+	 */
 	public AllRoutesListAdapter(Activity context, int resourceId,
 			List<AllRoutesListElement> listElements, MainCallback mCallback) {
+		
 		super(context, resourceId, listElements);
 		this.listElements = listElements;
 		this.context = context;
 
-		// Save the interface to communication with other fragments
-		// Necessary for button click event
-		this.mCallback = mCallback;
+		
+		//Interface zur Kommunikation mit MainActivity, nötig für Button Click event
+		this.mainCallback = mCallback;
 
-		// Set up as an observer for list item changes to
-		// refresh the view.
+		//allen Elementen wird der Adapter hinzugefügt
 		for (int i = 0; i < listElements.size(); i++) {
 			listElements.get(i).setAdapter(this);
 		}
 	}
 
-	// This method is called for each list element in order to build the view
+	
+	/**
+	 * Diese Method wird für jedes Listelement aufgerufen
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
 
-		// View is only null when the List is created the first time
+		// View ist null wenn die Liste zum ersten Mal aufgerufen wird
 		if (view == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -49,18 +64,20 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 
 		}
 
+		//Abgreifen des jeweiligen Elements
 		AllRoutesListElement listElement = listElements.get(position);
 		if (listElement != null) {
 
+			//Einlesen der Listelemente
 			Button buttonDetails = (Button) view
 					.findViewById(R.id.imagebuttonDetails);
 			TextView textName = (TextView) view
 					.findViewById(R.id.textRouteName);
-			final TextView textDate = (TextView) view
+			TextView textDate = (TextView) view
 					.findViewById(R.id.textRouteDate);
-			// if (icon != null) {
-			// icon.setImageDrawable(listElement.getIcon());
-			// }
+		
+			
+			
 			if (textName != null) {
 				textName.setText(listElement.getTextName());
 			}
@@ -69,9 +86,7 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 			}
 
 			if (buttonDetails != null) {
-
-				// Tags are used to relocate the object later on during the
-				// event
+				//Setzen eines Tags, damit im Onclick event die Position bestimmt werden kann
 				buttonDetails.setTag(position);
 			}
 
@@ -81,18 +96,16 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 				@Override
 				public void onClick(View v) {
 
-					// Stored position of the button
+					//Postion des geklickten Buttons
 					int position = (Integer) v.getTag();
 
-					// Getting the route object of the related row
-					// Transfering it to the interface in order to call the
-					// detailed map view
-					
-					
+
 					//Der Mainactivity wird mitgeteilt, dass es sich bei der geöffneten Route um eine bereits 
 					//abgeschlossene handelt (Active = false);
-					mCallback.onRouteOpenend(false);
-					mCallback.onShowRoute(listElements.get(position).getRoute());
+					mainCallback.onRouteOpenend(false);
+					
+					//Die geklickte Route wird angezeigt
+					mainCallback.onShowRoute(listElements.get(position).getRoute());
 
 				}
 
@@ -102,8 +115,6 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 		return view;
 	}
 
-	public List<AllRoutesListElement> getListElements() {
-		return listElements;
-	}
+	
 
 }

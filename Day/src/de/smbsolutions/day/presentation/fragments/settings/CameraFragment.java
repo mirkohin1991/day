@@ -14,24 +14,32 @@ import android.widget.Switch;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
 
+/**
+ * Speichert ob die Fotos in der Galerie App des Smartphones anzeigt werden
+ * sollen oder nicht. Je nachdem wird im Ordner "Hike" ein ".nomedia" File
+ * erstellt oder gelöscht, das der Galerie App sagt, ob sie diesen Ordner
+ * aufnehmen soll oder nicht.
+ */
+
 public class CameraFragment extends android.support.v4.app.Fragment {
 
 	private View view;
 	private Switch switchShowInGal;
 
+	/**
+	 * Bei Aufruf das Fragment "fragment_settings_camera" aufrufen.
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
 		view = inflater.inflate(R.layout.fragment_settings_camera, container,
 				false);
-
 		return view;
 	}
 
 	@Override
 	public void onResume() {
-
+		// Erstellt den Pfad an dem die Bilder gespeichert werden
 		final File path = new File(
 				Environment
 						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
@@ -39,10 +47,10 @@ public class CameraFragment extends android.support.v4.app.Fragment {
 
 		if (switchShowInGal == null) {
 			switchShowInGal = (Switch) view.findViewById(R.id.switchShowInGal);
-
 		}
 
-		// Wert (On/Off) aus der Datenbank abrufen
+		// Wert (On/Off) aus der Datenbank abrufen. Das Switch auf die jeweilige
+		// Positzion setzen.
 		if (Database.getSettingValue(Database.SETTINGS_SHOW_IN_GAL) == 1) {
 			switchShowInGal.setChecked(true);
 		} else {
@@ -60,33 +68,32 @@ public class CameraFragment extends android.support.v4.app.Fragment {
 						.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 							public void onCheckedChanged(
 									CompoundButton buttonView, boolean isChecked) {
+								// Wenn das Switch aktiv ist:
 								if (isChecked) {
 
+									// Wert in der Datenbank auf 1 setzten
 									Database.changeSettingValue(
 											Database.SETTINGS_SHOW_IN_GAL, 1);
 
-									// Writes a new file to the MyCameraApp
-									// directory to hide pictures taken with
-									// this app from the standard gallery app
-									// Images should be hidden
-									
+									// Löscht die Datei (.nomedia) aus dem
+									// Ordner "Hike"
+									// Bilder werden in der Galerie App
+									// angezeigt
 									String nomediaFile = path.toString()
 											+ "/.nomedia";
 									File file = new File(nomediaFile);
 									boolean deleted = file.delete();
-//									file = null;
-									// Toast.makeText(getActivity(), "An", Toast.LENGTH_SHORT).show();
-
 								} else {
-
+									// Wert in der Datenbank auf 0 setzten
 									Database.changeSettingValue(
 											Database.SETTINGS_SHOW_IN_GAL, 0);
-									
-									// Toast.makeText(getActivity(), "Aus", Toast.LENGTH_SHORT).show();
 
-
+									// Erstellt die Datei ".nomedia".
+									// Bilder werden nicht in der Galerie App
+									// angezeigt
 									try {
-										FileWriter fileWriter = new FileWriter(path + "/.nomedia");
+										FileWriter fileWriter = new FileWriter(
+												path + "/.nomedia");
 										fileWriter.close();
 										fileWriter = null;
 									} catch (IOException e) {
@@ -98,9 +105,7 @@ public class CameraFragment extends android.support.v4.app.Fragment {
 						});
 			}
 		});
-		
 		super.onResume();
-		
 	}
 
 	@Override
@@ -109,5 +114,4 @@ public class CameraFragment extends android.support.v4.app.Fragment {
 		switchShowInGal = null;
 		super.onDestroy();
 	}
-
 }

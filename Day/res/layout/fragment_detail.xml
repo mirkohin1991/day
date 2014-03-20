@@ -71,9 +71,7 @@
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/icon_stop_detail"
-                    android:text="Button"
-                    android:textColor="@color/white" />
+                    android:src="@drawable/icon_stop_detail"/>
 
                 <ViewFlipper
                     android:id="@+id/flipperStartStop"
@@ -85,26 +83,22 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:background="#00000000"
+                        android:background="@color/transparent"
                         android:paddingLeft="10dp"
                         android:paddingTop="10dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/icon_pause_detail"
-                        android:text="Button"
-                        android:textColor="@color/white" />
+                        android:src="@drawable/icon_pause_detail"/>
 
                     <ImageButton
                         android:id="@+id/ibRestartRoute"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:background="#00000000"
+                        android:background="@color/transparent"
                         android:paddingLeft="10dp"
                         android:paddingTop="10dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/icon_play_detail"
-                        android:text="Button"
-                        android:textColor="@color/white" />
+                        android:src="@drawable/icon_play_detail"/>
                 </ViewFlipper>
             </LinearLayout>
 
@@ -165,11 +159,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="#00000000"
+                                android:background="@color/transparent"
                                 android:scaleType="fitEnd"
-                                android:src="@drawable/slr"
-                                android:text="Button"
-                                android:textColor="@color/white" />
+                                android:src="@drawable/slr"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

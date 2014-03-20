@@ -51,7 +51,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private MainCallback mCallback;
 	private List<AllRoutesListElement> meineListe;
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -62,7 +61,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		view = inflater.inflate(R.layout.fragment_main, container, false);
 
 		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
-
 
 		return view;
 	}
@@ -111,26 +109,30 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		}
 
 		initializeFragmentPortrait();
-		
-		
-		//Always refresh the selected item of the slider menu
+
+		// Always refresh the selected item of the slider menu
 		mCallback.refreshSliderMenu();
+		
+		
+		//Wenn garkeine Route vorhandne ist, schlägt ein Zugriff auf die Liste fehl
+		if (!(routeList.getListRoutes().isEmpty())) {
 
 		if (routeList.isOpenRoute()) {
 
-			//a service for the route is running -> "Route is active"button
-           if ( mCallback.isServiceActive()) {
-        	   
-        	   ivPlayAnim.setVisibility(View.VISIBLE);
-        	   animateRunningIcon(ivPlayAnim);
-        	   
-           } else {
-        	   ivPlayAnim.setVisibility(View.INVISIBLE);
-           }
-        	
-           //Callback to start the service, because the route is still active
+			// a service for the route is running -> "Route is active"button
+			if (mCallback.isServiceActive()) {
+
+				ivPlayAnim.setVisibility(View.VISIBLE);
+				animateRunningIcon(ivPlayAnim);
+
+			} else {
+				ivPlayAnim.setVisibility(View.INVISIBLE);
+			}
+
+			// Callback to start the service, because the route is still active
 			mCallback.onActiveRouteNoService();
 
+		}
 		}
 
 	}
@@ -162,43 +164,41 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			meineListView.setItemChecked(index, true);
 
-			// get views from fragment
+			// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
+			// werden
+			if (!(routeList.getListRoutes().isEmpty())) {
 
-			sel_Route = routeList.getListRoutes().get(index);
+				// get views from fragment
+				sel_Route = routeList.getListRoutes().get(index);
 
-			changeDisplayedRouteDesc(routeList.getlastRoute());
+				changeDisplayedRouteDesc(routeList.getlastRoute());
 
-			if (routeList.isOpenRoute()) {
+				if (routeList.isOpenRoute()) {
 
-				TextView txtRouteName = (TextView) view
-						.findViewById(R.id.textRouteNameActive);
-				txtRouteName.setText(routeList.getlastRoute().getRouteName());
-				// Showing the current active route as the first item
-				vfNewOrCurrent.setDisplayedChild(1);
-				// btnStopRoute = (Button)
-				// view.findViewById(R.id.imagebuttonStop);
-				btnContinueRoute = (Button) view
-						.findViewById(R.id.imagebuttonContinue);
+					TextView txtRouteName = (TextView) view
+							.findViewById(R.id.textRouteNameActive);
+					txtRouteName.setText(routeList.getlastRoute()
+							.getRouteName());
+					// Showing the current active route as the first item
+					vfNewOrCurrent.setDisplayedChild(1);
+					// btnStopRoute = (Button)
+					// view.findViewById(R.id.imagebuttonStop);
+					btnContinueRoute = (Button) view
+							.findViewById(R.id.imagebuttonContinue);
 
-			} else {
-				// Showing the "create new route item"
-				vfNewOrCurrent.setDisplayedChild(0);
-				btnCreateRoute = (Button) view
-						.findViewById(R.id.imagebuttonCreate);
-			}
-			view.post(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					map = routeList.getlastRoute().prepareMapPreview(map);
+				} else {
+					// Showing the "create new route item"
+					vfNewOrCurrent.setDisplayedChild(0);
+					btnCreateRoute = (Button) view
+							.findViewById(R.id.imagebuttonCreate);
 				}
-			});
+
+			}
 
 		} catch (Exception e) {
 			// Toast.makeText(getActivity(),
-//					"Fehler Initialisierung Fragment: " + e.getMessage(),
-//					Toast.LENGTH_LONG).show();
+			// "Fehler Initialisierung Fragment: " + e.getMessage(),
+			// Toast.LENGTH_LONG).show();
 		}
 		addListitemListender(meineListView);
 
@@ -224,6 +224,17 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			addButtonClickListenerCreate(viewInclude);
 		}
+		view.post(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				//Wenn keine Route vorhanden, kann auch keine angezeigt werden
+				if (!(routeList.getListRoutes().isEmpty()))  {
+				map = routeList.getlastRoute().prepareMapPreview(map);
+			}
+			}
+		});
 	}
 
 	public void addButtonClickListenerContinue(Button button) {
@@ -235,7 +246,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				// SOLLTE ABER EIGENTLICH IMMER OFFEN SEIN, NUR DANN WIRD
 				// NÄMLICH DER LISTENER GESETZT
 				if (routeList.isOpenRoute()) {
-				
 
 					try {
 						sel_Route = routeList.getlastRoute();
@@ -246,11 +256,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					// Getting the route object of the related row
 					// Transfering it to the interface in order to call the
 					// detailed map view
-					
-					//Der Mainactivity wird mitgeteilt, dass die geöffnete Route eine aktive ist
+
+					// Der Mainactivity wird mitgeteilt, dass die geöffnete
+					// Route eine aktive ist
 					mCallback.onRouteOpenend(true);
-					
-					//Anzeigen der Route
+
+					// Anzeigen der Route
 					mCallback.onShowRoute(sel_Route);
 
 				}
@@ -268,15 +279,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void onClick(View v) {
 
-				// SOLLTE ABER EIGENTLICH IMMER KEINE MEHR OFFEN SEIN, NUR DANN
-				// WIRD
-				// NÄMLICH DER LISTENER GESETZT
-				if (routeList.isOpenRoute() == false) {
 
 					// Route not active -> start new one
 					mCallback.onOpenDialogNewRoute(routeList);
-				}
-
+			
 			}
 		});
 
@@ -313,7 +319,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				if (routeList.isOpenRoute()) {
 					// A route is active -> user wants to stop it
 
-					mCallback.onOpenDialogStopRoute("MAIN", routeList.getlastRoute());
+					mCallback.onOpenDialogStopRoute("MAIN",
+							routeList.getlastRoute());
 
 				}
 				return false;

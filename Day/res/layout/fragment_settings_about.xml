@@ -11,16 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textColor="@color/settings_text"
+        android:textColor="@color/white"
         android:text="@string/aboutTheApp_developer"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
         <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textColor="@color/settings_text"
+        android:textColor="@color/white"
         android:text="@string/aboutTheApp_description"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

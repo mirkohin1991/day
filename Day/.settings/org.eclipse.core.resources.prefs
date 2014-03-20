@@ -1,4 +1,11 @@
 eclipse.preferences.version=1
+encoding//src/de/smbsolutions/day/functions/database/Database.java=UTF-8
+encoding//src/de/smbsolutions/day/functions/objects/Route.java=UTF-8
+encoding//src/de/smbsolutions/day/functions/objects/SliderMenu.java=UTF-8
 encoding//src/de/smbsolutions/day/functions/tasks/MarkerWorkerTask.java=UTF-8
 encoding//src/de/smbsolutions/day/presentation/dialogs/CreateRouteDialog.java=UTF-8
 encoding//src/de/smbsolutions/day/presentation/fragments/DetailFragment.java=UTF-8
+encoding//src/de/smbsolutions/day/presentation/fragments/PictureFragment.java=UTF-8
+encoding//src/de/smbsolutions/day/presentation/fragments/settings/CameraFragment.java=UTF-8
+encoding//src/de/smbsolutions/day/presentation/fragments/settings/GPSFragment.java=UTF-8
+encoding//src/de/smbsolutions/day/presentation/listviews/SliderMenuListAdapter.java=UTF-8

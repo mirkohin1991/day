@@ -11,6 +11,9 @@ public class AboutFragment extends android.support.v4.app.Fragment {
 	
 	public AboutFragment(){}
 	
+	/**
+	 * Ruft das fragment_settings_about Layout auf.
+	 */
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {

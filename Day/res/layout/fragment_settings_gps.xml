@@ -22,17 +22,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             
-            android:text="GPS"
-            android:textColor="@color/settings_text"
+            android:text="@string/gpsOnOff"
+            android:textColor="@color/white"
             android:textSize="@dimen/h1" />
 
         <Switch
             android:id="@+id/switchGPSOnOff"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical|start|right"
             android:thumb="@drawable/switch_control"
             android:track="@drawable/switch_progress" />
 
@@ -50,8 +51,8 @@
             android:layout_height="0dp" 
             android:layout_weight="1" 
 
-            android:text="GPS Wiederholungsrate" 
-            android:textColor="@color/settings_text" 
+            android:text="@string/gps_frequency" 
+            android:textColor="@color/white" 
             android:textSize="@dimen/h2" />
         
         <SeekBar
@@ -71,7 +72,7 @@
             android:layout_weight="1"
 
             android:paddingBottom="20dp"
-            android:textColor="@color/settings_text"
+            android:textColor="@color/white"
             android:textSize="@dimen/h2" />
 
         <ImageView
@@ -88,8 +89,8 @@
             android:layout_weight="1"
 
             android:paddingTop="20dp"
-            android:text="Minimale Entfernung in Metern"
-            android:textColor="@color/settings_text"
+            android:text="@string/gps_min_distance"
+            android:textColor="@color/white"
             android:textSize="@dimen/h2" />
 
         <SeekBar
@@ -98,7 +99,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="30dp"
             android:layout_weight="10"
-            android:max="90"
+            android:max="95"
             android:progressDrawable="@drawable/green_scrubber_progress"
             android:thumb="@drawable/green_scrubber_control" />
 
@@ -108,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
 			android:paddingBottom="20dp"
-            android:textColor="@color/settings_text"
+            android:textColor="@color/white"
             android:textSize="@dimen/h2" />
     </LinearLayout>
     
@@ -123,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/gps_settings_note"
-        android:textColor="@color/settings_text"
+        android:textColor="@color/white"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/text"/>
     
@@ -133,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/gps_settings_note2"
-        android:textColor="@color/settings_text"
+        android:textColor="@color/white"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/text"/>
 

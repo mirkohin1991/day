@@ -4,18 +4,17 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <!-- Definiert die minimale Android Version  -->
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />
 
+     <!-- Legt die Zugriffsrechte der App fest. -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission
-        android:name="android.permission.CAMERA"
-        android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -23,7 +22,9 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
+     <!-- Legt das Icon, App Name und das App Theme der App fest. -->
     <application
+       
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -31,9 +32,11 @@
 
         <!-- Simon: AIzaSyB8LSEa5JoTGxnd1bfg9HE2FkmIadcZD_0 -->
         <!--  Mirko: AIzaSyCQEqd_ENlCU2hN6vr__HAbOja2GUSgdIQ -->
+        
+        <!-- Legt den Google Maps Key fest. -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyB8LSEa5JoTGxnd1bfg9HE2FkmIadcZD_0" />
+            android:value="AIzaSyBxJ55c4tfCj8ijdmLSsheogpUXN_e0k70" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

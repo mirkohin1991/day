@@ -72,6 +72,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private double distanceKm;
 	private double aveSpeed;
 	private BmTask task;
+	private boolean flag_routePaused;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -187,7 +188,15 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			// icon shall be displayed,
 			// because the service is connecting async.
 			// But getting to the detailfragment will always restart the route
-			flipperStartStop.setDisplayedChild(0);
+
+			if (flag_routePaused == true) {
+
+				flipperStartStop.setDisplayedChild(1);
+
+			} else {
+
+				flipperStartStop.setDisplayedChild(0);
+			}
 
 		}
 
@@ -236,6 +245,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			public void onClick(View v) {
 
 				mCallback.restartTracking(route);
+				flag_routePaused = false;
 
 				ibCamera.setVisibility(View.VISIBLE);
 				flipperStartStop.setDisplayedChild(0);
@@ -631,6 +641,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		mCallback.removeService();
 
+		flag_routePaused = true;
+
 		ibCamera.setVisibility(View.INVISIBLE);
 		flipperStartStop.setDisplayedChild(1);
 	}
@@ -688,21 +700,16 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		// Therefore, the fact slider has to be refreshed
 		calcRouteFacts(route);
 
-		if (tvDistance == null) {
-			tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-		}
+		tvDistance = (TextView) view.findViewById(R.id.tvDistance);
 
 		tvDistance
 				.setText(String.valueOf("Strecke: ca. " + distanceKm + " km"));
 
-		if (tvDuration == null) {
-			tvDuration = (TextView) view.findViewById(R.id.tvDuration);
-		}
+		tvDuration = (TextView) view.findViewById(R.id.tvDuration);
+
 		tvDuration.setText(String.valueOf("Dauer: " + duration));
 
-		if (tvAveSpeed == null) {
-			tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
-		}
+		tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
 		tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed + " km/h"));
 
 	}
