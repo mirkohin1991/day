@@ -48,7 +48,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private TextView txtViewDate;
 	private ImageView ivPlayAnim;
 	private Button btnContinueRoute;
-	private Button btnCreateRoute;
 	private ViewFlipper vfNewOrCurrent;
 
 	// Elemente der Liste aller Routen
@@ -227,8 +226,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					// ViewFlipper angezegit
 				} else {
 					vfNewOrCurrent.setDisplayedChild(0);
-					btnCreateRoute = (Button) view
-							.findViewById(R.id.imagebuttonCreate);
+					
 				}
 
 			}
