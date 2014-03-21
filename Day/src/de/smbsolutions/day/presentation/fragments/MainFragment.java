@@ -60,7 +60,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private Route selectedRoute;
 
 	private GoogleMap map;
-
 	private MainCallback mCallback;
 
 	@Override
