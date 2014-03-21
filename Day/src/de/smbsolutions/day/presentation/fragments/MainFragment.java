@@ -32,34 +32,45 @@ import de.smbsolutions.day.functions.objects.RouteList;
 import de.smbsolutions.day.presentation.listviews.AllRoutesListAdapter;
 import de.smbsolutions.day.presentation.listviews.AllRoutesListElement;
 
+/**
+ * 
+ * Die Mainfragment-Klasse ist für den zentralen StartScreen zuständig. Hier
+ * werden alle Routen aufgelistet, die Vorschau-Map gefüllt und alle
+ * Interaktionen gesteuert.
+ * 
+ */
 public class MainFragment extends android.support.v4.app.Fragment {
 
-	private GoogleMap map;
 	private SupportMapFragment mapFragment;
+
 	private View view;
-	private RouteList routeList;
-	private TextView txtViewPic;
+	private TextView txtViewName;
 	private TextView txtViewDate;
-	private ListView meineListView;
 	private ImageView ivPlayAnim;
 	private Button btnContinueRoute;
 	private Button btnCreateRoute;
 	private ViewFlipper vfNewOrCurrent;
-	private Route sel_Route;
-	private int index = 0;
-	private MainCallback mCallback;
+
+	// Elemente der Liste aller Routen
+	private ListView routeListView;
+	private int listViewIndex = 0;
 	private List<AllRoutesListElement> meineListe;
+
+	private RouteList routeList;
+	private Route selectedRoute;
+
+	private GoogleMap map;
+
+	private MainCallback mCallback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		routeList = new RouteList();
-		// Configuration for device orientation and shit
-
 		view = inflater.inflate(R.layout.fragment_main, container, false);
 
-		ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
+		// Eine neue Liste mit allen Routen wird erstellt
+		routeList = new RouteList();
 
 		return view;
 	}
@@ -68,18 +79,20 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
+		// Das Callback Interface wird erzeugt
 		try {
 			mCallback = (MainCallback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement OnButtonClick Interface");
+					+ " muss MainCallback Interface implementieren");
 		}
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+
+		// Wenn das Map-Fragment noch nicht vorhanden ist, wird es initialisiert
 		FragmentManager fm = getChildFragmentManager();
 
 		if (mapFragment == null) {
@@ -88,15 +101,17 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				mapFragment = SupportMapFragment.newInstance();
 				fm.beginTransaction().replace(R.id.map, mapFragment).commit();
 			}
-
 		}
 	}
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
+
 		super.onResume();
 
+		// Wenn das Fragment neu geladen wird, werden zunächst die
+		// Map-Einstellungen aktualisiert.
+		// Z.B. könnte der Maptype durch den Benutzer geändert worden sein
 		if (map == null) {
 			map = mapFragment.getMap();
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
@@ -107,86 +122,111 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		}
 
-		initializeFragmentPortrait();
+		// Initialisiern aller View-Komponenten des MainFragments
+		initializeFragment();
 
-		// Always refresh the selected item of the slider menu
+		// Refreshen des Slidermenüs
 		mCallback.refreshSliderMenu();
 
-//Wenn garkeine Route vorhandne ist, schlägt ein Zugriff auf die Liste fehl
+		// Nur wenn es eine Route gibt, kann mit der routeList gearbeitet werden
 		if (!(routeList.getListRoutes().isEmpty())) {
 
-		if (routeList.isOpenRoute()) {
+			// Wenn es noch dazu eine offene Route gibt
+			if (routeList.isOpenRoute()) {
 
-			// a service for the route is running -> "Route is active"button
-			if (mCallback.isServiceActive()) {
+				// Sofern ein Service läuft, wird der blinkende Button angezegit
+				if (mCallback.isServiceActive()) {
 
-				ivPlayAnim.setVisibility(View.VISIBLE);
-				animateRunningIcon(ivPlayAnim);
+					ivPlayAnim.setVisibility(View.VISIBLE);
+					animateRunningIcon(ivPlayAnim);
 
-			} else {
-				ivPlayAnim.setVisibility(View.INVISIBLE);
+					// Ansosten wird dieser ausgeblendet
+				} else {
+					ivPlayAnim.setVisibility(View.INVISIBLE);
+				}
+
+				// Zum Schluss muss überprüft werden ob ein Service läuft
+				mCallback.onActiveRouteNoService();
+
 			}
-
-			// Callback to start the service, because the route is still active
-			mCallback.onActiveRouteNoService();
-
-		}
 		}
 	}
+	
+	
+	@Override
+	public void onPause() {
+	
+		//Map muss gecleart werdenSS
+		map.clear();
 
-	public void initializeFragmentPortrait() {
+		super.onPause();
+	}
+
+
+	/**
+	 * 
+	 * Diese Methode initialisiert das Fragment
+	 * 
+	 */
+	public void initializeFragment() {
 		// portrait
 		try {
 
-			// viewflipper are used to change views at the same position
-			// --> Flipper to change between current route view and create route
-			// view
+			// Animationsbutton
+			ivPlayAnim = (ImageView) view.findViewById(R.id.ivPlayAnim);
 
+			// Flipper "Anlegen neuer Route" oder "Anzeigen aktiver Route"
 			vfNewOrCurrent = (ViewFlipper) view.findViewById(R.id.vf);
 
-			meineListView = (ListView) view.findViewById(R.id.listView1);
-
+			// Aufbauen der Liste, die alle Route enthält
+			routeListView = (ListView) view.findViewById(R.id.listView1);
 			meineListe = new ArrayList<AllRoutesListElement>();
 			for (Route route : routeList.getListRoutes()) {
-				// Only completed routes shall appear in the "recent routes"
-				// list
+
+				// Nur abgeschlossene Routen werden angezeigt
 				if (route.isActive() == false) {
 					meineListe.add(new AllRoutesListElement(route));
 				}
 			}
+
+			// Die Liste wird umgedreht, damit die neueste Route immer zuerst
+			// angezeigt wird
 			Collections.reverse(meineListe);
-			// Set the list view adapter
-			meineListView.setAdapter(new AllRoutesListAdapter(getActivity(),
+
+			// Adapter wird erzeugt
+			routeListView.setAdapter(new AllRoutesListAdapter(getActivity(),
 					R.id.listView1, meineListe, mCallback));
+			routeListView.setItemChecked(listViewIndex, true);
 
-			meineListView.setItemChecked(index, true);
-
-			// get views from fragment
-
-		// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
+			// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
 			// werden
 			if (!(routeList.getListRoutes().isEmpty())) {
 
-				// get views from fragment
-				sel_Route = routeList.getListRoutes().get(index);
+				// Speichern der selektierten Route
+				selectedRoute = routeList.getListRoutes().get(listViewIndex);
 
+				// Ändern der Benamsung auf dem Mapview
 				changeDisplayedRouteDesc(routeList.getlastRoute());
 
+				// Wenn eine Route aktiv ist, werden die entsprechenden
+				// ViewKomponenten befüllt
 				if (routeList.isOpenRoute()) {
 
 					TextView txtRouteName = (TextView) view
 							.findViewById(R.id.textRouteNameActive);
 					txtRouteName.setText(routeList.getlastRoute()
 							.getRouteName());
-					// Showing the current active route as the first item
+
+					// Der ViewFlipper wird so eingestellt, dass der
+					// "Aktiv-Route"-View angezeigt wird
 					vfNewOrCurrent.setDisplayedChild(1);
-					// btnStopRoute = (Button)
-					// view.findViewById(R.id.imagebuttonStop);
+
 					btnContinueRoute = (Button) view
 							.findViewById(R.id.imagebuttonContinue);
 
+					// Wenn keine offene Route vorhadnden ist, wird der andere
+					// ViewFlipper angezegit
 				} else {
-					// Showing the "create new route item"
 					vfNewOrCurrent.setDisplayedChild(0);
 					btnCreateRoute = (Button) view
 							.findViewById(R.id.imagebuttonCreate);
@@ -195,46 +235,49 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			}
 
 		} catch (Exception e) {
-			// Toast.makeText(getActivity(),
-			// "Fehler Initialisierung Fragment: " + e.getMessage(),
-			// Toast.LENGTH_LONG).show();
-		}
-		addListitemListender(meineListView);
 
-		// Child == 1 --> the "active route item" layout is
-		// displayed
+		}
+
+		/*
+		 * Abschließend werden alle Listener gesetzt
+		 */
+
+		addListitemListender(routeListView);
+
+		// 1 bedeutet, der "Aktive Route" Flipper ist angezeigt
 		if (vfNewOrCurrent.getDisplayedChild() == 1) {
 
+			// Listener auf dem Button zum Fortsetzen
 			addButtonClickListenerContinue(btnContinueRoute);
-			// addButtonClickListenerStop(btnStopRoute);
 
-			// Getting the whole line (including the two
-			// buttons)
+			// Ebenfalls Listener auf dem ganzen View, dann wird die Preview-Map
+			// angezeigt
 			View viewInclude = (View) view
 					.findViewById(R.id.includeCurrentElement);
-
 			addButtonClickListenerCurrentPreview(viewInclude);
 
-			// No current route -> add listener to create
-			// new one
+			
+		// 2 bedeutet, der "Neue Route Flipper ist angezeigt
 		} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
 
+			//ButtonClick Listener auf dem ganzen View
 			View viewInclude = (View) view.findViewById(R.id.includeNewElement);
-
 			addButtonClickListenerCreate(viewInclude);
 		}
+		
+		//Wird nach Fertigstellung des Layouts ausgeführt
 		view.post(new Runnable() {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				//Wenn keine Route vorhanden, kann auch keine angezeigt werden
-				if (!(routeList.getListRoutes().isEmpty()))  {
-				map = routeList.getlastRoute().prepareMapPreview(map);
-			}
+				// Wenn keine Route vorhanden, kann auch keine angezeigt werden
+				if (!(routeList.getListRoutes().isEmpty())) {
+					map = routeList.getlastRoute().prepareMapPreview(map);
+				}
 			}
 		});
 	}
+
 	public void addButtonClickListenerContinue(Button button) {
 		button.setOnClickListener(new OnClickListener() {
 
@@ -246,7 +289,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 				if (routeList.isOpenRoute()) {
 
 					try {
-						sel_Route = routeList.getlastRoute();
+						selectedRoute = routeList.getlastRoute();
 					} catch (Exception e) {
 						// handle exception
 					}
@@ -260,7 +303,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					mCallback.onRouteOpenend(true);
 
 					// Anzeigen der Route
-					mCallback.onShowRoute(sel_Route);
+					mCallback.onShowRoute(selectedRoute);
 
 				}
 
@@ -269,56 +312,54 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	// The "create new item" listener is registered to the complete view (Text
-	// and Icon togehter)
+
+	/**
+	 * Listener für den Bereich zum Erstellen einer Route
+	 */
 	public void addButtonClickListenerCreate(View view) {
 		view.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				// Route not active -> start new one
-			    mCallback.onOpenDialogNewRoute(routeList);
+				mCallback.onOpenDialogNewRoute(routeList);
 
 			}
 		});
 
 	}
 
-	// The "current route row" listener is registered additionally to the
-	// complete view
+	/**
+	 * Listener wenn der Benutzer auf den Namen der aktiven Route klickt (Nicht den Play-Button)
+	 */
 	public void addButtonClickListenerCurrentPreview(View view) {
+		
+		
+		//Wenn der Benutzer einen einfach Klick tätigt
 		view.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				try {
-					sel_Route = routeList.getlastRoute();
-
-				} catch (Exception e) {
-					// handle exception
-
-				}
-
-				map = sel_Route.prepareMapPreview(map);
-
-				changeDisplayedRouteDesc(sel_Route);
+			    selectedRoute = routeList.getlastRoute();
+			    //Map wird refresht 
+				map = selectedRoute.prepareMapPreview(map);
+				//Ändern der Beschriftung
+				changeDisplayedRouteDesc(selectedRoute);
 
 			}
 		});
 
+		//Wenn der Benutzer lange auf das Element klickt
 		view.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
 			public boolean onLongClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (routeList.isOpenRoute()) {
-					// A route is active -> user wants to stop it
 
+				if (routeList.isOpenRoute()) {
+				
 					mCallback.onOpenDialogStopRoute("MAIN",
 							routeList.getlastRoute());
-
 				}
 				return false;
 			}
@@ -326,60 +367,73 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
+	
+	/**
+	 * Listener für die jeweiligen List-Elemente der "Alle beendeten Routen"-Liste
+	 */
 	public void addListitemListender(ListView listView) {
 
+		
+		//Wenn der Benutzer einen normalen Klick tätigt
 		listView.setOnItemClickListener(new OnItemClickListener() {
+			
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
 				try {
-					// Getting the route through the adapter
-					AllRoutesListElement element = (AllRoutesListElement) meineListView
+					//Abrufen des geklickten Listitems
+					AllRoutesListElement element = (AllRoutesListElement) routeListView
 							.getAdapter().getItem(position);
-					sel_Route = element.getRoute();
-					// OLD
-					// sel_Route = routeList.getListRoutes().get(position);
-
+					//Global speichern
+					selectedRoute = element.getRoute();
+				
 				} catch (Exception e) {
-					// handle exception
-
+					
+					e.printStackTrace();
 				}
 
-				map = sel_Route.prepareMapPreview(map);
-
-				changeDisplayedRouteDesc(sel_Route);
+				//Aktualisieren der PreviewMap und der Beschreibung
+				map = selectedRoute.prepareMapPreview(map);
+				changeDisplayedRouteDesc(selectedRoute);
 			}
 		});
 
+		
+		//Wenn der Benutzer lange auf ein Element klickt, will er es löschen
 		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int index, long arg3) {
-				// Call Interface to handle the deletion of the route
+				
 				mCallback.onOpenDialogDeleteRoute(routeList,
-						meineListView.getCount() - (index + 1));
+						routeListView.getCount() - (index + 1));
 				return false;
 
 			}
 		});
 	}
 
+	
+	/**
+	 * Methode zum Ändern der Beschriftung auf der Map-Preview
+	 * @param route
+	 */
 	public void changeDisplayedRouteDesc(Route route) {
-		txtViewPic = (TextView) view.findViewById(R.id.txtViewPic);
-		txtViewPic.setText(route.getRouteName());
+		//Name
+		txtViewName = (TextView) view.findViewById(R.id.txtViewPic);
+		txtViewName.setText(route.getRouteName());
+		//Datum
 		txtViewDate = (TextView) view.findViewById(R.id.txtViewDatePreview);
 		txtViewDate.setText(route.getDate());
-
 	}
-
-	@Override
-	public void onPause() {
-		map.clear();
-
-		super.onPause();
-	}
-
+	
+   
+	
+	/**
+	 * Methode  Animieren des "Route läuft gerade"-Icons
+	 */
 	public void animateRunningIcon(ImageView animateImage) {
+		
 		final AnimationDrawable tvAnimation = (AnimationDrawable) animateImage
 				.getDrawable();
 		animateImage.post(new Runnable() {
