@@ -112,25 +112,27 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		// Always refresh the selected item of the slider menu
 		mCallback.refreshSliderMenu();
 
-//Wenn garkeine Route vorhandne ist, schlägt ein Zugriff auf die Liste fehl
+		// Wenn garkeine Route vorhandne ist, schlägt ein Zugriff auf die Liste
+		// fehl
 		if (!(routeList.getListRoutes().isEmpty())) {
 
-		if (routeList.isOpenRoute()) {
+			if (routeList.isOpenRoute()) {
 
-			// a service for the route is running -> "Route is active"button
-			if (mCallback.isServiceActive()) {
+				// a service for the route is running -> "Route is active"button
+				if (mCallback.isServiceActive()) {
 
-				ivPlayAnim.setVisibility(View.VISIBLE);
-				animateRunningIcon(ivPlayAnim);
+					ivPlayAnim.setVisibility(View.VISIBLE);
+					animateRunningIcon(ivPlayAnim);
 
-			} else {
-				ivPlayAnim.setVisibility(View.INVISIBLE);
+				} else {
+					ivPlayAnim.setVisibility(View.INVISIBLE);
+				}
+
+				// Callback to start the service, because the route is still
+				// active
+				mCallback.onActiveRouteNoService();
+
 			}
-
-			// Callback to start the service, because the route is still active
-			mCallback.onActiveRouteNoService();
-
-		}
 		}
 	}
 
@@ -163,7 +165,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 			// get views from fragment
 
-		// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
+			// Wenn garkeine Route vorhanden ist, kann auch keine angezeigt
 			// werden
 			if (!(routeList.getListRoutes().isEmpty())) {
 
@@ -228,13 +230,14 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				//Wenn keine Route vorhanden, kann auch keine angezeigt werden
-				if (!(routeList.getListRoutes().isEmpty()))  {
-				map = routeList.getlastRoute().prepareMapPreview(map);
-			}
+				// Wenn keine Route vorhanden, kann auch keine angezeigt werden
+				if (!(routeList.getListRoutes().isEmpty())) {
+					map = routeList.getlastRoute().prepareMapPreview(map);
+				}
 			}
 		});
 	}
+
 	public void addButtonClickListenerContinue(Button button) {
 		button.setOnClickListener(new OnClickListener() {
 
@@ -278,7 +281,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			public void onClick(View v) {
 
 				// Route not active -> start new one
-			    mCallback.onOpenDialogNewRoute(routeList);
+				mCallback.onOpenDialogNewRoute(routeList);
 
 			}
 		});

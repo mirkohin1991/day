@@ -1,6 +1,5 @@
 package de.smbsolutions.day.presentation.fragments.settings;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import de.smbsolutions.day.R;
 import de.smbsolutions.day.functions.database.Database;
-import de.smbsolutions.day.functions.initialization.Device;
 import de.smbsolutions.day.functions.interfaces.MainCallback;
 
 /**

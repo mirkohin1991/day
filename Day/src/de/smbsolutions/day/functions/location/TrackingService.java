@@ -15,7 +15,6 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -132,8 +131,8 @@ public class TrackingService extends Service implements
 			showPopUpEnableSettings();
 
 			// // Display the connection status
-			Toast.makeText(activity, "Location couldn't be detected",
-					Toast.LENGTH_SHORT).show();
+			// toast.makeText(activity, "Location couldn't be detected",
+					// toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
 		}
 	}
@@ -206,8 +205,8 @@ public class TrackingService extends Service implements
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
 		if (locationClient.isConnected()) {
-			Toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
-					.show();
+			// toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
+//					.show();
 		}
 
 		// Abrufen der letzten Location
@@ -229,7 +228,7 @@ public class TrackingService extends Service implements
 			}
 
 			// Display the connection status
-			Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
+			// toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
 
 			// Wenn Benutzer Tracking ausgestellt hat --> kein locationlistener
@@ -261,8 +260,8 @@ public class TrackingService extends Service implements
 			showPopUpEnableSettings();
 
 			// // Display the connection status
-			Toast.makeText(activity, "Location couldn't be detected",
-					Toast.LENGTH_SHORT).show();
+			// toast.makeText(activity, "Location couldn't be detected",
+					// toast.LENGTH_SHORT).show();
 
 		}
 
@@ -297,8 +296,8 @@ public class TrackingService extends Service implements
 		if (previousLocation != null) {
 			if (location.distanceTo(previousLocation) < Database
 					.getSettingValue(Database.SETTINGS_TRACKING_METER)) {
-				Toast.makeText(activity, "Zu nahe am letzten Punkt",
-						Toast.LENGTH_SHORT).show();
+				// toast.makeText(activity, "Zu nahe am letzten Punkt",
+						// toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
@@ -320,7 +319,7 @@ public class TrackingService extends Service implements
 		String msg = "Updated Location: "
 				+ Double.toString(location.getLatitude()) + ","
 				+ Double.toString(location.getLongitude());
-		Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+		// toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -328,7 +327,7 @@ public class TrackingService extends Service implements
 	 * Tracking-Einstellungen vorgenommen hat
 	 */
 	public void refreshTrackingInterval() {
-		Toast.makeText(this, "Interval refreshed", Toast.LENGTH_LONG).show();
+		// toast.makeText(this, "Interval refreshed", Toast.LENGTH_LONG).show();
 		// Intervallparameter werden angepasst
 		UPDATE_INTERVAL = Database
 				.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL);
@@ -348,7 +347,7 @@ public class TrackingService extends Service implements
 			// Alle bisherigen Updates werden gelöscht
 			locationClient.removeLocationUpdates(this);
 
-			Toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
+			// toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
 
 			// Nur wenn GPS Tracking aktiviert wurde, soll auch getrackt werden
 			if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
