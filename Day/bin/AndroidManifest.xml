@@ -43,7 +43,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="de.smbsolutions.day.presentation.activities.MainActivity"
+            android:name="de.smbsolutions.hike.presentation.activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -53,7 +53,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".functions.location.TrackingService" >
+        <service android:name="de.smbsolutions.hike.functions.location.TrackingService" >
         </service>
     </application>
 
