@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 import de.smbsolutions.hike.functions.initialization.Device;
 import de.smbsolutions.hike.functions.interfaces.MainCallback;
 import de.smbsolutions.hike.presentation.fragments.settings.AboutFragment;

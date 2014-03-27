@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 import de.smbsolutions.hike.functions.database.Database;
 
 /**

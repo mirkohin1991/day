@@ -1,7 +1,6 @@
 package de.smbsolutions.hike.functions.objects;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -22,7 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 import de.smbsolutions.hike.functions.database.Database;
 import de.smbsolutions.hike.functions.tasks.MarkerWorkerTask;
 

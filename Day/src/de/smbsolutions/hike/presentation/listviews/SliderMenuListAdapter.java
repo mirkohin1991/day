@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 import de.smbsolutions.hike.functions.initialization.Device;
 
 /**

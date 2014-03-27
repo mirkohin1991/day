@@ -3,7 +3,7 @@ package de.smbsolutions.hike.functions.initialization;
 import android.app.Activity;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 
 /**
  * 

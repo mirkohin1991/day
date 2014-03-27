@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 import de.smbsolutions.hike.functions.interfaces.MainCallback;
 import de.smbsolutions.hike.functions.objects.Route;
 import de.smbsolutions.hike.functions.objects.RouteList;

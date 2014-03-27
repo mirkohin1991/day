@@ -14,7 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import de.smbsolutions.day.R;
+import de.smbsolutions.hike.R;
 import de.smbsolutions.hike.functions.interfaces.MainCallback;
 import de.smbsolutions.hike.functions.objects.Route;
 import de.smbsolutions.hike.functions.objects.RoutePoint;

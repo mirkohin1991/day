@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package de.smbsolutions.day;
+package de.smbsolutions.hike;
 
 public final class R {
     public static final class anim {
@@ -583,9 +583,9 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #AdsAttrs_adSize de.smbsolutions.day:adSize}</code></td><td>
+           <tr><td><code>{@link #AdsAttrs_adSize de.smbsolutions.hike:adSize}</code></td><td>
     The size of the ad.</td></tr>
-           <tr><td><code>{@link #AdsAttrs_adUnitId de.smbsolutions.day:adUnitId}</code></td><td> The ad unit ID.</td></tr>
+           <tr><td><code>{@link #AdsAttrs_adUnitId de.smbsolutions.hike:adUnitId}</code></td><td> The ad unit ID.</td></tr>
            </table>
            @see #AdsAttrs_adSize
            @see #AdsAttrs_adUnitId
@@ -610,7 +610,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name de.smbsolutions.day:adSize
+          @attr name de.smbsolutions.hike:adSize
         */
         public static final int AdsAttrs_adSize = 0;
         /**
@@ -626,7 +626,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name de.smbsolutions.day:adUnitId
+          @attr name de.smbsolutions.hike:adUnitId
         */
         public static final int AdsAttrs_adUnitId = 1;
         /** Attributes that can be used with a MapAttrs.
@@ -635,20 +635,20 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #MapAttrs_cameraBearing de.smbsolutions.day:cameraBearing}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLat de.smbsolutions.day:cameraTargetLat}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLng de.smbsolutions.day:cameraTargetLng}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTilt de.smbsolutions.day:cameraTilt}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraZoom de.smbsolutions.day:cameraZoom}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_mapType de.smbsolutions.day:mapType}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiCompass de.smbsolutions.day:uiCompass}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiRotateGestures de.smbsolutions.day:uiRotateGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiScrollGestures de.smbsolutions.day:uiScrollGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiTiltGestures de.smbsolutions.day:uiTiltGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomControls de.smbsolutions.day:uiZoomControls}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomGestures de.smbsolutions.day:uiZoomGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_useViewLifecycle de.smbsolutions.day:useViewLifecycle}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_zOrderOnTop de.smbsolutions.day:zOrderOnTop}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraBearing de.smbsolutions.hike:cameraBearing}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLat de.smbsolutions.hike:cameraTargetLat}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLng de.smbsolutions.hike:cameraTargetLng}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTilt de.smbsolutions.hike:cameraTilt}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraZoom de.smbsolutions.hike:cameraZoom}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_mapType de.smbsolutions.hike:mapType}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiCompass de.smbsolutions.hike:uiCompass}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiRotateGestures de.smbsolutions.hike:uiRotateGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiScrollGestures de.smbsolutions.hike:uiScrollGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiTiltGestures de.smbsolutions.hike:uiTiltGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomControls de.smbsolutions.hike:uiZoomControls}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomGestures de.smbsolutions.hike:uiZoomGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_useViewLifecycle de.smbsolutions.hike:useViewLifecycle}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_zOrderOnTop de.smbsolutions.hike:zOrderOnTop}</code></td><td></td></tr>
            </table>
            @see #MapAttrs_cameraBearing
            @see #MapAttrs_cameraTargetLat
@@ -672,7 +672,7 @@ containing a value of this type.
             0x7f01000e, 0x7f01000f
         };
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#cameraBearing}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#cameraBearing}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -682,11 +682,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:cameraBearing
+          @attr name de.smbsolutions.hike:cameraBearing
         */
         public static final int MapAttrs_cameraBearing = 1;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#cameraTargetLat}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#cameraTargetLat}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -696,11 +696,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:cameraTargetLat
+          @attr name de.smbsolutions.hike:cameraTargetLat
         */
         public static final int MapAttrs_cameraTargetLat = 2;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#cameraTargetLng}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#cameraTargetLng}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -710,11 +710,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:cameraTargetLng
+          @attr name de.smbsolutions.hike:cameraTargetLng
         */
         public static final int MapAttrs_cameraTargetLng = 3;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#cameraTilt}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#cameraTilt}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -724,11 +724,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:cameraTilt
+          @attr name de.smbsolutions.hike:cameraTilt
         */
         public static final int MapAttrs_cameraTilt = 4;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#cameraZoom}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#cameraZoom}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -738,11 +738,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:cameraZoom
+          @attr name de.smbsolutions.hike:cameraZoom
         */
         public static final int MapAttrs_cameraZoom = 5;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#mapType}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#mapType}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -758,11 +758,11 @@ containing a value of this type.
 <tr><td><code>terrain</code></td><td>3</td><td></td></tr>
 <tr><td><code>hybrid</code></td><td>4</td><td></td></tr>
 </table>
-          @attr name de.smbsolutions.day:mapType
+          @attr name de.smbsolutions.hike:mapType
         */
         public static final int MapAttrs_mapType = 0;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#uiCompass}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#uiCompass}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -772,11 +772,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:uiCompass
+          @attr name de.smbsolutions.hike:uiCompass
         */
         public static final int MapAttrs_uiCompass = 6;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#uiRotateGestures}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#uiRotateGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -786,11 +786,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:uiRotateGestures
+          @attr name de.smbsolutions.hike:uiRotateGestures
         */
         public static final int MapAttrs_uiRotateGestures = 7;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#uiScrollGestures}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#uiScrollGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -800,11 +800,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:uiScrollGestures
+          @attr name de.smbsolutions.hike:uiScrollGestures
         */
         public static final int MapAttrs_uiScrollGestures = 8;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#uiTiltGestures}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#uiTiltGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -814,11 +814,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:uiTiltGestures
+          @attr name de.smbsolutions.hike:uiTiltGestures
         */
         public static final int MapAttrs_uiTiltGestures = 9;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#uiZoomControls}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#uiZoomControls}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -828,11 +828,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:uiZoomControls
+          @attr name de.smbsolutions.hike:uiZoomControls
         */
         public static final int MapAttrs_uiZoomControls = 10;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#uiZoomGestures}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#uiZoomGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -842,11 +842,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:uiZoomGestures
+          @attr name de.smbsolutions.hike:uiZoomGestures
         */
         public static final int MapAttrs_uiZoomGestures = 11;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#useViewLifecycle}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#useViewLifecycle}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -856,11 +856,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:useViewLifecycle
+          @attr name de.smbsolutions.hike:useViewLifecycle
         */
         public static final int MapAttrs_useViewLifecycle = 12;
         /**
-          <p>This symbol is the offset where the {@link de.smbsolutions.day.R.attr#zOrderOnTop}
+          <p>This symbol is the offset where the {@link de.smbsolutions.hike.R.attr#zOrderOnTop}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -870,7 +870,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name de.smbsolutions.day:zOrderOnTop
+          @attr name de.smbsolutions.hike:zOrderOnTop
         */
         public static final int MapAttrs_zOrderOnTop = 13;
     };
