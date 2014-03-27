@@ -44,6 +44,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private SupportMapFragment mapFragment;
 
 	private View view;
+	
+	
+	
+	
+	
 	private TextView txtViewName;
 	private TextView txtViewDate;
 	private ImageView ivPlayAnim;

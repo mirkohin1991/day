@@ -23,7 +23,6 @@
     <style name="Theme.Appbasetheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_appbasetheme</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Appbasetheme</item>
-        <item name="android:textColor">@color/white</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Appbasetheme</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Appbasetheme</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Appbasetheme</item>

@@ -20,13 +20,13 @@ import de.smbsolutions.day.functions.objects.RoutePoint;
  * der User keine unnötigen Wartezeiten verspürt.
  * 
  */
-public class BmTask extends
+public class BitmapWorkerTask extends
 		AsyncTask<Route, Void, LinkedHashMap<Bitmap, Timestamp>> {
 	// Linkedhashmap und Callback zur Kommunikation mit dem Fragment
 	private FragmentCallback callback;
 	private LinkedHashMap<Bitmap, Timestamp> bitmaps;
 
-	public BmTask(LinkedHashMap<Bitmap, Timestamp> bitmaps,
+	public BitmapWorkerTask(LinkedHashMap<Bitmap, Timestamp> bitmaps,
 			FragmentCallback callback) {
 		this.bitmaps = bitmaps;
 		this.callback = callback;
@@ -70,7 +70,6 @@ public class BmTask extends
 	 */
 	@Override
 	protected void onPostExecute(LinkedHashMap<Bitmap, Timestamp> result) {
-		// TODO Auto-generated method stub
 
 		super.onPostExecute(result);
 		// Läd alle Bitmaps in die Scrollbar

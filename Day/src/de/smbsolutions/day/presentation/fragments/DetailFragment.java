@@ -39,8 +39,13 @@ import de.smbsolutions.day.functions.interfaces.MainCallback;
 import de.smbsolutions.day.functions.objects.Route;
 import de.smbsolutions.day.functions.objects.RoutePoint;
 import de.smbsolutions.day.functions.tasks.BitmapManager;
-import de.smbsolutions.day.functions.tasks.BmTask;
-
+import de.smbsolutions.day.functions.tasks.BitmapWorkerTask;
+/**
+ * 
+ * Die DetailFragment-Klasse ist für die Detailansicht einer Route zuständig. Hier
+ * kann der Benutzer die Route verfolgen und 
+ * 
+ */
 public class DetailFragment extends android.support.v4.app.Fragment implements
 		FragmentCallback {
 
@@ -70,7 +75,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	private String duration;
 	private double distanceKm;
 	private double aveSpeed;
-	private BmTask task;
+	private BitmapWorkerTask task;
 	private boolean flag_routePaused;
 
 	@Override
@@ -229,7 +234,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		myGallery.removeAllViews();
 		listBitmaps = new LinkedHashMap<Bitmap, Timestamp>();
-		task = new BmTask(listBitmaps, this);
+		task = new BitmapWorkerTask(listBitmaps, this);
 		task.execute(route);
 		myGallery.removeAllViews();
 		myGallery = null;
@@ -509,31 +514,34 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		String time = null;
 		long duration = timeseconds;
 
-		duration = duration / 1000;
+		 duration = duration / 1000;
 
 		long second = duration % 60;
 		long minute = (duration % 3600) / 60;
 		long hour = duration / 3600;
 		long day = duration / 3600 / 24;
+		hour = hour - (day * 24);
 
 		String sSecond = String.format("%02d", second);
 		String sMinute = String.format("%02d", minute);
 		String sHour = String.format("%02d", hour);
 		String sDay = String.format("%02d", day);
+		if (second >= 0 || minute >= 0 || hour >= 0 || day >= 0) {
+			if (minute >= 1) {
+				if (hour >= 1) {
+					if (day >= 1) {
+						time = sDay + " T, " + sHour + ":" + sMinute
+								+ " Stunden";
+					} else {
+						time = sHour + ":" + sMinute + " Stunden";
+					}
 
-		if (minute >= 1) {
-			if (hour >= 1) {
-				if (day >= 1) {
-					time = sDay + " T, " + sHour + ":" + sMinute + " Stunden";
 				} else {
-					time = sHour + ":" + sMinute + " Stunden";
+					time = sMinute + ":" + sSecond + " Minuten";
 				}
-
 			} else {
-				time = sMinute + ":" + sSecond + " Minuten";
+				time = sSecond + " Sekunden";
 			}
-		} else {
-			time = sSecond + " Sekunden";
 		}
 
 		return time;
