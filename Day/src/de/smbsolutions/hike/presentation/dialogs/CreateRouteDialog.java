@@ -21,7 +21,6 @@ import de.smbsolutions.hike.functions.objects.RouteList;
  */
 public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 
-	
 	private RouteList routeList;
 	private Bundle bundle;
 	private MainCallback mCallback;
@@ -29,80 +28,83 @@ public class CreateRouteDialog extends android.support.v4.app.DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Aufbauen des Dialoges
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		
-		//Mitgegebene RouteList abrufen
+
+		// Mitgegebene RouteList abrufen
 		bundle = this.getArguments();
 		routeList = (RouteList) bundle.getParcelable("routeList");
 
-
 		// Das eigene Dialoglayout wird eingebunden
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		 View nameView = inflater.inflate(R.layout.dialog_createroute,
-				null);
+		View nameView = inflater.inflate(R.layout.dialog_createroute, null);
 		builder.setView(nameView);
 
-		//Hinzufügen des Anlegen-Buttons. Der Hanlder wird später selbst gesetzt und überschreibt die Standard-Logik
+		// Hinzufügen des Anlegen-Buttons. Der Hanlder wird später selbst
+		// gesetzt und überschreibt die Standard-Logik
 		builder.setPositiveButton("Anlegen", null
 
-		//Hinfügen des Abbrechen Buttons. Wenn dieser gedrückt wird, muss der zuvor gestartete Service wieder beendet werden		
+		// Hinfügen des Abbrechen Buttons. Wenn dieser gedrückt wird, muss der
+		// zuvor gestartete Service wieder beendet werden
 		).setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 
 				mCallback.removeService();
 			}
 		});
-		
+
 		// Der AlertDialog wird erstellt und zurückgegeben
 		final AlertDialog dialog = builder.create();
-		
-		
-		//Eigener ShowDialog Listener, um die ButtonClick events selbst zu definieren
-		//-> Nur dadurch ist es möglich das Schließen des Dialogs bei fehlerhafter Eingabe des Routenamen zu unterdrücken
+
+		// Eigener ShowDialog Listener, um die ButtonClick events selbst zu
+		// definieren
+		// -> Nur dadurch ist es möglich das Schließen des Dialogs bei
+		// fehlerhafter Eingabe des Routenamen zu unterdrücken
 		dialog.setOnShowListener(new OnShowListener() {
-			
+
 			@Override
 			public void onShow(DialogInterface dialog) {
-				
-				Button btnPositive = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+
+				Button btnPositive = ((AlertDialog) dialog)
+						.getButton(AlertDialog.BUTTON_POSITIVE);
 				btnPositive.setOnClickListener(new View.OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
-						
-                        //Eigegebener Name wird ausgelesen
-						EditText nameText = (EditText) getDialog().findViewById(
-								R.id.routename);
+
+						// Eigegebener Name wird ausgelesen
+						EditText nameText = (EditText) getDialog()
+								.findViewById(R.id.routename);
 						String routeName = nameText.getText().toString();
 
-						//Wenn der Name leer ist, erscheint eine Errormessage als Hinweis
+						// Wenn der Name leer ist, erscheint eine Errormessage
+						// als Hinweis
 						if (routeName.isEmpty()) {
 
-                          nameText.setHint("Bitte Namen eingeben");
-                          nameText.setHintTextColor(Color.RED);
+							nameText.setHint("Bitte Namen eingeben");
+							nameText.setHintTextColor(Color.RED);
 
-                         // Wenn alles gut ging, wird die neue Route angelegt 
+							// Wenn alles gut ging, wird die neue Route angelegt
 						} else {
 
-							//Dialog soll beendet werden
+							// Dialog soll beendet werden
 							dismiss();
-							
+
 							Route route = new Route(routeName);
 							routeList.addRoute(route);
 							mCallback.onStartTrackingService(route);
 						}
-						
+
 					}
 				});
-				
+
 			}
 		});
 
-	
 		return dialog;
 	}
 
 	/**
-	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity
+	 * gespeichert
 	 */
 	@Override
 	public void onAttach(Activity activity) {

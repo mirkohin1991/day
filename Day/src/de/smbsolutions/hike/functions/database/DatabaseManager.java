@@ -24,7 +24,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 	public DatabaseManager(Context context) {
 
 		super(context, DB_NAME, null, DB_VERSION);
-
+		
 	}
 
 	/**

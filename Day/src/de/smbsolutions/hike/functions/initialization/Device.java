@@ -93,29 +93,4 @@ public class Device {
 		return APP_SETTINGS;
 	}
 
-	/**
-	 * Setter für APP_SETTINGS
-	 * 
-	 */
-	public static void setAPP_SETTINGS(AppSettings aPP_SETTINGS) {
-		APP_SETTINGS = aPP_SETTINGS;
-	}
-
-	/**
-	 * Getter für DEVICE_NAME
-	 * 
-	 * @return DEVICE_NAME
-	 */
-	public static String getDEVICE_NAME() {
-		return DEVICE_NAME;
-	}
-
-	/**
-	 * Setter für DEVICE_NAME
-	 * 
-	 */
-	public static void setDEVICE_NAME(String dEVICE_NAME) {
-		DEVICE_NAME = dEVICE_NAME;
-	}
-
 }

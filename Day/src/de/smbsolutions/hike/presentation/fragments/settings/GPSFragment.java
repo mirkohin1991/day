@@ -15,8 +15,8 @@ import de.smbsolutions.hike.functions.interfaces.MainCallback;
 
 /**
  * Einstellungen für GPS Tracking, GPS Wiederholungsrate und minimale Entferung.
- * Berechnet die Werte für die Anzeige.
- * Speichert Werte für das GPS Tracking, GPS Wiederholungsrate und minimale Entferung in der Datenbank.
+ * Berechnet die Werte für die Anzeige. Speichert Werte für das GPS Tracking,
+ * GPS Wiederholungsrate und minimale Entferung in der Datenbank.
  */
 public class GPSFragment extends android.support.v4.app.Fragment {
 	private Switch switchGPSOnOff;
@@ -28,9 +28,10 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 	private SeekBar seekBarFrequency;
 	private SeekBar seekBarFrequencyMeter;
 
-/**
- * Bei Aufruf werden die aktuellen Daten aus der Datenbank gelesen und in Variablen gespeichert.
- */
+	/**
+	 * Bei Aufruf werden die aktuellen Daten aus der Datenbank gelesen und in
+	 * Variablen gespeichert.
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -40,28 +41,26 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_settings_gps,
 				container, false);
 
-//		Layoutelemente definiere
+		// Layoutelemente definiere
 		actSec = (TextView) rootView.findViewById(R.id.actSec);
 		actMeter = (TextView) rootView.findViewById(R.id.actMeter);
-		
+
 		Switch switchGPSOnOff = (Switch) rootView
 				.findViewById(R.id.switchGPSOnOff);
 		seekBarFrequency = (SeekBar) rootView
 				.findViewById(R.id.seekBarFrequency);
 		seekBarFrequencyMeter = (SeekBar) rootView
 				.findViewById(R.id.SeekBarFrequencyMeter);
-		
-		// Werte für Zeit und Meter aus der Datenbank lesen
-		timeSec = Database
-				.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 1000;
-		meter = Database
-				.getSettingValue(Database.SETTINGS_TRACKING_METER);
 
-		
-//		  Wert für Tracking (On/Off) aus der Datenbank abrufen.
-//		  Das Switch für das GPS Tracking und die Seekbars für Wiederholungsrate, und minimale Entfernung 
-//		  auf die Entsprechenden Werte setzen.
-		 
+		// Werte für Zeit und Meter aus der Datenbank lesen
+		timeSec = Database.getSettingValue(Database.SETTINGS_TRACKING_INTERVAL) / 1000;
+		meter = Database.getSettingValue(Database.SETTINGS_TRACKING_METER);
+
+		// Wert für Tracking (On/Off) aus der Datenbank abrufen.
+		// Das Switch für das GPS Tracking und die Seekbars für
+		// Wiederholungsrate, und minimale Entfernung
+		// auf die Entsprechenden Werte setzen.
+
 		if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
 
 			// GPS Switch, Seekbar für Zeit, Seekbar für Meter aktivieren
@@ -99,10 +98,12 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 		}
 
 		// Wenn Wert geaendert wird, diesen in die Datenbank schreiben
-		switchGPSOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			/**
-			 * Prüfen ob der Wert des GPS Tracking Switch geändert wurde.
-			 */
+		switchGPSOnOff
+				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					/**
+					 * Prüfen ob der Wert des GPS Tracking Switch geändert
+					 * wurde.
+					 */
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 
@@ -196,9 +197,9 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 					int frequency = 0;
 
 					/**
-					 * Standardmethode einer Seekbar.
-					 * Sie wird automatisch aufgerufen wenn der Nutzer die Seekbar betätigt
-					 * Ändert den Wert der Anzeige zur Laufzeit
+					 * Standardmethode einer Seekbar. Sie wird automatisch
+					 * aufgerufen wenn der Nutzer die Seekbar betätigt Ändert
+					 * den Wert der Anzeige zur Laufzeit
 					 */
 					public void onProgressChanged(SeekBar seekBar,
 							int progress, boolean fromUser) {
@@ -236,9 +237,8 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 					}
 
 					/**
-					 * Standardmethode einer Seekbar.
-					 * Sie wird automatisch aufgerufen wenn der Nutzer die
-					 * Seekbar "loslaesst".
+					 * Standardmethode einer Seekbar. Sie wird automatisch
+					 * aufgerufen wenn der Nutzer die Seekbar "loslaesst".
 					 */
 					public void onStopTrackingTouch(SeekBar seekBar) {
 
@@ -286,9 +286,9 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 					int frequencyMeter = 0;
 
 					/**
-					 * Standardmethode einer Seekbar.
-					 * Sie wird automatisch aufgerufen wenn der Nutzer die Seekbar betätigt.
-					 * Aendert die Anzeige der Meteranzeige
+					 * Standardmethode einer Seekbar. Sie wird automatisch
+					 * aufgerufen wenn der Nutzer die Seekbar betätigt. Aendert
+					 * die Anzeige der Meteranzeige
 					 */
 					public void onProgressChanged(SeekBar seekBarMeter,
 							int progress, boolean fromUser) {
@@ -309,9 +309,8 @@ public class GPSFragment extends android.support.v4.app.Fragment {
 					}
 
 					/**
-					 * Standardmethode einer Seekbar.
-					 * Sie wird automatisch aufgerufen wenn der Nutzer die
-					 * Seekbar "loslaesst".
+					 * Standardmethode einer Seekbar. Sie wird automatisch
+					 * aufgerufen wenn der Nutzer die Seekbar "loslaesst".
 					 * Speichert die aktuelle Meteranzahl in die Datenbank.
 					 */
 					public void onStopTrackingTouch(SeekBar seekBarMeter) {

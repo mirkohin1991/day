@@ -30,42 +30,42 @@ import de.smbsolutions.hike.functions.tasks.MarkerWorkerTask;
  * Diese Klasse bildet eine ganze Route ab. Damit bildet sie einen Satz an
  * RoutePoints zur entsprechenden Route in dieser Klasse als Liste ab
  * Letzendlich wird durch diese Klasse ein Mapping DB<->Objektorientierung
- * vorgenommen. �nderungen werden dem Objekt �ber Methoden mitgeben und durch
+ * vorgenommen. Änderungen werden dem Objekt über Methoden mitgeben und durch
  * dieses an die Datenbank weitergegeben. Die Klasse implementiert Parcable, um
- * Objekte von Ihr mit einem Bundle zu �bertragen
+ * Objekte von Ihr mit einem Bundle zu übertragen
  */
 public class Route implements Parcelable {
 
 	private static final long serialVersionUID = 1L;
 
 	// Liste aller vorhandener RoutePoints. Muss vom Type CopyOnWriteArrayList
-	// sein, weil dadurch gew�hrleistet wird, dass bei synchronen Zugriffen auf
+	// sein, weil dadurch gewährleistet wird, dass bei synchronen Zugriffen auf
 	// die Liste keine Fehler auftreten.
 	private CopyOnWriteArrayList<RoutePoint> routePoints = new CopyOnWriteArrayList<RoutePoint>();
 
-	// �bergreifende Eingenschaften zur Route
+	// übergreifende Eingenschaften zur Route
 	private String routeName;
 	private String date;
 	private boolean active;
 	private int id;
 
-	// Hier werden sp�ter die Polyline Punkte eingef�gt, damit auf der Karte die
+	// Hier werden später die Polyline Punkte eingefügt, damit auf der Karte die
 	// Verbindungen erscheinen
 	PolylineOptions polylineOptions_back;
 	PolylineOptions polylineOptions_top;
 
-	// Notwendige Hashmap, um bei einem Klick auf einen Marker sp�ter zu
+	// Notwendige Hashmap, um bei einem Klick auf einen Marker später zu
 	// erkennen welcher Routenpunkt sich dahinter verbirgt.
 	public LinkedHashMap<RoutePoint, Marker> markerMap;
 
 	/**
-	 * Leerer Konstruktur f�r Routen, die schon angelegt wurden
+	 * Leerer Konstruktur für Routen, die schon angelegt wurden
 	 */
 	public Route() {
 	}
 
 	/**
-	 * Konstruktor f�r neue Routen
+	 * Konstruktor für neue Routen
 	 */
 	public Route(String routeName) {
 
@@ -73,7 +73,7 @@ public class Route implements Parcelable {
 		String today = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
 		this.routeName = routeName;
-		// Die letzte Id in der Datenbank wird um eins erh�ht, um die neue ID zu
+		// Die letzte Id in der Datenbank wird um eins erhöht, um die neue ID zu
 		// bekommen
 		id = Database.getlastRouteID() + 1;
 		date = today;
@@ -88,11 +88,11 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * Schlie�en der Route
+	 * Schließen der Route
 	 */
 	public void closeRoute() {
 
-		// Schlie�en der Route. Nur wenn erfolgreich wird flag auf false gesetzt
+		// Schließen der Route. Nur wenn erfolgreich wird flag auf false gesetzt
 		if (Database.closeRoute(id) == true) {
 			active = false;
 		}
@@ -100,15 +100,15 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * Hinzuf�gen eines einzelnen RoutePoints zur Datenkbank
+	 * Hinzufügen eines einzelnen RoutePoints zur Datenkbank
 	 */
 	public void addRoutePointDB(RoutePoint point) {
 
-		// Nur wenn die Route aktiv ist, ist es m�glich Punkte hinzuzuf�gen
+		// Nur wenn die Route aktiv ist, ist es möglich Punkte hinzuzufügen
 		if (active == true) {
 
 			// Wenn der DB Insert geklappt hat, wird die Route auch der internen
-			// Liste hinzugef�gt
+			// Liste hinzugefügt
 			if (Database.addNewRoutePoint(point) == true) {
 
 				routePoints.add(point);
@@ -118,7 +118,7 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * Hinzuf�gen eines Routenpunktes zur internen Liste, nicht aber zur
+	 * Hinzufügen eines Routenpunktes zur internen Liste, nicht aber zur
 	 * Datenbank. Dies wird beispielsweise beim Auslesen der vorhandenen routen
 	 * aus der Datenbank benutzt
 	 */
@@ -128,7 +128,7 @@ public class Route implements Parcelable {
 
 	/**
 	 * Methode, um der mitgegebenen Map alle zur Route vorhanden Punkte
-	 * hinzuf�gen Preview bedeutet, dass hier eine spezielle Vorgehensweise f�r
+	 * hinzufügen Preview bedeutet, dass hier eine spezielle Vorgehensweise für
 	 * die Vorschau auf dem Hauptfragment benutzt wird
 	 */
 	public GoogleMap prepareMapPreview(final GoogleMap mapImport) {
@@ -145,8 +145,8 @@ public class Route implements Parcelable {
 
 	/**
 	 * Methode, um der mitgegebenen Map alle zur Route vorhanden Punkte
-	 * hinzuf�gen Details bedeutet, dass es sich hier um die Map der
-	 * Detailansicht zur Route handelt. In diesem Fall m�ssen weit aus mehr
+	 * hinzufügen Details bedeutet, dass es sich hier um die Map der
+	 * Detailansicht zur Route handelt. In diesem Fall müssen weit aus mehr
 	 * Dinge angezeigt werden als beim Preview
 	 */
 	public GoogleMap prepareMapDetails(final GoogleMap mapImport,
@@ -164,7 +164,7 @@ public class Route implements Parcelable {
 		// Dadurch kann eine enorme Performancesteigerung erreicht werden
 		if (hasPicturePoint()) {
 
-			// Zun�chst werden die normalen Marker erstellt, um diese sp�ter
+			// Zunächst werden die normalen Marker erstellt, um diese später
 			// dann im Task mit den Bildern zu ersetzen
 			for (RoutePoint point : this.routePoints) {
 
@@ -178,11 +178,11 @@ public class Route implements Parcelable {
 			// Die Map wird von alten Markern befreit
 			mapImport.clear();
 
-			// Die Polylines k�nnen auch schon hinzugef�gt werden
+			// Die Polylines können auch schon hinzugefügt werden
 			addPolylinesDetail(mapImport);
 
-			// Anschlie�end werden jetzt alle Marker, die mit Bildern angezeigt
-			// werden sollen, eingef�gt.
+			// Anschließend werden jetzt alle Marker, die mit Bildern angezeigt
+			// werden sollen, eingefügt.
 			MarkerWorkerTask task = new MarkerWorkerTask(mapImport, markerMap,
 					this, context);
 			task.execute(this.routePoints);
@@ -200,14 +200,14 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * Methode die bei der mitgegebenen Map daf�r sorgt, dass der Zoom alle
-	 * Punkte umschlie�t
+	 * Methode die bei der mitgegebenen Map dafür sorgt, dass der Zoom alle
+	 * Punkte umschließt
 	 */
 	private void setZoomAllMarkers(GoogleMap map) {
 
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		// Locations der Polylines werden dem Builder hingef�gt
+		// Locations der Polylines werden dem Builder hingefügt
 		for (LatLng point : polylineOptions_top.getPoints()) {
 			builder.include(point);
 		}
@@ -221,12 +221,12 @@ public class Route implements Parcelable {
 
 	/**
 	 * Methode, die den Zoom der mitgegeben Map auf einen bestimmten Punkt
-	 * setzt, der der Methode ebenfalls �bergeben wird
+	 * setzt, der der Methode ebenfalls übergeben wird
 	 */
 	public void setZoomSpecificMarker(RoutePoint point, GoogleMap map) {
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		// Aus der Hashmap kann �ber den Routepunkt die Position ermittelt
+		// Aus der Hashmap kann über den Routepunkt die Position ermittelt
 		// werden
 		LatLng latlng = markerMap.get(point).getPosition();
 
@@ -245,7 +245,7 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * Methoden zum L�schen einzelner Bilder aus der Datenbank und anschlie�end
+	 * Methoden zum Löschen einzelner Bilder aus der Datenbank und anschließend
 	 * aus der internen Liste
 	 */
 	public void deletePictureDB(RoutePoint deletePoint) {
@@ -259,7 +259,7 @@ public class Route implements Parcelable {
 
 	/**
 	 * Methode, die der Map auf der Detailansichtsseite die Polylines pro Punkt
-	 * hinzuf�gt. Zudem werden Start und Ziel Flaggen angezeigt
+	 * hinzufügt. Zudem werden Start und Ziel Flaggen angezeigt
 	 */
 	private void addPolylinesDetail(GoogleMap map) {
 
@@ -269,13 +269,13 @@ public class Route implements Parcelable {
 				Color.rgb(19, 88, 5));
 
 		for (RoutePoint point : this.routePoints) {
-			// Der Punkt wird der Polyline hinzugef�gt
+			// Der Punkt wird der Polyline hinzugefügt
 			polylineOptions_back.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
 			polylineOptions_top.add(new LatLng(point.getLatitude(), point
 					.getLongitude()));
 
-			// Wenn die Route keine Bilder enth�lt, werden Start (und Ziel)
+			// Wenn die Route keine Bilder enthält, werden Start (und Ziel)
 			// Flagge gesetzt
 			if (hasPicturePoint() == false) {
 
@@ -323,7 +323,7 @@ public class Route implements Parcelable {
 
 	/**
 	 * Methode, die der Vorschaumap auf der Hauptansichtsseite die Polylines pro
-	 * Punkt hinzuf�gt. Zudem werden Start und Ziel Flaggen angezeigt.
+	 * Punkt hinzufügt. Zudem werden Start und Ziel Flaggen angezeigt.
 	 */
 	private void addPolylinesPreview(GoogleMap map) {
 
@@ -347,7 +347,7 @@ public class Route implements Parcelable {
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.start_marker));
 
-				// Der Marker wird der map hinzugef�gt
+				// Der Marker wird der map hinzugefügt
 				map.addMarker(markerOpt);
 
 			}
@@ -380,8 +380,8 @@ public class Route implements Parcelable {
 
 	/**
 	 * Methode, um einer vorhanden Polyline-Kombination einen weiteren Punkt
-	 * hinzuzuf�gen. Wird verwendet wenn Service oder Benutzer zur Laufzeit
-	 * einen Punkt hinzuf�gen
+	 * hinzuzufügen. Wird verwendet wenn Service oder Benutzer zur Laufzeit
+	 * einen Punkt hinzufügen
 	 */
 	public void addPoint2Polyline(RoutePoint point, GoogleMap map) {
 
@@ -394,14 +394,14 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * Methode, die die Information zur�ckliefert, ob es Punkte in der Route
+	 * Methode, die die Information zurückliefert, ob es Punkte in der Route
 	 * gibt, die ein Bild enthalten
 	 */
 	public boolean hasPicturePoint() {
 
 		for (RoutePoint point : routePoints) {
 
-			// Sobald ein Punkt ein bild enth�lt wird true returned
+			// Sobald ein Punkt ein bild enthält wird true returned
 			if ((point.getPicture() != null)) {
 				return true;
 			}
@@ -447,7 +447,7 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * N�tig, weil die Klasse Parcable implementiert
+	 * Nötig, weil die Klasse Parcable implementiert
 	 */
 	@Override
 	public int describeContents() {
@@ -456,7 +456,7 @@ public class Route implements Parcelable {
 	}
 
 	/**
-	 * N�tig, weil die Klasse Parcable implementiert
+	 * Nötig, weil die Klasse Parcable implementiert
 	 */
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {

@@ -44,11 +44,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	private SupportMapFragment mapFragment;
 
 	private View view;
-	
-	
-	
-	
-	
 	private TextView txtViewName;
 	private TextView txtViewDate;
 	private ImageView ivPlayAnim;
@@ -154,17 +149,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public void onPause() {
-	
-		//Map muss gecleart werdenSS
+
+		// Map muss gecleart werdenSS
 		map.clear();
 
 		super.onPause();
 	}
-
 
 	/**
 	 * 
@@ -231,13 +224,13 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					// ViewFlipper angezegit
 				} else {
 					vfNewOrCurrent.setDisplayedChild(0);
-					
+
 				}
 
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 
 		/*
@@ -258,16 +251,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					.findViewById(R.id.includeCurrentElement);
 			addButtonClickListenerCurrentPreview(viewInclude);
 
-			
-		// 2 bedeutet, der "Neue Route Flipper ist angezeigt
+			// 2 bedeutet, der "Neue Route Flipper ist angezeigt
 		} else if (vfNewOrCurrent.getDisplayedChild() == 0) {
 
-			//ButtonClick Listener auf dem ganzen View
+			// ButtonClick Listener auf dem ganzen View
 			View viewInclude = (View) view.findViewById(R.id.includeNewElement);
 			addButtonClickListenerCreate(viewInclude);
 		}
-		
-		//Wird nach Fertigstellung des Layouts ausgeführt
+
+		// Wird nach Fertigstellung des Layouts ausgeführt
 		view.post(new Runnable() {
 
 			@Override
@@ -293,7 +285,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 					try {
 						selectedRoute = routeList.getlastRoute();
 					} catch (Exception e) {
-						// handle exception
+						e.printStackTrace();
 					}
 
 					// Getting the route object of the related row
@@ -314,7 +306,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-
 	/**
 	 * Listener für den Bereich zum Erstellen einer Route
 	 */
@@ -332,34 +323,34 @@ public class MainFragment extends android.support.v4.app.Fragment {
 	}
 
 	/**
-	 * Listener wenn der Benutzer auf den Namen der aktiven Route klickt (Nicht den Play-Button)
+	 * Listener wenn der Benutzer auf den Namen der aktiven Route klickt (Nicht
+	 * den Play-Button)
 	 */
 	public void addButtonClickListenerCurrentPreview(View view) {
-		
-		
-		//Wenn der Benutzer einen einfach Klick tätigt
+
+		// Wenn der Benutzer einen einfach Klick tätigt
 		view.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-			    selectedRoute = routeList.getlastRoute();
-			    //Map wird refresht 
+				selectedRoute = routeList.getlastRoute();
+				// Map wird refresht
 				map = selectedRoute.prepareMapPreview(map);
-				//Ändern der Beschriftung
+				// Ändern der Beschriftung
 				changeDisplayedRouteDesc(selectedRoute);
 
 			}
 		});
 
-		//Wenn der Benutzer lange auf das Element klickt
+		// Wenn der Benutzer lange auf das Element klickt
 		view.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
 			public boolean onLongClick(View arg0) {
 
 				if (routeList.isOpenRoute()) {
-				
+
 					mCallback.onOpenDialogStopRoute("MAIN",
 							routeList.getlastRoute());
 				}
@@ -369,44 +360,42 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 	}
 
-	
 	/**
-	 * Listener für die jeweiligen List-Elemente der "Alle beendeten Routen"-Liste
+	 * Listener für die jeweiligen List-Elemente der
+	 * "Alle beendeten Routen"-Liste
 	 */
 	public void addListitemListender(ListView listView) {
 
-		
-		//Wenn der Benutzer einen normalen Klick tätigt
+		// Wenn der Benutzer einen normalen Klick tätigt
 		listView.setOnItemClickListener(new OnItemClickListener() {
-			
+
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
 				try {
-					//Abrufen des geklickten Listitems
+					// Abrufen des geklickten Listitems
 					AllRoutesListElement element = (AllRoutesListElement) routeListView
 							.getAdapter().getItem(position);
-					//Global speichern
+					// Global speichern
 					selectedRoute = element.getRoute();
-				
+
 				} catch (Exception e) {
-					
+
 					e.printStackTrace();
 				}
 
-				//Aktualisieren der PreviewMap und der Beschreibung
+				// Aktualisieren der PreviewMap und der Beschreibung
 				map = selectedRoute.prepareMapPreview(map);
 				changeDisplayedRouteDesc(selectedRoute);
 			}
 		});
 
-		
-		//Wenn der Benutzer lange auf ein Element klickt, will er es löschen
+		// Wenn der Benutzer lange auf ein Element klickt, will er es löschen
 		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
 					int index, long arg3) {
-				
+
 				mCallback.onOpenDialogDeleteRoute(routeList,
 						routeListView.getCount() - (index + 1));
 				return false;
@@ -415,27 +404,25 @@ public class MainFragment extends android.support.v4.app.Fragment {
 		});
 	}
 
-	
 	/**
 	 * Methode zum Ändern der Beschriftung auf der Map-Preview
+	 * 
 	 * @param route
 	 */
 	public void changeDisplayedRouteDesc(Route route) {
-		//Name
+		// Name
 		txtViewName = (TextView) view.findViewById(R.id.txtViewPic);
 		txtViewName.setText(route.getRouteName());
-		//Datum
+		// Datum
 		txtViewDate = (TextView) view.findViewById(R.id.txtViewDatePreview);
 		txtViewDate.setText(route.getDate());
 	}
-	
-   
-	
+
 	/**
-	 * Methode  Animieren des "Route läuft gerade"-Icons
+	 * Methode Animieren des "Route läuft gerade"-Icons
 	 */
 	public void animateRunningIcon(ImageView animateImage) {
-		
+
 		final AnimationDrawable tvAnimation = (AnimationDrawable) animateImage
 				.getDrawable();
 		animateImage.post(new Runnable() {

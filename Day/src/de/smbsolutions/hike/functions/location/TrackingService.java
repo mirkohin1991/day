@@ -132,7 +132,7 @@ public class TrackingService extends Service implements
 
 			// // Display the connection status
 			// toast.makeText(activity, "Location couldn't be detected",
-					// toast.LENGTH_SHORT).show();
+			// toast.LENGTH_SHORT).show();
 			// If already requested, start periodic updates
 		}
 	}
@@ -185,7 +185,7 @@ public class TrackingService extends Service implements
 						CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
 			} catch (IntentSender.SendIntentException e) {
-
+				e.printStackTrace();
 			}
 
 		}
@@ -206,7 +206,7 @@ public class TrackingService extends Service implements
 
 		if (locationClient.isConnected()) {
 			// toast.makeText(activity, "Der Client passt", Toast.LENGTH_SHORT)
-//					.show();
+			// .show();
 		}
 
 		// Abrufen der letzten Location
@@ -261,7 +261,7 @@ public class TrackingService extends Service implements
 
 			// // Display the connection status
 			// toast.makeText(activity, "Location couldn't be detected",
-					// toast.LENGTH_SHORT).show();
+			// toast.LENGTH_SHORT).show();
 
 		}
 
@@ -297,7 +297,7 @@ public class TrackingService extends Service implements
 			if (location.distanceTo(previousLocation) < Database
 					.getSettingValue(Database.SETTINGS_TRACKING_METER)) {
 				// toast.makeText(activity, "Zu nahe am letzten Punkt",
-						// toast.LENGTH_SHORT).show();
+				// toast.LENGTH_SHORT).show();
 				return;
 			}
 		}
@@ -347,7 +347,8 @@ public class TrackingService extends Service implements
 			// Alle bisherigen Updates werden gelöscht
 			locationClient.removeLocationUpdates(this);
 
-			// toast.makeText(this, "Tracker restarted", Toast.LENGTH_LONG).show();
+			// toast.makeText(this, "Tracker restarted",
+			// Toast.LENGTH_LONG).show();
 
 			// Nur wenn GPS Tracking aktiviert wurde, soll auch getrackt werden
 			if (Database.getSettingValue(Database.SETTINGS_TRACKING) == 1) {
@@ -364,7 +365,7 @@ public class TrackingService extends Service implements
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 	}

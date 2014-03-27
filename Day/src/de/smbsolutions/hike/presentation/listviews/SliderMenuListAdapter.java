@@ -1,6 +1,7 @@
 package de.smbsolutions.hike.presentation.listviews;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -45,6 +46,7 @@ public class SliderMenuListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	/**
 	 * Bereitet die Listeneintraege im Slidermenu optisch auf.
 	 */

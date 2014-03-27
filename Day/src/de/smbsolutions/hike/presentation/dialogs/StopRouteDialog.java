@@ -18,19 +18,19 @@ public class StopRouteDialog extends DialogFragment {
 	private Route route;
 	private Bundle bundle;
 	private MainCallback mainCallback;
-	
+
 	private String fragmentFlag;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		//Übergebene Params werden ausgelesen
+		// Übergebene Params werden ausgelesen
 		bundle = this.getArguments();
 		route = (Route) bundle.getParcelable("route");
-		//fragmentFlag enthällt ein Kennzeichen woher der Aufruf kam
-		//Denn der StopDialog kann aus MainFrag und DetailFrag erfolgen
+		// fragmentFlag enthällt ein Kennzeichen woher der Aufruf kam
+		// Denn der StopDialog kann aus MainFrag und DetailFrag erfolgen
 		fragmentFlag = (String) bundle.getString("fragmentFlag");
-		
+
 		return new AlertDialog.Builder(getActivity()).setTitle("Route beenden")
 				.setMessage("Möchten Sie die Route wirklich beenden?")
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
@@ -42,21 +42,21 @@ public class StopRouteDialog extends DialogFragment {
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						
-						//Schließen der übergebenen Route
+
+						// Schließen der übergebenen Route
 						route.closeRoute();
 						dismiss();
 
-						//MainActivity kümmert sich um alle Folgeprozesse
+						// MainActivity kümmert sich um alle Folgeprozesse
 						mainCallback.onRouteStopped(fragmentFlag, route);
 
 					}
 				}).create();
 	}
 
-	
 	/**
-	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity
+	 * gespeichert
 	 */
 	@Override
 	public void onAttach(Activity activity) {

@@ -92,7 +92,8 @@ public class BitmapManager {
 		File small_picutre_file = getOutputMediaFile(MEDIA_TYPE_IMAGE, true);
 
 		Bitmap bitmap = BitmapManager.decodeSampledBitmapFromUri(
-				big_image_file.getPath(), Device.getPictureScrollbarDensity(), Device.getPictureScrollbarDensity());
+				big_image_file.getPath(), Device.getPictureScrollbarDensity(),
+				Device.getPictureScrollbarDensity());
 
 		FileOutputStream fOut = null;
 		try {
@@ -114,31 +115,30 @@ public class BitmapManager {
 	}
 
 	/**
-	 * Gibt Uri eine Datei zurück.
+	 * Gibt Uri einer Datei zurück.
 	 */
 	public static Uri getOutputMediaFileUri(int type, boolean small) {
 		return Uri.fromFile(getOutputMediaFile(type, small));
 	}
-/**
- * 
- 
- */
-private static File getOutputMediaFile(int type, boolean small) {
-		// To be safe, you should check that the SDCard is mounted
-		// using Environment.getExternalStorageState() before doing this.
+
+	/**
+	 * Gibt eine Datei zurück und überprüft ob eine SD-Karte vorhanden ist.
+	 * Außerdem wird überprüft ob Speicherorte für die Bitmapdatei bereits
+	 * ertellt wurden.
+	 */
+	private static File getOutputMediaFile(int type, boolean small) {
 
 		File picturepath;
+
+		// mist das Bild ein PreviewBild?
 		if (small) {
+			// Pfad des Bildes
 			picturepath = new File(
 					Environment
 							.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 					"HikePreview");
-			// This location works best if you want the created images to be
-			// shared
-			// between applications and persist after your app has been
-			// uninstalled.
 
-			// Create the storage directory if it does not exist
+			// Erstellt den Ordner falls er noch nicht vorhanden ist.
 			if (!picturepath.exists()) {
 				picturepath.mkdirs();
 				try {
@@ -157,16 +157,12 @@ private static File getOutputMediaFile(int type, boolean small) {
 			}
 
 		} else {
+			// Pfad des Bildes
 			picturepath = new File(
 					Environment
 							.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 					"Hike");
-			// This location works best if you want the created images to be
-			// shared
-			// between applications and persist after your app has been
-			// uninstalled.
-
-			// Create the storage directory if it does not exist
+			// Erstellt den Ordner falls er noch nicht vorhanden ist.
 			if (!picturepath.exists()) {
 				if (!picturepath.mkdirs()) {
 					Log.d("Hike", "failed to create directory");
@@ -174,8 +170,8 @@ private static File getOutputMediaFile(int type, boolean small) {
 				}
 			}
 		}
-
-		// Create a media file name
+		// Erstellt die Media-Datei und hängt ein Timestamp ans Ende des
+		// Dateinamens.
 		timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		File mediaFile;
 		if (type == MEDIA_TYPE_IMAGE) {

@@ -40,42 +40,61 @@ import de.smbsolutions.hike.functions.objects.Route;
 import de.smbsolutions.hike.functions.objects.RoutePoint;
 import de.smbsolutions.hike.functions.tasks.BitmapManager;
 import de.smbsolutions.hike.functions.tasks.BitmapWorkerTask;
+
 /**
  * 
- * Die DetailFragment-Klasse ist für die Detailansicht einer Route zuständig. Hier
- * kann der Benutzer die Route verfolgen und 
+ * Die DetailFragment-Klasse ist für die Detailansicht einer Route zuständig.
+ * Hier kann der Benutzer die Route verfolgen und und Details dazu einsehen.
+ * Außerdem kann von hier aus die Kamera gestartet und die Detailansicht eines
+ * Bildes geöffnent werden.
  * 
  */
 public class DetailFragment extends android.support.v4.app.Fragment implements
 		FragmentCallback {
-
+	// Mapfragment für das Initialisieren der GoogleMap
 	private SupportMapFragment mapFragment;
+	// Hauptview des Fragments
 	private View view;
+	// GoogleMap der aktuellen Route
 	private GoogleMap map;
+	// Die angezeigte Route
 	private Route route;
+	// MainCallback zur Kommunikation mit der Activity
 	private MainCallback mCallback;
+	// Hashmap mit allen anzuzeigen Bitmaps
 	private LinkedHashMap<Bitmap, Timestamp> listBitmaps;
+	// ImageButtons des Fragments
 	private ImageButton ibCamera;
 	private ImageButton ibInfoSliderIn;
 	private ImageButton ibInfoSliderOut;
 	private ImageButton ibPauseRoute;
 	private ImageButton ibStopRoute;
 	private ImageButton ibRestartRoute;
+	// TextViews des Fragments
 	private TextView tvDistance;
 	private TextView tvDuration;
 	private TextView tvAveSpeed;
+	// Request Code für Kamera-Intent
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	// Pfad eines Bilder
 	private Uri fileUri;
+	// Media-Typ für Kamera-Intent (Wwelche Datei soll die Kamera erstellen?)
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
+	// Flag für Fertigstellung der Map
 	private boolean mapPrepared = false;
+	// Gallery für die Bilder
 	private LinearLayout myGallery;
+	// ViewFlipper des Fragments
 	private ViewFlipper flipperInfo;
 	private ViewFlipper flipperStartStop;
+	// Dauer, Distanz, Durchschnittsgeschwindigkeit der aktuellen Route
 	private String duration;
 	private double distanceKm;
 	private double aveSpeed;
+	// Hintergrundtask zur Erstellung der Bitmaps
 	private BitmapWorkerTask task;
+	// Flag zum Status der Route
 	private boolean flag_routePaused;
 
 	@Override
@@ -85,8 +104,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		Bundle data = getArguments();
 		route = (Route) data.getParcelable("route");
 
-		// If a route doesn't have a picture point, the Picture Scrollbar is
-		// disabled
+		/*
+		 * Hat die Route Bilder? Ja --> Gallery wird initialisiert. Nein -->
+		 * Gallery wird nicht initialisiert.
+		 */
 		if (route.hasPicturePoint() == false) {
 
 			view = inflater.inflate(R.layout.fragment_detail_nopicture,
@@ -96,6 +117,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 			myGallery = (LinearLayout) view
 					.findViewById(R.id.LinearLayoutImage);
+			// Fügt Bilder zur Gallery hinzu.
 			addPhotos2Gallery(myGallery);
 
 		}
@@ -106,8 +128,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	@Override
 	public void onDestroy() {
-		unbindDrawables(view);
+		/*
+		 * Wird ausgeführt wenn das Fragment wieder zerstört wird. Befreit
+		 * Objekte zur Vermeidung von Memory Leaks
+		 */
 
+		unbindDrawables(view);
 		clearFragment();
 		super.onDestroy();
 	}
@@ -115,7 +141,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
+		/*
+		 * Fügt das Maincallback hinzu.
+		 */
 		try {
 			mCallback = (MainCallback) activity;
 
@@ -129,6 +157,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		/*
+		 * Initialisiert das MapFragment wenn es nicht null ist und die Activity
+		 * erstellt wurde.
+		 */
 		android.support.v4.app.FragmentManager fm = getChildFragmentManager();
 
 		if (mapFragment == null) {
@@ -138,9 +170,17 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	}
 
+	/**
+	 * Initialisiert die Map und stellt Einstellungen zum Fragment fest. Welche
+	 * Buttons und Views müssen initialisiert werden?
+	 * 
+	 */
+	@Override
 	public void onResume() {
 		super.onResume();
+
 		if (map == null) {
+			// Initialierung der GoogleMap
 			map = mapFragment.getMap();
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 			// padding muss noch je nach gerätetyp gesetzt werden
@@ -152,15 +192,15 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			map.setMapType(Device.getAPP_SETTINGS().getMapType());
 		}
 
-		// Refreshing the slider menu, so that no item is selected any longer
+		// aktualisiert das SliderMenu wenn kein Button mehr geklickt wurde.
 		mCallback.refreshSliderMenu();
-
-		initializeFragmentPortrait();
+		// Initialisierung des Fragments
+		initializeFragment();
 
 	}
 
-	public void initializeFragmentPortrait() {
-
+	public void initializeFragment() {
+		// Initialisierung der Views und Buttons
 		ibCamera = (ImageButton) view.findViewById(R.id.ibCamera);
 
 		ibPauseRoute = (ImageButton) view.findViewById(R.id.ibPauseRoute);
@@ -180,7 +220,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		flipperStartStop = (ViewFlipper) view
 				.findViewById(R.id.flipperStartStop);
 
-		// Closed routes cannot generate a new picture and cannot pause a route
+		// Beendete Route sollen nicht pausiert oder gestartet werden können
 		if (route.isActive() == false) {
 			ibCamera.setVisibility(View.INVISIBLE);
 			ibStopRoute.setVisibility(View.INVISIBLE);
@@ -188,11 +228,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			// route is active
 		} else {
 
-			// Callback method isServiceActive cannot be used to check which
-			// icon shall be displayed,
-			// because the service is connecting async.
-			// But getting to the detailfragment will always restart the route
-
+			// Legt fest welches Flipper-Kind angezeigt werden soll
 			if (flag_routePaused == true) {
 
 				flipperStartStop.setDisplayedChild(1);
@@ -203,6 +239,10 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 
 		}
+		/*
+		 * Wird ausgeführt wenn das Layout fertig erstellt wurde. Erst dann
+		 * dürfen Einstellungen zur Map vorgenommen werden. (Zoom z.B.)
+		 */
 
 		view.post(new Runnable() {
 
@@ -211,8 +251,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 				if (route != null) {
 					if (mapPrepared == false) {
-						// if point added, only edit polyline and add
-						// new marker!!!
+						// Erstellen der Map mit Detailinformationen
 						map = route.prepareMapDetails(map, getActivity());
 						mapPrepared = true;
 
@@ -222,6 +261,8 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			}
 
 		});
+
+		// Hinzufpgen aller ClickListener
 		addButtonClickListenerCamera(ibCamera);
 		addButtonClickListenerPauseRoute(ibPauseRoute);
 		addButtonClickListenerStopRoute(ibStopRoute);
@@ -230,10 +271,19 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		addButtonClickListenerSliderOut(ibInfoSliderOut);
 	}
 
+	/**
+	 * Fügt der Gallery alle Bitmaps hinzu.
+	 * 
+	 * @param myGallery
+	 */
 	public void addPhotos2Gallery(LinearLayout myGallery) {
 
 		myGallery.removeAllViews();
 		listBitmaps = new LinkedHashMap<Bitmap, Timestamp>();
+		/*
+		 * Ausführen des Hintergrundtasks zur Erstellung der Bitmaps. Läuft
+		 * nicht im Main-UI-Thread!
+		 */
 		task = new BitmapWorkerTask(listBitmaps, this);
 		task.execute(route);
 		myGallery.removeAllViews();
@@ -337,13 +387,16 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		Log.d("Test", "addButtonClickListenerSliderOut gestartet");
 	}
 
+	/**
+	 * onActivityResult wird ausgeführt wenn das Kamera-Intent ein Ergebnis
+	 * zurückliefert. Dies kann ein Bilder oder Video sein.
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		// Ist das Ergebnis ein Bild?
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-
-			// Getting the current timestamp
-
+			// Gibt es überhaupt ein Ergebnis?
 			if (resultCode == -1) {
 
 				int scrollbarHeight = Device.getPictureScrollbarDensity();
@@ -374,42 +427,34 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 					mCallback.onPictureTaken(route, fileUri, small_picture);
 					small_picture = null;
-					// If no small picture could be created, NULL is stored
-				} else {
-					// SOll hier noch was passieren???
-					// route.addRoutePointDB(new RoutePoint(route.getId(),
-					// tsTemp,
-					// fileUri.getPath(), null, gps.getLatitude(), gps
-					// .getLongitude(), gps.getAltitude()));
-
+					// Wenn kein Bild erstellt wird, wird null gespeichert.
 				}
 
 			}
 
-			// now at least one picture was taken
+			// Wurde überhaupt ein Bild geschossen?
 			if (route.hasPicturePoint() == true) {
 
-				// If it is the first picture ever taken the layout has to be
-				// changed to the one with picture scrollbar
+				// Nun muss das Layout verändert werden.
 				if (myGallery == null) {
-
-					// Vielleicht gibt es noch eine bessere Lösung.
-
+					// Neuladen des Fragments
 					mCallback.onShowRoute(route);
 
 				} else {
-					// refresh the image view
+					// aktualisiert das ImageView
 					addPhotos2Gallery(myGallery);
 					route.prepareMapDetails(map, getActivity());
 				}
 
 			} else {
+				// Führe PrepareMap nochmal aus.
 				route.prepareMapPreview(map);
 			}
 
 		}
 	}
 
+	// Animation für den ViewFlipper
 	private Animation outToLeftAnimation() {
 		Animation outtoLeft = new TranslateAnimation(
 				Animation.RELATIVE_TO_PARENT, 0.0f,
@@ -421,6 +466,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		return outtoLeft;
 	}
 
+	// Animation für den ViewFlipper
 	private Animation inFromLeftAnimation() {
 		Animation inFromLeft = new TranslateAnimation(
 				Animation.RELATIVE_TO_PARENT, -1.5f,
@@ -432,7 +478,9 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		return inFromLeft;
 	}
 
+	// Berechnet die Detailinformationen für die aktuelle Route
 	private void calcRouteFacts(Route route) {
+		// Variablen zur Berechnung
 		long startDate = 0;
 		long markerDate = 0;
 		double markerLong = 0;
@@ -443,7 +491,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		long routeDuration = 0;
 		long index = 0;
 
-		// Set the start Lat and Long
 		double startMarkerLat = 0;
 		double startMarkerLong = 0;
 		float distanceTotal = 0;
@@ -453,7 +500,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 		locStart.setLatitude(startMarkerLat);
 		locStart.setLongitude(startMarkerLong);
-
+		// Iteration über alle Punkte der Route
 		for (RoutePoint point : route.getRoutePoints()) {
 
 			if (index == 0) {
@@ -463,33 +510,33 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 				locStart.setLatitude(startMarkerLat);
 				locStart.setLongitude(startMarkerLong);
 			} else {
-				// Gets the actual timestamp
+				// speichert den aktuellen TimeStamp
 				markerDate = point.getTimestamp().getTime();
 				durationAct = markerDate - startDate;
 				routeDuration += durationAct;
 				startDate = point.getTimestamp().getTime();
 			}
 
-			// Gets the actual lat and long
+			// speichert den aktuellen TimeStamp
 			markerLat = point.getLatitude();
 			markerLong = point.getLongitude();
 
 			locDest.setLatitude(markerLat);
 			locDest.setLongitude(markerLong);
 
-			// Calculates the distance
+			// Kalkuliert die Distanz
 			distanceAct = distanceOld + locStart.distanceTo(locDest);
 			distanceOld = distanceAct;
 			distanceTotal = distanceAct / 1000;
 
-			// Sets the "old" lat and long as new start lat and long
+			// Speichert oldLat/Long als aktuelle Werte ab.
 			locStart.setLatitude(markerLat);
 			locStart.setLongitude(markerLong);
 
 			index++;
 		}
 
-		// Calculates the distance from km to meter
+		// Formatiert km zu m.
 		distanceKm = (double) Math.round(distanceTotal * 100.0) / 100.0;
 		aveSpeed = (double) Math
 				.round(((distanceAct / (routeDuration / 1000)) * 3.6) * 100.0) / 100.0;
@@ -497,6 +544,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	}
 
+	// Löscht alle Views inkl. der Kinder eines Views
 	private void unbindDrawables(View view) {
 		if (view.getBackground() != null) {
 			view.getBackground().setCallback(null);
@@ -510,11 +558,12 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		}
 	}
 
+	// Berechnet die Dauer der aktuellen Route
 	public String getDuration(long timeseconds) {
 		String time = null;
 		long duration = timeseconds;
 
-		 duration = duration / 1000;
+		duration = duration / 1000;
 
 		long second = duration % 60;
 		long minute = (duration % 3600) / 60;
@@ -562,11 +611,11 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 				for (RoutePoint point : route.getRoutePoints()) {
 
-					// Timestamp of the clicked picture
+					// Timestamp des aktuellen Punktes
 					Timestamp tsClicked = (Timestamp) v.getTag();
 
 					if (tsClicked == point.getTimestamp()) {
-
+						// Zoom einstellen
 						route.setZoomSpecificMarker(point, map);
 					}
 
@@ -581,16 +630,14 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			@Override
 			public boolean onLongClick(View v) {
 
-				// Looping over the routelist to get the right picture
+				// Welches ist das richtige Bild?
 				for (RoutePoint point : route.getRoutePoints()) {
 
-					// Timestamp of the clicked picture
+					// Timestamp des aktuellen Punktes
 					Timestamp tsClicked = (Timestamp) v.getTag();
 
 					if (tsClicked == point.getTimestamp()) {
 
-						// Call the Callback interface to execute the required
-						// action
 						mCallback.onDeletePictureClick(route, point);
 
 						return true;
@@ -603,13 +650,16 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		});
 	}
 
+	/**
+	 * Wird ausgeführt wenn ein Task beendet wurde.
+	 */
 	@Override
 	public void onTaskfinished(LinkedHashMap<Bitmap, Timestamp> bitmaps) {
 
 		// Bilder sollten automatisch ins Layout passen
 		int index = 0;
 		for (Map.Entry<Bitmap, Timestamp> mapSet : bitmaps.entrySet()) {
-
+			// Fügt die Bitmaps den ImageViews hinzu und läd sie in die Hashmap
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setAdjustViewBounds(true);
 			if (index == 0) {
@@ -620,7 +670,7 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 			index++;
 			imageView.setImageBitmap(mapSet.getKey());
 			imageView.setTag(mapSet.getValue());
-
+			// Clicklistener für die einzelnen Bilder
 			addImageListener(imageView);
 			myGallery.addView(imageView);
 
@@ -634,26 +684,33 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	@Override
 	public void onRouteStopped() {
-
+		// Beenden des Services
 		mCallback.removeService();
-
 		ibCamera.setVisibility(View.INVISIBLE);
 		ibPauseRoute.setVisibility(View.INVISIBLE);
 		ibStopRoute.setVisibility(View.INVISIBLE);
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.smbsolutions.hike.functions.interfaces.FragmentCallback#onRoutePaused
+	 * ()
+	 */
 	@Override
 	public void onRoutePaused() {
-
+		// Beenden des Services
 		mCallback.removeService();
-
 		flag_routePaused = true;
-
 		ibCamera.setVisibility(View.INVISIBLE);
 		flipperStartStop.setDisplayedChild(1);
 	}
 
+	/**
+	 *  Befreit das Fragment und löst Verknüpfungen zu bestehenden Java-Objekten
+	 */
 	public void clearFragment() {
 		if (listBitmaps != null) {
 			for (Map.Entry<Bitmap, Timestamp> mapSet : listBitmaps.entrySet()) {
@@ -698,20 +755,18 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	}
 
+	/**
+	 * Aktualisiert den InfoSlider mit den neuen Werten
+	 */
 	public void refreshInfoSlider() {
-		// Method is called when a new routepoint was added
-		// Therefore, the fact slider has to be refreshed
+
 		calcRouteFacts(route);
-
 		tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-
 		tvDistance
 				.setText(String.valueOf("Strecke: ca. " + distanceKm + " km"));
 
 		tvDuration = (TextView) view.findViewById(R.id.tvDuration);
-
 		tvDuration.setText(String.valueOf("Dauer: " + duration));
-
 		tvAveSpeed = (TextView) view.findViewById(R.id.tvAveSpeed);
 		tvAveSpeed.setText(String.valueOf("Gesch.: " + aveSpeed + " km/h"));
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.focuser.sendmelogs.LogCollector;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +18,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
 import android.view.MenuItem;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+
 import de.smbsolutions.day.R;
 import de.smbsolutions.hike.functions.database.Database;
 import de.smbsolutions.hike.functions.initialization.Device;
@@ -568,7 +570,8 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 	@Override
 	public void onStartTrackingService(Route route) {
-
+		// Globales Flag zum Status der Route wird gesetzt.
+		onRouteOpenend(true);
 		if (mService != null) {
 
 			mService.saveActivity(this);
@@ -600,13 +603,13 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		// Wenn nicht, wurde die App bespielsweise beendet. DAnn wird der
 		// Service jetzt neu gestartet
 		if (mService == null) {
-			
+
 			// Service neu gestartet
 			Intent intent = new Intent(this, TrackingService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-			//Auch ist es möglich, dass der Service erstellt wurde, 
-			//aber nicht mehr läuft
+			// Auch ist es möglich, dass der Service erstellt wurde,
+			// aber nicht mehr läuft
 		} else if (mService.isServiceRunning() == false) {
 			Intent intent = new Intent(this, TrackingService.class);
 			bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -627,15 +630,16 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 	public void onTrackingIntervalChanged() {
 
 		if (mService != null) {
-			
-			// Der Benutzer hat die Werte geändert, also muss der Service angepasst werden
+
+			// Der Benutzer hat die Werte geändert, also muss der Service
+			// angepasst werden
 			mService.refreshTrackingInterval();
 
 			if (mService.isServiceRunning()) {
 
-		// Neustarten des Services mit den neuen Werten
+				// Neustarten des Services mit den neuen Werten
 				mService.restartLocationTracker();
-				
+
 			}
 		}
 	}
@@ -653,8 +657,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 	}
 
-
-
 	@Override
 	public boolean isServiceActive() {
 
@@ -662,7 +664,7 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 
 			if (mService.isServiceRunning()) {
 				return true;
-				
+
 			} else {
 				return false;
 			}
@@ -686,17 +688,13 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		return previousFragment;
 	}
 
-	
-	
-
-
 	@Override
 	public void onLocationChanged(Route route, RoutePoint point) {
 
-
 		Fragment frag = getSupportFragmentManager().findFragmentByTag(
 				CURRENT_FRAGMENT);
-		//Wenn es sich um das Detailfragment handelt, wird der InfoSlider refresht
+		// Wenn es sich um das Detailfragment handelt, wird der InfoSlider
+		// refresht
 		if (frag instanceof DetailFragment) {
 			((DetailFragment) frag).refreshInfoSlider();
 		}
@@ -732,7 +730,6 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		}
 
 	}
-	
 
 	@Override
 	public void onDumpDetected() {
@@ -755,9 +752,9 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 		SupportMapFragment mapFragment;
 		Fragment frag = getSupportFragmentManager().findFragmentByTag(
 				CURRENT_FRAGMENT);
-		
-		//Wenn das Mainfragment geöffnet ist, wird null zurück gegeben.
-		//Denn dieses darf durch den Service nicht aktualisiert werden
+
+		// Wenn das Mainfragment geöffnet ist, wird null zurück gegeben.
+		// Denn dieses darf durch den Service nicht aktualisiert werden
 		if (frag instanceof MainFragment) {
 			return null;
 		} else {
@@ -773,17 +770,17 @@ public class MainActivity extends FragmentActivity implements MainCallback {
 			return null;
 
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 
 		super.onDestroy();
-		
-		//Wenn App beendet wird, muss auch der Service beendet werden
+
+		// Wenn App beendet wird, muss auch der Service beendet werden
 		if (mService != null) {
 			unbindService(mConnection);
 			mService = null;
-			
+
 		}
 
 	}

@@ -22,10 +22,9 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 	private Context context;
 	private MainCallback mainCallback;
 
-	
-	
 	/**
 	 * Konstruktor
+	 * 
 	 * @param context
 	 * @param resourceId
 	 * @param listElements
@@ -33,22 +32,21 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 	 */
 	public AllRoutesListAdapter(Activity context, int resourceId,
 			List<AllRoutesListElement> listElements, MainCallback mCallback) {
-		
+
 		super(context, resourceId, listElements);
 		this.listElements = listElements;
 		this.context = context;
 
-		
-		//Interface zur Kommunikation mit MainActivity, nötig für Button Click event
+		// Interface zur Kommunikation mit MainActivity, nötig für Button Click
+		// event
 		this.mainCallback = mCallback;
 
-		//allen Elementen wird der Adapter hinzugefügt
+		// allen Elementen wird der Adapter hinzugefügt
 		for (int i = 0; i < listElements.size(); i++) {
 			listElements.get(i).setAdapter(this);
 		}
 	}
 
-	
 	/**
 	 * Diese Method wird für jedes Listelement aufgerufen
 	 */
@@ -64,20 +62,18 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 
 		}
 
-		//Abgreifen des jeweiligen Elements
+		// Abgreifen des jeweiligen Elements
 		AllRoutesListElement listElement = listElements.get(position);
 		if (listElement != null) {
 
-			//Einlesen der Listelemente
+			// Einlesen der Listelemente
 			Button buttonDetails = (Button) view
 					.findViewById(R.id.imagebuttonDetails);
 			TextView textName = (TextView) view
 					.findViewById(R.id.textRouteName);
 			TextView textDate = (TextView) view
 					.findViewById(R.id.textRouteDate);
-		
-			
-			
+
 			if (textName != null) {
 				textName.setText(listElement.getTextName());
 			}
@@ -86,26 +82,26 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 			}
 
 			if (buttonDetails != null) {
-				//Setzen eines Tags, damit im Onclick event die Position bestimmt werden kann
+				// Setzen eines Tags, damit im Onclick event die Position
+				// bestimmt werden kann
 				buttonDetails.setTag(position);
 			}
-
-
 
 			buttonDetails.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 
-					//Postion des geklickten Buttons
+					// Postion des geklickten Buttons
 					int position = (Integer) v.getTag();
 
-
-					//Der Mainactivity wird mitgeteilt, dass es sich bei der geöffneten Route um eine bereits 
-					//abgeschlossene handelt (Active = false);
+					// Der Mainactivity wird mitgeteilt, dass es sich bei der
+					// geöffneten Route um eine bereits
+					// abgeschlossene handelt (Active = false);
 					mainCallback.onRouteOpenend(false);
-					
-					//Die geklickte Route wird angezeigt
-					mainCallback.onShowRoute(listElements.get(position).getRoute());
+
+					// Die geklickte Route wird angezeigt
+					mainCallback.onShowRoute(listElements.get(position)
+							.getRoute());
 
 				}
 
@@ -114,7 +110,5 @@ public class AllRoutesListAdapter extends ArrayAdapter<AllRoutesListElement> {
 		}
 		return view;
 	}
-
-	
 
 }

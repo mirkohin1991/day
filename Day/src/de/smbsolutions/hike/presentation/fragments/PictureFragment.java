@@ -21,8 +21,8 @@ import de.smbsolutions.hike.functions.objects.RoutePoint;
 import de.smbsolutions.hike.functions.tasks.BitmapManager;
 
 /**
- * Diese Klasse besch�ftigt sich mit dem PictureView. Auf diesem wird ein Bild
- * in Gro�ansicht angezeigt und kann geteilt sowie gel�scht werden.
+ * Diese Klasse beschäftigt sich mit dem PictureView. Auf diesem wird ein Bild
+ * in Großansicht angezeigt und kann geteilt sowie gelöscht werden.
  */
 public class PictureFragment extends android.support.v4.app.Fragment {
 
@@ -36,33 +36,32 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	private ImageButton btnDeletePicture;
 	private File pictureFile;
 
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		//Mitgegebene Parameter werden ausgelesen
+		// Mitgegebene Parameter werden ausgelesen
 		data = getArguments();
 		route = (Route) data.getParcelable("route");
 		routePoint = (RoutePoint) data.getParcelable("point");
-		
-        //Ben�tigte Views des layouts werden ausgelesen
+
+		// Benötigte Views des layouts werden ausgelesen
 		view = inflater.inflate(R.layout.fragment_picture, container, false);
 		pictureView = (ImageView) view.findViewById(R.id.imageViewFullPicture);
 		btnSharePicture = (ImageButton) view
 				.findViewById(R.id.pictureShareButton);
 		btnDeletePicture = (ImageButton) view
 				.findViewById(R.id.pitctureDeleteButton);
-		
+
 		addButtonClickListener();
 
 		return view;
 
 	}
-   
-	
+
 	/**
-	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity
+	 * gespeichert
 	 */
 	@Override
 	public void onAttach(Activity activity) {
@@ -75,22 +74,21 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 					+ " muss mainCallback Interface implementieren");
 		}
 	}
-	
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		//Layout wird aufgebaut
+		// Layout wird aufgebaut
 		initializeFragmentPortrait();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 
@@ -109,7 +107,7 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 	}
 
 	/**
-	 * Methode, die dem View das jeweilige Bild hinzuf�gt
+	 * Methode, die dem View das jeweilige Bild hinzufügt
 	 */
 	public void initializeFragmentPortrait() {
 
@@ -126,21 +124,21 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 		}
 
 	}
-	
-	
-	 /**
-     * ButtonClick Listener f�r Share- und L�sch-Funktionalit�t
-     */
-	private void addButtonClickListener() {
-		
 
-		//Wenn auf den ShareButton geklickt wird, wird dem Benutzer ein Dialog mit m�glichen Share-Funktionen seines Smartphones angezeigt
+	/**
+	 * ButtonClick Listener für Share- und Lösch-Funktionalität
+	 */
+	private void addButtonClickListener() {
+
+		// Wenn auf den ShareButton geklickt wird, wird dem Benutzer ein Dialog
+		// mit möglichen Share-Funktionen seines Smartphones angezeigt
 		btnSharePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				// Ein Dialog mit entsprechenden Sharem�glichkeiten wird ge�ffnet
+				// Ein Dialog mit entsprechenden Sharemöglichkeiten wird
+				// geöffnet
 				Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 				sharingIntent.setType("image/*");
 				sharingIntent.putExtra(Intent.EXTRA_TEXT,
@@ -152,18 +150,16 @@ public class PictureFragment extends android.support.v4.app.Fragment {
 			}
 		});
 
-		
-		//L�schen eines Fotos
+		// Löschen eines Fotos
 		btnDeletePicture.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				//Entsprechende MainCallback Methode wird aufgerufen
+				// Entsprechende MainCallback Methode wird aufgerufen
 				mainCallback.onDeletePictureClick(route, routePoint);
 			}
 		});
 
 	}
-
 
 }

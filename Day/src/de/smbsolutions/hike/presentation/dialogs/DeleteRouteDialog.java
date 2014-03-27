@@ -7,10 +7,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import de.smbsolutions.hike.functions.interfaces.MainCallback;
 import de.smbsolutions.hike.functions.objects.RouteList;
-
 
 /**
  * Dialog zum Löschen einer ganzen Route
@@ -25,37 +23,40 @@ public class DeleteRouteDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		//Beschaffen der mitgegebenen Parameter
+		// Beschaffen der mitgegebenen Parameter
 		bundle = this.getArguments();
 		routeList = (RouteList) bundle.getParcelable("routeList");
 		routeIndex = bundle.getInt("routeIndex");
 
-		//Erstellen des Dialoges
+		// Erstellen des Dialoges
 		return new AlertDialog.Builder(getActivity()).setTitle("Route löschen")
 				.setMessage("Möchten Sie die Route wirklich löschen?")
-				
+
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// Nichts muss getan werden, Dialog wird automatisch beendet
+						// Nichts muss getan werden, Dialog wird automatisch
+						// beendet
 					}
 				})
-				
-				//Wenn JA geklickt wurde, wird die Route gelöscht und das Callbackinterface aufgerufen
+
+				// Wenn JA geklickt wurde, wird die Route gelöscht und das
+				// Callbackinterface aufgerufen
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						
-							routeList.deleteRouteDB(routeIndex);					
-							mainCallback.onRouteDeleted();
-						
+
+						routeList.deleteRouteDB(routeIndex);
+						mainCallback.onRouteDeleted();
+
 						dismiss();
 					}
 				}).create();
 	}
 
 	/**
-	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity
+	 * gespeichert
 	 */
 	@Override
 	public void onAttach(Activity activity) {

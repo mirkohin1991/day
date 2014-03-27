@@ -24,7 +24,7 @@ public class Database implements DatabaseInterface {
 	private static Database db_object = null;
 
 	/**
-	 * Liefert die Instanz zur�ck (Singleton)
+	 * Liefert die Instanz zurück (Singleton)
 	 */
 	public static Database getInstance(Context context) {
 		if (db_object == null)
@@ -55,7 +55,7 @@ public class Database implements DatabaseInterface {
 	}
 
 	/**
-	 * Ein neuer RoutePoint wird der letzten Route hinzugef�gt
+	 * Ein neuer RoutePoint wird der letzten Route hinzugefügt
 	 */
 	public static boolean addNewRoutePoint(RoutePoint point) {
 
@@ -77,7 +77,7 @@ public class Database implements DatabaseInterface {
 
 			return true;
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			return false;
 
 		}
@@ -85,7 +85,7 @@ public class Database implements DatabaseInterface {
 	}
 
 	/**
-	 * L�schen einer ganzen Route
+	 * Löschen einer ganzen Route
 	 */
 	public static boolean deleteRoute(Route route) {
 
@@ -98,13 +98,13 @@ public class Database implements DatabaseInterface {
 			database.close();
 			return true;
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			return false;
 		}
 	}
 
 	/**
-	 * Diese Methode löscht den Pfad von in der App gel�scht Bildern, sodass die
+	 * Diese Methode löscht den Pfad von in der App gelöscht Bildern, sodass die
 	 * App nichtmehr versucht diese anzuzeigen
 	 */
 	public static boolean deletePicturePath(RoutePoint routePoint) {
@@ -121,6 +121,7 @@ public class Database implements DatabaseInterface {
 			return true;
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -147,14 +148,14 @@ public class Database implements DatabaseInterface {
 			return true;
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			return false;
 		}
 
 	}
 
 	/**
-	 * Schlie�en einer Route in der Datenbank
+	 * Schließen einer Route in der Datenbank
 	 */
 	public static boolean closeRoute(int id) {
 
@@ -173,7 +174,7 @@ public class Database implements DatabaseInterface {
 			return true;
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			return false;
 		}
 
@@ -236,17 +237,17 @@ public class Database implements DatabaseInterface {
 		}
 
 		// Alle Routpunkte werden abgerufen
-		db_cursor = database.query("route_points", null, condition, null,
-				null, null, null);
+		db_cursor = database.query("route_points", null, condition, null, null,
+				null, null);
 
 		// neue Route wird angelegt
 		Route route = new Route();
 
-		// Liste die später alle Routen enth�lt
+		// Liste die später alle Routen enthält
 		List<Route> route_list = new ArrayList<Route>();
 
-		// ID wird immer gespeichert um Record mit Vorg�nger vergleichen zu
-		// k�nnen
+		// ID wird immer gespeichert um Record mit Vorgänger vergleichen zu
+		// können
 		// Initialert -1 signalisiert, dass es der erste Eintrag ist
 		int previous_id = -1;
 		while (db_cursor.moveToNext()) {
@@ -267,34 +268,34 @@ public class Database implements DatabaseInterface {
 			// Wenn es sich um eine neue Route handelt
 			if (cursor_id != previous_id) {
 
-				// Und es zus�tzlich nicht die erste Zeile des cursors ist
+				// Und es zusätzlich nicht die erste Zeile des cursors ist
 				if (cursor_id != previous_id && previous_id != -1) {
-					// Die ganze Route wird zur Liste hinzugef�gt
+					// Die ganze Route wird zur Liste hinzugefügt
 					route_list.add(route);
-					// Neue Route f�r n�chsten Durchlauf wird angelegt
+					// Neue Route für nächsten Durchlauf wird angelegt
 					route = new Route();
 				}
 
 				// Weil es sich um eine neue Route handelt muss die ID gesetzt
 				// werden
 				route.setId(cursor_id);
-				// Und zus�tzlich die Infos in die Route_info Tabelle
+				// Und zusätzlich die Infos in die Route_info Tabelle
 				// geschrieben werden
 				getRouteInfo(route);
 			}
 
-			// Die Route_id wir jetzt f�r den n�chsten Durchlauf gespeichert
+			// Die Route_id wir jetzt für den nächsten Durchlauf gespeichert
 			previous_id = cursor_id;
 
 			// Nachdem alle Infos beschafft wurden, kann der Punkt zur Route
-			// hinzugef�gt werden
+			// hinzugefügt werden
 			RoutePoint route_point = new RoutePoint(cursor_id, cursor_time,
 					cursor_picture, cursor_picture_preview, cursor_latitude,
 					cursor_longitude, cursor_latitude);
 			route.addRoutePoint(route_point);
 
 			// Wenn es sich um den letzten Eintrag des result_sets handelt, muss
-			// die Route direkt hinzugef�gt werden, weil es keinen n�chsten Loop
+			// die Route direkt hinzugefügt werden, weil es keinen nächsten Loop
 			// geben wird
 			if (db_cursor.isLast() == true) {
 				route_list.add(route);
@@ -304,14 +305,14 @@ public class Database implements DatabaseInterface {
 		db_cursor.close();
 		database.close();
 
-		// Zur�ckgeben der gew�nschten Liste von Routen
+		// Zurückgeben der gewünschten Liste von Routen
 		return route_list;
 
 	}
 
 	/**
 	 * Diese Methode beschafft alle generellen Informationen die zu einer Route
-	 * vorhanden sind und f�gt diese dem Routeobjekt hinzu (Name,Datum und ob
+	 * vorhanden sind und fügt diese dem Routeobjekt hinzu (Name,Datum und ob
 	 * aktiv)
 	 */
 	public static void getRouteInfo(Route route) {
@@ -331,7 +332,7 @@ public class Database implements DatabaseInterface {
 					.getColumnIndex("name")));
 			route.setDate(db_cursor.getString(db_cursor.getColumnIndex("date")));
 
-			// Weil SQLite kein Boolean kennt findet hier immer eine �bersetzung
+			// Weil SQLite kein Boolean kennt findet hier immer eine Übersetzung
 			// statt
 			switch (db_cursor.getInt(db_cursor.getColumnIndex("active"))) {
 			case 1:
@@ -361,7 +362,7 @@ public class Database implements DatabaseInterface {
 	}
 
 	/**
-	 * Zu einer Einstellung wird der entsprechende Wert zur�ckgeliefert
+	 * Zu einer Einstellung wird der entsprechende Wert zurückgeliefert
 	 */
 	public static int getSettingValue(String name) {
 
@@ -389,7 +390,7 @@ public class Database implements DatabaseInterface {
 
 	/**
 	 * Zu einer Einstellung wird der entsprechende Wert in der Datenbank
-	 * ge�ndert
+	 * geändert
 	 */
 	public static void changeSettingValue(String setting, int value) {
 
@@ -398,31 +399,25 @@ public class Database implements DatabaseInterface {
 		ContentValues values = new ContentValues();
 
 		values.put("value", value);
-		database
-				.update("settings", values, "name=?", new String[] { setting });
+		database.update("settings", values, "name=?", new String[] { setting });
 
 		database.close();
 
 	}
 
-	
 	/**
-	 * Methode zum �berpr�fen, ob die Datenbank schon Einstellungswerte enth�lt
+	 * Methode zum überprüfen, ob die Datenbank schon Einstellungswerte enthält
 	 */
-    private static boolean hasSettingValues() {
+	private static boolean hasSettingValues() {
 
 		Cursor db_cursor;
 
 		database = dbHelper.getReadableDatabase();
 
-		db_cursor = database.query("settings", 
-				null, 
-				"name = ?", 
-				new String[] { "tracking" }, 
-												
-				null, 
-				null,
-				null);
+		db_cursor = database.query("settings", null, "name = ?",
+				new String[] { "tracking" },
+
+				null, null, null);
 
 		db_cursor.moveToFirst();
 
@@ -442,16 +437,15 @@ public class Database implements DatabaseInterface {
 
 	}
 
-    /**
-     * Methode zur Erstellung der voreingestellten Einstellungen
-     */
+	/**
+	 * Methode zur Erstellung der voreingestellten Einstellungen
+	 */
 	public static void createDefaultSettings() {
-
 
 		database = dbHelper.getWritableDatabase();
 
 		ContentValues setting_values = new ContentValues();
-	
+
 		setting_values.put("name", "tracking");
 		setting_values.put("value", 1);
 		database.insert("settings", null, setting_values);
@@ -480,7 +474,8 @@ public class Database implements DatabaseInterface {
 	}
 
 	/**
-	 * Methode zum Erstellen von drei Default-Routen, um den Benutzer schon bei Installation etwas pr�sentieren zu k�nnen
+	 * Methode zum Erstellen von drei Default-Routen, um den Benutzer schon bei
+	 * Installation etwas präsentieren zu können
 	 */
 	public static void createDefaultRoutes() {
 		try {
@@ -488,7 +483,7 @@ public class Database implements DatabaseInterface {
 			database = dbHelper.getWritableDatabase();
 
 			for (int i = 0; i <= 2; i++) {
-				
+
 				Route route = new Route("Beispielroute" + String.valueOf(i));
 				route.addRoutePointDB(new RoutePoint(route.getId(),
 						new Timestamp(System.currentTimeMillis()), null, null,
@@ -514,7 +509,7 @@ public class Database implements DatabaseInterface {
 			}
 
 		} catch (Exception e) {
-		
+			e.printStackTrace();
 
 		}
 	}

@@ -7,16 +7,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import de.smbsolutions.hike.functions.interfaces.MainCallback;
 import de.smbsolutions.hike.functions.objects.Route;
 import de.smbsolutions.hike.functions.objects.RoutePoint;
-
 
 /**
  * Dialog zum Löschen eines Bildpunktes
@@ -31,36 +27,36 @@ public class DeletePictureDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		//Abrufen der mitgebenen Parameter
+		// Abrufen der mitgebenen Parameter
 		bundle = this.getArguments();
 		route = (Route) bundle.getParcelable("route");
 		point = (RoutePoint) bundle.getParcelable("point");
 
-		//Neuer Dialog wird erstellt
+		// Neuer Dialog wird erstellt
 		return new AlertDialog.Builder(getActivity()).setTitle("Bild löschen")
 				.setMessage("Möchten Sie das Bild wirklich löschen?")
-				
+
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// Dialog wird einfach beendet
 					}
 				})
-				
-				//Wenn der JA Button geklickt wurde, wird das Bild gelöscht
+
+				// Wenn der JA Button geklickt wurde, wird das Bild gelöscht
 				.setPositiveButton(android.R.string.yes, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 
 						try {
 
-							
-							//Zu löschende Dateien wird gelesen
+							// Zu löschende Dateien wird gelesen
 							File deleteFile = new File(point.getPicture());
 							File deleteFilePreview = new File(point
 									.getPicturePreview());
 
-							// Wenn Löschen erfolgreich, wird auch die Route und die Datenbank aktualisiert
+							// Wenn Löschen erfolgreich, wird auch die Route und
+							// die Datenbank aktualisiert
 							if (deleteFile.delete() == true
 									&& deleteFilePreview.delete() == true) {
 
@@ -69,8 +65,8 @@ public class DeletePictureDialog extends DialogFragment {
 
 							}
 							dismiss();
-							
-							//Route wird neu angezeigt
+
+							// Route wird neu angezeigt
 							mainCallback.onShowRoute(route);
 
 						} catch (Exception e) {
@@ -83,7 +79,8 @@ public class DeletePictureDialog extends DialogFragment {
 	}
 
 	/**
-	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity gespeichert
+	 * Wenn der Dialog attached wird, wird der Callback zur MainActivity
+	 * gespeichert
 	 */
 	@Override
 	public void onAttach(Activity activity) {
