@@ -167,8 +167,9 @@ public class Route implements Parcelable {
 			// dann im Task mit den Bildern zu ersetzen
 			for (RoutePoint point : this.routePoints) {
 
-				MarkerOptions markerOpt = new MarkerOptions().position(
-						new LatLng(point.getLatitude(), point.getLongitude()));
+				MarkerOptions markerOpt = new MarkerOptions()
+						.position(new LatLng(point.getLatitude(), point
+								.getLongitude()));
 
 				Marker marker = mapImport.addMarker(markerOpt);
 				markerMap.put(point, marker);
@@ -244,6 +245,18 @@ public class Route implements Parcelable {
 	}
 
 	/**
+	 * Zoomt zu einem bestimmten Punkt auf der Map.
+	 * 
+	 * @param point
+	 * @param map
+	 */
+	public void setZoomSpecificPoint(RoutePoint point, GoogleMap map) {
+		LatLng latlng = new LatLng(point.getLatitude(), point.getLongitude());
+		CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(latlng);
+		map.animateCamera(camUpdate);
+	}
+
+	/**
 	 * Methoden zum Löschen einzelner Bilder aus der Datenbank und anschließend
 	 * aus der internen Liste
 	 */
@@ -280,11 +293,10 @@ public class Route implements Parcelable {
 
 				// Erster RoutePoint --> Start Flagge
 				if (point == routePoints.get(0)) {
-					MarkerOptions markerOpt = new MarkerOptions()
-							.position(
-									new LatLng(point.getLatitude(), point
-											.getLongitude()))
-							.icon(BitmapDescriptorFactory
+					MarkerOptions markerOpt = new MarkerOptions().position(
+							new LatLng(point.getLatitude(), point
+									.getLongitude())).icon(
+							BitmapDescriptorFactory
 									.fromResource(R.drawable.start_marker));
 
 					// Speichern des Markers in der Hashmap
@@ -298,11 +310,10 @@ public class Route implements Parcelable {
 					// Aber nur wenn die Route schon beendet ist
 					if (active == false) {
 
-						MarkerOptions markerOpt = new MarkerOptions()
-								.position(
-										new LatLng(point.getLatitude(), point
-												.getLongitude()))
-								.icon(BitmapDescriptorFactory
+						MarkerOptions markerOpt = new MarkerOptions().position(
+								new LatLng(point.getLatitude(), point
+										.getLongitude())).icon(
+								BitmapDescriptorFactory
 										.fromResource(R.drawable.stop_marker));
 
 						// Speichern des Markers in der Hashmap
@@ -339,10 +350,8 @@ public class Route implements Parcelable {
 
 			// Erster RoutePoint --> Start-Flagge
 			if (point == routePoints.get(0)) {
-				MarkerOptions markerOpt = new MarkerOptions()
-						.position(
-								new LatLng(point.getLatitude(), point
-										.getLongitude()))
+				MarkerOptions markerOpt = new MarkerOptions().position(
+						new LatLng(point.getLatitude(), point.getLongitude()))
 						.icon(BitmapDescriptorFactory
 								.fromResource(R.drawable.start_marker));
 
@@ -357,11 +366,10 @@ public class Route implements Parcelable {
 				// Aber nur wenn die Route schon beendet ist
 				if (active == false) {
 
-					MarkerOptions markerOpt = new MarkerOptions()
-							.position(
-									new LatLng(point.getLatitude(), point
-											.getLongitude()))
-							.icon(BitmapDescriptorFactory
+					MarkerOptions markerOpt = new MarkerOptions().position(
+							new LatLng(point.getLatitude(), point
+									.getLongitude())).icon(
+							BitmapDescriptorFactory
 									.fromResource(R.drawable.stop_marker));
 
 					map.addMarker(markerOpt);
@@ -375,7 +383,6 @@ public class Route implements Parcelable {
 		map.addPolyline(polylineOptions_back);
 
 	}
-	
 
 	/**
 	 * Methode, um einer vorhanden Polyline-Kombination einen weiteren Punkt
@@ -390,6 +397,7 @@ public class Route implements Parcelable {
 				.getLongitude()));
 		map.addPolyline(polylineOptions_top);
 		map.addPolyline(polylineOptions_back);
+		setZoomSpecificPoint(point, map);
 	}
 
 	/**
