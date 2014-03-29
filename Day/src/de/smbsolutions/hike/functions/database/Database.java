@@ -557,7 +557,7 @@ public class Database implements DatabaseInterface {
 					7.678954, 5454));
 			closeRoute(route.getId());
 
-			Route route2 = new Route("Spaziergang zum HBF");
+			Route route2 = new Route("Spaziergang");
 			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
 					System.currentTimeMillis()), null, null, 47.999512,
 					7.851523, 5454));
