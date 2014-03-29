@@ -544,20 +544,6 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 
 	}
 
-	// Löscht alle Views inkl. der Kinder eines Views
-	private void unbindDrawables(View view) {
-		if (view.getBackground() != null) {
-			view.getBackground().setCallback(null);
-
-		}
-		if (view instanceof ViewGroup) {
-			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-				unbindDrawables(((ViewGroup) view).getChildAt(i));
-			}
-			((ViewGroup) view).removeAllViews();
-		}
-	}
-
 	// Berechnet die Dauer der aktuellen Route
 	public String getDuration(long timeseconds) {
 		String time = null;
@@ -754,6 +740,22 @@ public class DetailFragment extends android.support.v4.app.Fragment implements
 		fileUri = null;
 
 	}
+	/**
+	 *  Löscht alle Views inkl. der Kinder eines Views
+	 * @param view
+	 */
+		private void unbindDrawables(View view) {
+			if (view.getBackground() != null) {
+				view.getBackground().setCallback(null);
+
+			}
+			if (view instanceof ViewGroup) {
+				for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+					unbindDrawables(((ViewGroup) view).getChildAt(i));
+				}
+				((ViewGroup) view).removeAllViews();
+			}
+		}
 
 	/**
 	 * Aktualisiert den InfoSlider mit den neuen Werten

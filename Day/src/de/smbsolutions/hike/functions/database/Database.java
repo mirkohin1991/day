@@ -482,31 +482,141 @@ public class Database implements DatabaseInterface {
 
 			database = dbHelper.getWritableDatabase();
 
-			for (int i = 0; i <= 2; i++) {
+			Route route = new Route("Fahrt zur DHBW");
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.6332747,
+					7.6926668, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.633599,
+					7.692146, 9000000));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.633177,
+					7.691090, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.633105,
+					7.690457, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.632331,
+					7.688745, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.630796,
+					7.685518, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.630278,
+					7.684126, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.629202,
+					7.682477, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.626422,
+					7.678744, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.625137,
+					7.677095, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.622821,
+					7.675461, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.620247,
+					7.672092, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.619112,
+					7.670965, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.618536,
+					7.672187, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.620564,
+					7.674979, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.619380,
+					7.678016, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.618049,
+					7.677464, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.617653,
+					7.677069, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.617503,
+					7.677420, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.616639,
+					7.677853, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.616542,
+					7.678025, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.616529,
+					7.678326, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.616692,
+					7.678517, 5454));
+			route.addRoutePointDB(new RoutePoint(route.getId(), new Timestamp(
+					System.currentTimeMillis() + 300000), null, null, 47.618099,
+					7.678954, 5454));
+			closeRoute(route.getId());
 
-				Route route = new Route("Beispielroute" + String.valueOf(i));
-				route.addRoutePointDB(new RoutePoint(route.getId(),
-						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9983322, 7.8018200, 5454));
-				route.addRoutePointDB(new RoutePoint(route.getId(),
-						new Timestamp(System.currentTimeMillis()), null, null,
-						47.91913344, 7.8218310, 5454));
-				route.addRoutePointDB(new RoutePoint(route.getId(),
-						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9313355, 7.8248580, 5454));
-				route.addRoutePointDB(new RoutePoint(route.getId(),
-						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9513366, 7.8618999, 5454));
-				route.addRoutePointDB(new RoutePoint(route.getId(),
-						new Timestamp(System.currentTimeMillis()), null, null,
-						47.9983322, 7.8018200, 5454));
-				if (i < 2) {
-
-					closeRoute(route.getId());
-				}
-				database.close();
-
-			}
+			Route route2 = new Route("Spaziergang zum HBF");
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.999512,
+					7.851523, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.999615,
+					7.850700, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.998497,
+					7.850233, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.998721,
+					7.848568, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.998972,
+					7.846750, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 48.000239,
+					7.847259, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 48.000447,
+					7.846110, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 48.001477,
+					7.846523, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 48.001778,
+					7.845757, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 48.000770,
+					7.844898, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.999626,
+					7.843928, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.998511,
+					7.843115, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.996864,
+					7.841802, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.996630,
+					7.841659, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.996477,
+					7.841597, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.996387,
+					7.841742, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.996410,
+					7.841904, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis()), null, null, 47.996692,
+					7.842099, 5454));
+			route.addRoutePointDB(new RoutePoint(route2.getId(), new Timestamp(
+					System.currentTimeMillis() + 1500000), null, null,
+					47.997373, 7.842642, 5454));
+			closeRoute(route2.getId());
+			database.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
