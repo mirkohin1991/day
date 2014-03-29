@@ -18,7 +18,7 @@ public class DumpDetectionDialog extends DialogFragment {
 		return new AlertDialog.Builder(getActivity())
 				.setTitle("Hike wurde das letzte Mal nicht korrekt beendet")
 				.setMessage(
-						"Möchten Sie den Fehlerbereicht an die Entwickler senden?")
+						"Möchten Sie den Fehlerbericht an die Entwickler senden?")
 				.setNegativeButton(android.R.string.no, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

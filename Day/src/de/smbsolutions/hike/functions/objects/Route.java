@@ -251,8 +251,13 @@ public class Route implements Parcelable {
 	 * @param map
 	 */
 	public void setZoomSpecificPoint(RoutePoint point, GoogleMap map) {
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 		LatLng latlng = new LatLng(point.getLatitude(), point.getLongitude());
-		CameraUpdate camUpdate = CameraUpdateFactory.newLatLng(latlng);
+
+		builder.include(latlng);
+		LatLngBounds bounds = builder.build();
+		CameraUpdate camUpdate = CameraUpdateFactory
+				.newLatLngBounds(bounds, 60);
 		map.animateCamera(camUpdate);
 	}
 
